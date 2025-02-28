@@ -86,7 +86,6 @@ void process_token(t_token *current, t_token *prev,
 void handle_syntax_error(t_mini *ms);
 void    exec(t_mini *ms);
 void    exec_pipe(t_token *token);
-void	exec_command(t_token *token);
 void    exec_builtin(t_token *token, t_mini *ms);
 void    exec_redirect(t_token *token);
 void    exec_heredoc(t_token *token);

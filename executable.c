@@ -10,7 +10,7 @@ void exec(t_mini *ms)
         if (current->type == CMD_PIPE)
             exec_pipe(current);
         else if (current->type == CMD_EXEC)
-            exec_command(current);
+            return ;
         else if (current->type == CMD_BUILDIN)
             exec_builtin(current, ms);
         else if (current->type == CMD_REDIRECT)

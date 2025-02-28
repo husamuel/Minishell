@@ -4,7 +4,7 @@ INCLUDES = -I./42-libft
 LIBS = -lreadline -L./42-libft -lft
 SRCS = main.c init.c lexer.c input.c parser.c valid_syntax.c executable.c \
        ./commands/exec_heredoc.c ./commands/exec_pipe.c \
-       ./commands/exec_redirect.c ./commands/exec_command.c ./commands/exec_builtin.c \
+       ./commands/exec_redirect.c ./commands/exec_builtin.c \
        ./commands/builtin/exec_cd.c ./commands/builtin/exec_cd_2.c ./commands/builtin/exec_echo.c \
        ./commands/builtin/exec_exit.c ./commands/builtin/exec_env.c \
        ./commands/builtin/exec_export.c ./commands/builtin/exec_pwd.c \

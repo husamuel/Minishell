@@ -30,55 +30,42 @@ void execute_command(t_mini *ms, t_token *cmd)
 {
     pid_t pid;
     int status;
-
-    if (!cmd || !cmd->cmd)
+    
+    if (!cmd || !cmd->cmd || cmd->type == CMD_EXIT_STATUS)
         return;
-
-    signal(SIGINT, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN);
-
+    
+    void (*old_sigint)(int) = signal(SIGINT, SIG_IGN);
+    void (*old_sigquit)(int) = signal(SIGQUIT, SIG_IGN);
+    
     pid = fork();
     if (pid == 0)
     {
         reset_signals();
-        
         execvp(cmd->cmd, cmd->args_file);
         perror("minishell");
-        exit(127);
+        exit(127);  // Retorna 127 caso execvp falhe
     }
     else if (pid > 0)
     {
-        signal(SIGINT, SIG_IGN);
-        signal(SIGQUIT, SIG_IGN);
-
         waitpid(pid, &status, 0);
 
         if (WIFEXITED(status))
         {
+            // Se o processo filho terminar com sucesso
             ms->exit_status = WEXITSTATUS(status);
         }
         else if (WIFSIGNALED(status))
         {
-            if (WTERMSIG(status) == SIGINT)
-            {
-                ms->exit_status = 130;
-                write(1, "\n", 1);
-            }
-            else if (WTERMSIG(status) == SIGQUIT)
-            {
-                ms->exit_status = 131;
-                write(1, "Quit (core dumped)\n", 19);
-            }
-            else
-                ms->exit_status = 128 + WTERMSIG(status);
+            // Se o processo filho for encerrado por um sinal
+            ms->exit_status = 128 + WTERMSIG(status);
         }
-        
-        setup_signals();
+
+        signal(SIGINT, old_sigint);
+        signal(SIGQUIT, old_sigquit);
     }
     else
     {
         perror("minishell: fork");
-        ms->exit_status = 1;
-        setup_signals();
+        ms->exit_status = 1;  // Retorna 1 caso o fork falhe
     }
 }
