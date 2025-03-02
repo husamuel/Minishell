@@ -43,7 +43,7 @@ void execute_command(t_mini *ms, t_token *cmd)
         reset_signals();
         execvp(cmd->cmd, cmd->args_file);
         perror("minishell");
-        exit(127);  // Retorna 127 caso execvp falhe
+        exit(127); 
     }
     else if (pid > 0)
     {
@@ -51,12 +51,10 @@ void execute_command(t_mini *ms, t_token *cmd)
 
         if (WIFEXITED(status))
         {
-            // Se o processo filho terminar com sucesso
             ms->exit_status = WEXITSTATUS(status);
         }
         else if (WIFSIGNALED(status))
         {
-            // Se o processo filho for encerrado por um sinal
             ms->exit_status = 128 + WTERMSIG(status);
         }
 
@@ -66,6 +64,6 @@ void execute_command(t_mini *ms, t_token *cmd)
     else
     {
         perror("minishell: fork");
-        ms->exit_status = 1;  // Retorna 1 caso o fork falhe
+        ms->exit_status = 1;
     }
 }
