@@ -26,7 +26,6 @@ typedef struct s_mini
 {
 	char	*input;
 	char	*prompt;
-	t_env	*envp;
 	t_env	*export;
 	t_token	*token;
 	int exit_status;
@@ -66,14 +65,28 @@ typedef enum e_cmd_type {
 // RUI functions -- CD functions
 char	*get_new_cwd(char *buffer);
 void	free_pwd(char *oldpwd, char *pwd);
-
-int		ft_strcmp(char *s1, char *s2);
-
 void	update_var(char *oldpwd, char *pwd, t_mini *mini);
+
+// UTILS
+void	free_2strings(char *var, char *arg);
+int		ft_strcmp(char *s1, char *s2);
+int		list_size(t_token *token);
+t_env	*ft_last(t_env *head);
+t_env	*find_node(char *var, t_env *head);
+
+// EXPAND
 char	*expand_var(char *var, t_env *ev);
 
-t_env	*ft_last(t_env *head);
-/////
+// EXPORT
+void	append_node(char *var, char *content, t_env *head);
+void	order_var(t_mini *mini);
+void	print_export(t_env *head);
+
+// CD FUNCTIONS
+void	exec_cd_point(t_token *token, t_mini *mini);
+int		check_fullpath(t_token *next, t_mini *mini);
+void	cd_dollar(t_token *next, t_mini *mini);
+//
 
 t_mini init(char **envp);
 char *get_input(t_mini *ms, char *prompt);

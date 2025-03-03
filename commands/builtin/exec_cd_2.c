@@ -6,7 +6,7 @@
 /*   By: ruida-si <ruida-si@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/08 17:31:57 by ruida-si          #+#    #+#             */
-/*   Updated: 2025/02/12 16:00:28 by ruida-si         ###   ########.fr       */
+/*   Updated: 2025/03/01 17:14:14 by ruida-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini)
 {
 	t_env	*ev;
 
-	ev = mini->envp;
+	ev = mini->export;
 	while (ev)
 	{
 		if (ft_strcmp(ev->var, "OLDPWD") == 0)
@@ -31,6 +31,7 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini)
 	}
 }
 
+// return var content with malloc or NULL if not found
 char	*expand_var(char *var, t_env *ev)
 {
 	int		i;

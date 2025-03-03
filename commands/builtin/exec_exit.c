@@ -6,13 +6,13 @@
 /*   By: ruida-si <ruida-si@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/06 14:47:38 by ruida-si          #+#    #+#             */
-/*   Updated: 2025/02/06 14:47:39 by ruida-si         ###   ########.fr       */
+/*   Updated: 2025/03/01 14:05:47 by ruida-si         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../../minishell.h"
 
-void exec_exit(t_token *token)
+void	exec_exit(t_token *token)
 {
 	(void)token;
 	printf("exit\n");

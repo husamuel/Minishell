@@ -8,7 +8,6 @@ t_mini init(char **envp)
     t_mini ms;
 
     ms.input = NULL;
-    ms.envp = get_envp(envp);
 	ms.export = get_envp(envp);
     ms.token = NULL;
 	ms.prompt = "\001\033[31m\002m\001\033[33m\002i\001\033[32m\002n\001\033[36m\002i\001\033[34m\002s\001\033[35m\002h\001\033[31m\002e\001\033[33m\002l\001\033[32m\002l\001\033[0m\002$ ";
