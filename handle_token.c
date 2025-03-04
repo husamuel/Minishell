@@ -99,12 +99,22 @@ static int is_subshell(t_token *current)
 void process_token(t_token *current, t_token *prev,
 	t_token **last_cmd, int *command_seen, t_mini *ms)
 {
-	if (is_subshell(current))
-	{
-		*command_seen = 1;
-		*last_cmd = current;
-		return ;
-	}
+    if (is_subshell(current))
+    {
+        *command_seen = 1;
+        *last_cmd = current;
+        
+        if (!current->args_file) {
+            current->args_file = malloc(sizeof(char *) * 2);
+            if (!current->args_file)
+                return;
+            current->args_file[0] = strdup(current->cmd);
+            current->args_file[1] = NULL;
+        }
+        
+        execute_command(ms, current);
+        return;
+    }
 
 	if (strcmp(current->cmd, "$?") == 0) {
 		printf("%d\n", ms->exit_status);
