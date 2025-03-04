@@ -112,7 +112,7 @@ void process_token(t_token *current, t_token *prev,
             current->args_file[1] = NULL;
         }
         
-        execute_command(ms, current);
+        execute_command(current);
         return;
     }
 

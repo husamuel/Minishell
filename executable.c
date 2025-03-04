@@ -3,21 +3,23 @@
 void exec(t_mini *ms)
 {
     t_token *current;
+    int status;
 
     current = ms->token;
     while (current)
     {
         if (current->type == CMD_PIPE)
-            exec_pipe(current);
+            status = exec_pipe(current);
         else if (current->type == CMD_BUILDIN)
-            exec_builtin(current, ms);
+            status = exec_builtin(current, ms);
         else if (current->type == CMD_REDIRECT)
-            exec_redirect(current);
+            status = exec_redirect(current);
         else if (current->type == CMD_HEREDOC)
-            exec_heredoc(current);
+            status = exec_heredoc(current);
         else if (current->type == CMD_EXEC)
-            execute_command(ms, current);
+            status = execute_command(current);
         
         current = current->next;
     }
+    handle_exit_status(ms, status);
 }

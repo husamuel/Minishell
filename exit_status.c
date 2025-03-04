@@ -26,13 +26,13 @@ void reset_signals(void)
     signal(SIGQUIT, SIG_DFL);
 }
 
-void execute_command(t_mini *ms, t_token *cmd)
+int execute_command(t_token *cmd)
 {
     pid_t pid;
     int status;
-    
-    if (!cmd || !cmd->cmd || cmd->type == CMD_EXIT_STATUS)
-        return;
+
+    if (!cmd || !cmd->cmd)
+        return -1;
     
     void (*old_sigint)(int) = signal(SIGINT, SIG_IGN);
     void (*old_sigquit)(int) = signal(SIGQUIT, SIG_IGN);
@@ -48,22 +48,39 @@ void execute_command(t_mini *ms, t_token *cmd)
     else if (pid > 0)
     {
         waitpid(pid, &status, 0);
-
-        if (WIFEXITED(status))
-        {
-            ms->exit_status = WEXITSTATUS(status);
-        }
-        else if (WIFSIGNALED(status))
-        {
-            ms->exit_status = 128 + WTERMSIG(status);
-        }
-
+        
         signal(SIGINT, old_sigint);
         signal(SIGQUIT, old_sigquit);
+        
+        if (WIFEXITED(status))
+            return WEXITSTATUS(status);
+        else if (WIFSIGNALED(status))
+        {
+            write(1, "\n", 1);
+            return WTERMSIG(status) + 128;
+        }
+        return 0;
     }
     else
     {
         perror("minishell: fork");
-        ms->exit_status = 1;
+        return 130;
     }
+}
+
+void handle_exit_status(t_mini *ms, int status)
+{
+    int signal = WTERMSIG(status);
+    if (WIFEXITED(status))
+        ms->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+    {
+        ms->exit_status = 127;
+        if (signal == SIGINT || signal == SIGQUIT)
+            ms->exit_status = 130;
+    }
+    else if (signal == SIGINT || signal == SIGQUIT)
+        ms->exit_status = 130;
+    else
+        ms->exit_status = 0;
 }

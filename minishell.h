@@ -98,10 +98,10 @@ void process_token(t_token *current, t_token *prev,
     t_token **last_cmd, int *command_seen, t_mini *ms);
 void handle_syntax_error(t_mini *ms);
 void    exec(t_mini *ms);
-void    exec_pipe(t_token *token);
-void    exec_builtin(t_token *token, t_mini *ms);
-void    exec_redirect(t_token *token);
-void    exec_heredoc(t_token *token);
+int    exec_pipe(t_token *token);
+int    exec_builtin(t_token *token, t_mini *ms);
+int    exec_redirect(t_token *token);
+int    exec_heredoc(t_token *token);
 
 void     exec_echo(t_token *token, t_mini *mini);
 void     exec_cd(t_token *token, t_mini *mini);
@@ -120,6 +120,7 @@ void    sigint_handler(int sig);
 void    sigquit_handler(int sig);
 void    setup_signals(void);
 void	free_tokens(t_token *token);
-void execute_command(t_mini *ms, t_token *cmd);
+int	execute_command(t_token *cmd);
+void handle_exit_status(t_mini *ms, int status);
 
 #endif

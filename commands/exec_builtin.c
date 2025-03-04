@@ -18,10 +18,13 @@ static int is_builtin(const char *cmd)
     return (0);
 }
 
-void exec_builtin(t_token *token, t_mini *mini)
+int exec_builtin(t_token *token, t_mini *mini)
 {
+    int status;
+
+    status = 127;
     if (!is_builtin(token->cmd))
-        return;        
+        return status;        
     if (strcmp(token->cmd, "cd") == 0)
         exec_cd(token, mini);
     else if (strcmp(token->cmd, "echo") == 0)
@@ -36,4 +39,5 @@ void exec_builtin(t_token *token, t_mini *mini)
         exec_env(token, mini);
     else if (strcmp(token->cmd, "exit") == 0)
         exec_exit(token);
+    return status;
 }
