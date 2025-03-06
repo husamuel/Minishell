@@ -67,5 +67,4 @@ void parser(t_mini *ms)
         prev = current;
         current = current->next;
     }
-    handle_syntax_error(ms);
 }
