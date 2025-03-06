@@ -59,19 +59,22 @@ int execute_command(t_token *cmd)
             write(1, "\n", 1);
             return WTERMSIG(status) + 128;
         }
-        return 0;
+        return 2;
     }
     else
     {
         perror("minishell: fork");
-        return 130;
+        return 2;
     }
 }
 
 void handle_exit_status(t_mini *ms, int status)
 {
     int signal = WTERMSIG(status);
-    if (WIFEXITED(status))
+
+    if(ms->exit_status == 2)
+        return;
+    else if (WIFEXITED(status))
         ms->exit_status = WEXITSTATUS(status);
     else if (WIFSIGNALED(status))
     {

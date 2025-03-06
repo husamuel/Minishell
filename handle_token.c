@@ -1,5 +1,6 @@
 #include "minishell.h"
 
+
 void add_to_args_file(t_token *token, char *arg)
 {
 	int i;
@@ -81,7 +82,6 @@ static void handle_argument_token(t_token *current, t_token *prev,
 		current->type = CMD_ARG;
 		add_to_args_file(last_cmd, processed_arg);
 	}
-
 	free(processed_arg);
 }
 
@@ -111,17 +111,25 @@ void process_token(t_token *current, t_token *prev,
             current->args_file[0] = strdup(current->cmd);
             current->args_file[1] = NULL;
         }
-        
         execute_command(current);
         return;
     }
-
 	if (strcmp(current->cmd, "$?") == 0) {
 		printf("%d\n", ms->exit_status);
 		current->type = CMD_EXIT_STATUS;
 		*command_seen = 0;
 		return;
 	}
+	if (strcmp(current->cmd, "expr") == 0)
+	{
+        current->type = CMD_EXPR;
+        return;
+    }
+	if (strcmp(current->cmd, "+") == 0)
+	{
+        current->type = CMD_PLUS;
+        return;
+    }
 	if (current->cmd[0] == '\\') {
 		current->type = CMD_NONE;
 		return;

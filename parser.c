@@ -55,10 +55,12 @@ void parser(t_mini *ms)
 
     if (!ms || !ms->token)
         return ;
+
     current = ms->token;
     prev = NULL;
     last_cmd = NULL;
     command_seen = 0;
+
     while (current)
     {
         process_token(current, prev, &last_cmd, &command_seen, ms);

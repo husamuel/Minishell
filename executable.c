@@ -18,6 +18,8 @@ void exec(t_mini *ms)
             status = exec_heredoc(current);
         else if (current->type == CMD_EXEC)
             status = execute_command(current);
+        else if (current->type == CMD_EXPR)
+            process_expr_command(current, ms);
         
         current = current->next;
     }

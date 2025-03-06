@@ -48,35 +48,47 @@ static int validate_redirect_syntax(t_token *tokens) {
     return 1;
 }
 
-static int validate_command_sequence(t_token *tokens) {
-    t_token *current = tokens;
+static int validate_command_sequence(t_mini *ms) {
+    t_token *current = ms->token;
     int exec_count = 0;
     int only_exit_status = 1;
-    
+    current->is_invalid = 1;
     while (current) {
-        if (current->type == CMD_EXEC || 
-            current->type == CMD_BUILDIN || 
+        if (current->type == CMD_EXEC ||
+            current->type == CMD_BUILDIN ||
             current->type == CMD_SUBSHELL)
+        {
+            current->is_invalid = 0; 
             exec_count++;
-            
-        if (current->type != CMD_EXIT_STATUS && 
-            current->type != CMD_NONE && 
-            current->type != CMD_ARG)
-            only_exit_status = 0;
-            
+        }
+        
+        if (current->type != CMD_EXIT_STATUS &&
+            current->type != CMD_NONE)
+        {
+            only_exit_status = 1;
+        }
+        
+        if (current->type == CMD_ARG && current->is_invalid == 1) {
+            ms->exit_status = 2;
+            return 0;
+        }
+        
         if (current->type == CMD_PIPE) {
             if (!current->next ||
                 (current->next->type != CMD_EXEC &&
-                current->next->type != CMD_BUILDIN &&
-                current->next->type != CMD_SUBSHELL))
+                 current->next->type != CMD_BUILDIN &&
+                 current->next->type != CMD_SUBSHELL))
                 return 0;
         }
+        
         current = current->next;
     }
     
-    if (only_exit_status)
+    if (only_exit_status) {
+        ms->exit_status = 127;
         return 1;
-        
+    }
+    
     return exec_count > 0;
 }
 
@@ -85,7 +97,7 @@ static int validate_syntax(t_mini *ms) {
         return 0;
     return (validate_pipe_syntax(ms->token) &&
             validate_redirect_syntax(ms->token) &&
-            validate_command_sequence(ms->token));
+            validate_command_sequence(ms));
 }
 
 void handle_syntax_error(t_mini *ms) {

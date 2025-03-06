@@ -10,6 +10,7 @@ typedef struct s_token
 	struct s_token	*prev;
 	int quoted;
 	int quoted_type;
+	int is_invalid;
 }	t_token;
 
 // RUI
@@ -30,6 +31,7 @@ typedef struct s_mini
 	t_token	*token;
 	int exit_status;
 	int in_quotes;
+	char *current_cmd;
 }	t_mini;
 
 typedef enum e_cmd_type {
@@ -44,7 +46,9 @@ typedef enum e_cmd_type {
     CMD_SINGLE_QUOTE = 17,
     CMD_DOUBLE_QUOTE = 18,
     CMD_EXIT_STATUS = 19,
-    CMD_SUBSHELL = 20
+    CMD_SUBSHELL = 20,
+	CMD_EXPR = 21,
+	CMD_PLUS = 22
 } t_cmd_type;
 
 
@@ -122,5 +126,5 @@ void    setup_signals(void);
 void	free_tokens(t_token *token);
 int	execute_command(t_token *cmd);
 void handle_exit_status(t_mini *ms, int status);
-
+void process_expr_command(t_token *current, t_mini *ms);
 #endif
