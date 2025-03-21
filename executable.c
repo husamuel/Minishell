@@ -16,10 +16,10 @@ void exec(t_mini *ms)
             status = exec_redirect(current);
         else if (current->type == CMD_HEREDOC)
             status = exec_heredoc(current);
-        else if (current->type == CMD_EXEC)
-            status = execute_command(current);
         else if (current->type == CMD_EXPR)
             process_expr_command(current, ms);
+        else if (current->type == CMD_EXEC)
+            status = execute_command(current);
         
         current = current->next;
     }
