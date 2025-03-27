@@ -9,7 +9,7 @@ void exec(t_mini *ms)
     while (current)
     {
         if (current->type == CMD_PIPE)
-            status = exec_pipe(current);
+            status = exec_pipe(ms);
         else if (current->type == CMD_BUILDIN)
             status = exec_builtin(current, ms);
         else if (current->type == CMD_REDIRECT)
@@ -20,6 +20,8 @@ void exec(t_mini *ms)
             process_expr_command(current, ms);
         else if (current->type == CMD_EXEC)
             status = execute_command(current);
+		else if (current->type == CMD_EXIT_STATUS)
+			printf("command not found: %d\n", ms->exit_status);
         
         current = current->next;
     }

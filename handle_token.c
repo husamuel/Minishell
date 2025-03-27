@@ -109,9 +109,6 @@ void process_token(t_token *current, t_token *prev,
     if (ft_strcmp(current->cmd, "$?") == 0) {
         current->type = CMD_EXIT_STATUS;
         
-        if (!in_expr_command) {
-            printf("%d\n", ms->exit_status);
-        }
         
         if (in_expr_command && *last_cmd) {
             add_to_args_file(*last_cmd, current->cmd);
