@@ -50,7 +50,7 @@ int exec_pipe(t_mini *ms)
                 close_pipes(curr_pipe);
             }
             close_pipes(prev_pipe);
-            execute_command(current_token);
+            execute_command(current_token, ms);
             exit(127);
         }
         else

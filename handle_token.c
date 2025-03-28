@@ -86,7 +86,7 @@ void process_token(t_token *current, t_token *prev,
     
     if (is_subshell(current))
     {
-        execute_command(current);
+        execute_command(current, ms);
         return;
     }
     

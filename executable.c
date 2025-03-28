@@ -19,7 +19,7 @@ void exec(t_mini *ms)
         else if (current->type == CMD_EXPR)
             process_expr_command(current, ms);
         else if (current->type == CMD_EXEC)
-            status = execute_command(current);
+            status = execute_command(current, ms);
 		else if (current->type == CMD_EXIT_STATUS)
 			printf("command not found: %d\n", ms->exit_status);
         
