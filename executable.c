@@ -3,12 +3,12 @@
 void exec(t_mini *ms)
 {
     t_token *current;
-    int status;
+    int status = 0;
 
     current = ms->token;
-    if(ms->pipe == 1)
+    if (ms->pipe == 1)
     {
-        status = exec_pipe(ms);
+        status = exec_pipe(ms); // Execução correta dos pipes
         ms->pipe = 0;
     }
     else
