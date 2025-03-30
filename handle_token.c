@@ -86,7 +86,7 @@ void process_token(t_token *current, t_token *prev,
     
     if (is_subshell(current))
     {
-        execute_command(current, ms);
+        execute_command(current);
         return;
     }
     
@@ -135,6 +135,7 @@ void process_token(t_token *current, t_token *prev,
     
     if (current->cmd[0] == '|') {
         current->type = CMD_PIPE;
+        ms->pipe = 1;
         *command_seen = 0;
         *last_cmd = NULL;
         in_expr_command = 0;

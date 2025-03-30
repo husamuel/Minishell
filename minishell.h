@@ -33,6 +33,7 @@ typedef struct s_mini
 	int in_quotes;
 	char *current_cmd;
 	char *output;
+	int pipe;
 }	t_mini;
 
 typedef enum e_cmd_type {
@@ -124,7 +125,7 @@ void    sigint_handler(int sig);
 void    sigquit_handler(int sig);
 void    setup_signals(void);
 void	free_tokens(t_token *token);
-int execute_command(t_token *cmd, t_mini *ms);
+int execute_command(t_token *cmd);
 void handle_exit_status(t_mini *ms, int status);
 void process_expr_command(t_token *current, t_mini *ms);
 #endif
