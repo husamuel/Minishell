@@ -1,91 +1,176 @@
 #include "./../minishell.h"
 
-static void close_pipes(int pipe_fd[2]) {
-    if (pipe_fd[0] != -1) close(pipe_fd[0]);
-    if (pipe_fd[1] != -1) close(pipe_fd[1]);
+static void	close_and_free_pipes(int **pipe_fds, int pipe_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < pipe_count)
+	{
+		close(pipe_fds[i][0]);
+		close(pipe_fds[i][1]);
+		free(pipe_fds[i]);
+		i++;
+	}
+	free(pipe_fds);
 }
 
-int exec_pipe(t_mini *ms) {
-    int status = 0;
-    pid_t pid;
-    int prev_pipe[2] = {-1, -1};
-    int curr_pipe[2] = {-1, -1};
-    t_token *current_token = ms->token;
+static void	free_pipes_on_error(int **pipe_fds, int index)
+{
+	int	j;
 
-    if (!current_token || !ms->pipe)  
-        return 0;
+	j = 0;
+	while (j <= index)
+	{
+		free(pipe_fds[j]);
+		j++;
+	}
+	free(pipe_fds);
+}
 
-    while (current_token) {
-        if (current_token->type == CMD_PIPE) {
-            current_token = current_token->next;
-            continue;
-        }
+static int	**init_pipes(int pipe_count)
+{
+	int	**pipe_fds;
+	int	i;
 
-        // Criar novo pipe se houver próximo comando
-        if (current_token->next && current_token->next->type == CMD_PIPE) {
-            if (pipe(curr_pipe) == -1) {
-                perror("minishell: pipe");
-                return 127;
-            }
-        } else {
-            curr_pipe[0] = -1;
-            curr_pipe[1] = -1;
-        }
+	pipe_fds = malloc(sizeof(int *) * pipe_count);
+	if (!pipe_fds)
+		return (NULL);
+	i = 0;
+	while (i < pipe_count)
+	{
+		pipe_fds[i] = malloc(sizeof(int) * 2);
+		if (!pipe_fds[i])
+		{
+			free_pipes_on_error(pipe_fds, i - 1);
+			return (NULL);
+		}
+		if (pipe(pipe_fds[i]) == -1)
+		{
+			perror("minishell: pipe");
+			free_pipes_on_error(pipe_fds, i);
+			return (NULL);
+		}
+		i++;
+	}
+	return (pipe_fds);
+}
 
-        pid = fork();
-        if (pid == -1) {
-            perror("minishell: fork");
-            return 127;
-        }
+static void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
+{
+	int	i;
 
-        if (pid == 0) { // Processo filho
-            signal(SIGINT, SIG_DFL);
-            signal(SIGQUIT, SIG_DFL);
+	if (cmd_index > 0)
+	{
+		if (dup2(pipe_fds[cmd_index - 1][0], STDIN_FILENO) == -1)
+		{
+			perror("minishell: dup2 input");
+			exit(1);
+		}
+	}
+	if (cmd_index < pipe_count)
+	{
+		if (dup2(pipe_fds[cmd_index][1], STDOUT_FILENO) == -1)
+		{
+			perror("minishell: dup2 output");
+			exit(1);
+		}
+	}
+	i = 0;
+	while (i < pipe_count)
+	{
+		close(pipe_fds[i][0]);
+		close(pipe_fds[i][1]);
+		i++;
+	}
+}
 
-            if (prev_pipe[0] != -1) {
-                if (dup2(prev_pipe[0], STDIN_FILENO) == -1) {
-                    perror("dup2 prev_pipe");
-                    close_pipes(prev_pipe);
-                    exit(1);
-                }
-            }
-            if (curr_pipe[1] != -1) {
-                if (dup2(curr_pipe[1], STDOUT_FILENO) == -1) {
-                    perror("dup2 curr_pipe");
-                    close_pipes(curr_pipe);
-                    exit(1);
-                }
-            }
-            
-            close_pipes(prev_pipe);
-            close_pipes(curr_pipe);
+static void	execute_child_process(t_token *current, t_mini *ms)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	
+	if (current->type == CMD_BUILDIN)
+		exit(exec_builtin(current, ms));
+	else if (current->type == CMD_REDIRECT)
+		exit(exec_redirect(current));
+	else if (current->type == CMD_HEREDOC)
+		exit(exec_heredoc(current));
+	else if (current->type == CMD_EXEC)
+	{
+		execvp(current->cmd, current->args_file);
+		perror("minishell");
+		exit(127);
+	}
+	else
+	{
+		execvp(current->cmd, current->args_file);
+		perror("minishell");
+		exit(127);
+	}
+}
 
-            execvp(current_token->cmd, current_token->args_file);
-            perror("minishell");
-            exit(127);
-        }
+static void	handle_child_process(t_token *current, t_mini *ms, 
+			int **pipe_fds, int cmd_index, int pipe_count)
+{
+	set_child_pipes(pipe_fds, cmd_index, pipe_count);
+	execute_child_process(current, ms);
+}
 
-        // Processo pai fecha pipes antigos e atualiza
-        if (prev_pipe[0] != -1) close(prev_pipe[0]);
-        if (prev_pipe[1] != -1) close(prev_pipe[1]);
-        prev_pipe[0] = curr_pipe[0];
-        prev_pipe[1] = curr_pipe[1];
-        
-        // Fechar a escrita no pipe corrente no processo pai
-        if (curr_pipe[1] != -1) close(curr_pipe[1]);
+static t_token	*skip_pipe_tokens(t_token *current)
+{
+	while (current && current->type == CMD_PIPE)
+		current = current->next;
+	return (current);
+}
 
-        current_token = current_token->next;
-    }
+static int	update_exit_status(t_mini *ms, int status)
+{
+	while (wait(&status) > 0)
+	{
+		if (WIFEXITED(status))
+			ms->exit_status = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			ms->exit_status = WTERMSIG(status) + 128;
+	}
+	return (status);
+}
 
-    // Fechar o último pipe de leitura no pai
-    if (prev_pipe[0] != -1) close(prev_pipe[0]);
+int	exec_pipe(t_mini *ms)
+{
+	int		status;
+	pid_t	pid;
+	int		**pipe_fds;
+	t_token	*current;
+	int		cmd_index;
+	int		pipe_count;
 
-    // Esperar por todos os processos filhos
-    while (wait(&status) > 0) {
-        if (WIFEXITED(status))
-            ms->exit_status = WEXITSTATUS(status);
-        else if (WIFSIGNALED(status))
-            ms->exit_status = WTERMSIG(status) + 128;
-    }
-    return status;
+	status = 0;
+	current = ms->token;
+	pipe_count = ms->pipe;
+	pipe_fds = init_pipes(pipe_count);
+	if (!pipe_fds)
+		return (1);
+	cmd_index = 0;
+	while (current)
+	{
+		if (current->type == CMD_PIPE)
+		{
+			current = current->next;
+			continue;
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("minishell: fork");
+			close_and_free_pipes(pipe_fds, pipe_count);
+			return (127);
+		}
+		if (pid == 0)
+			handle_child_process(current, ms, pipe_fds, cmd_index, pipe_count);
+		current = skip_pipe_tokens(current->next);
+		cmd_index++;
+	}
+	close_and_free_pipes(pipe_fds, pipe_count);
+	return (update_exit_status(ms, status));
 }

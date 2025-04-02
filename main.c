@@ -21,6 +21,7 @@ int main(int argc, char *argv[], char **envp)
 				free_tokens(ms.token);
             }
         }
+		ms.pipe = 0;
     }
 	free(&ms);
 }

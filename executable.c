@@ -6,10 +6,9 @@ void exec(t_mini *ms)
     int status = 0;
 
     current = ms->token;
-    if (ms->pipe == 1)
+    if (ms->pipe != 0)
     {
-        status = exec_pipe(ms); // Execução correta dos pipes
-        ms->pipe = 0;
+        status = exec_pipe(ms);
     }
     else
     {

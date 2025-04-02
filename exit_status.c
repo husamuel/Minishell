@@ -34,7 +34,6 @@ int execute_command(t_token *cmd)
     if (!cmd || !cmd->cmd || !cmd->args_file)
         return -1;
 
-    // Guardar sinais antigos
     void (*old_sigint)(int) = signal(SIGINT, sigint_handler);
     void (*old_sigquit)(int) = signal(SIGQUIT, SIG_IGN);
 
