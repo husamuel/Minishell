@@ -6,6 +6,7 @@ typedef struct s_token
 	char			*cmd;
 	int				type;
 	char			**args_file;
+	char			**args;
 	struct s_token	*next;
 	struct s_token	*prev;
 	int quoted;

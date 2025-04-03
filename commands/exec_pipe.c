@@ -85,29 +85,41 @@ static void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 	}
 }
 
-static void	execute_child_process(t_token *current, t_mini *ms)
+static void execute_child_process(t_token *current, t_mini *ms)
 {
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	
-	if (current->type == CMD_BUILDIN)
-		exit(exec_builtin(current, ms));
-	else if (current->type == CMD_REDIRECT)
-		exit(exec_redirect(current));
-	else if (current->type == CMD_HEREDOC)
-		exit(exec_heredoc(current));
-	else if (current->type == CMD_EXEC)
-	{
-		execvp(current->cmd, current->args_file);
-		perror("minishell");
-		exit(127);
-	}
-	else
-	{
-		execvp(current->cmd, current->args_file);
-		perror("minishell");
-		exit(127);
-	}
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
+    
+    fprintf(stderr, "Executing command: %s\n", current->cmd);
+    if (current->args) {
+        int i = 0;
+        fprintf(stderr, "Arguments:\n");
+        while (current->args[i]) {
+            fprintf(stderr, "  args[%d]: %s\n", i, current->args[i]);
+            i++;
+        }
+    } else {
+        fprintf(stderr, "Args is NULL\n");
+    }
+    
+    if (current->type == CMD_BUILDIN)
+        exit(exec_builtin(current, ms));
+    else if (current->type == CMD_REDIRECT)
+        exit(exec_redirect(current));
+    else if (current->type == CMD_HEREDOC)
+        exit(exec_heredoc(current));
+    else
+    {
+        if (current->args && current->args[0]) {
+            execvp(current->args[0], current->args);
+            perror("minishell: command not found");
+        } else if (current->cmd) {
+            char *argv[] = {current->cmd, NULL};
+            execvp(current->cmd, argv);
+            perror("minishell: command not found");
+        }
+        exit(127);
+    }
 }
 
 static void	handle_child_process(t_token *current, t_mini *ms, 
