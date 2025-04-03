@@ -90,18 +90,6 @@ static void execute_child_process(t_token *current, t_mini *ms)
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
     
-    fprintf(stderr, "Executing command: %s\n", current->cmd);
-    if (current->args) {
-        int i = 0;
-        fprintf(stderr, "Arguments:\n");
-        while (current->args[i]) {
-            fprintf(stderr, "  args[%d]: %s\n", i, current->args[i]);
-            i++;
-        }
-    } else {
-        fprintf(stderr, "Args is NULL\n");
-    }
-    
     if (current->type == CMD_BUILDIN)
         exit(exec_builtin(current, ms));
     else if (current->type == CMD_REDIRECT)
@@ -147,42 +135,41 @@ static int	update_exit_status(t_mini *ms, int status)
 	}
 	return (status);
 }
-
-int	exec_pipe(t_mini *ms)
+int exec_pipe(t_mini *ms)
 {
-	int		status;
-	pid_t	pid;
-	int		**pipe_fds;
-	t_token	*current;
-	int		cmd_index;
-	int		pipe_count;
+    int     status;
+    pid_t   pid;
+    int     **pipe_fds;
+    t_token *current;
+    int     cmd_index;
+    int     pipe_count;
 
-	status = 0;
-	current = ms->token;
-	pipe_count = ms->pipe;
-	pipe_fds = init_pipes(pipe_count);
-	if (!pipe_fds)
-		return (1);
-	cmd_index = 0;
-	while (current)
-	{
-		if (current->type == CMD_PIPE)
-		{
-			current = current->next;
-			continue;
-		}
-		pid = fork();
-		if (pid == -1)
-		{
-			perror("minishell: fork");
-			close_and_free_pipes(pipe_fds, pipe_count);
-			return (127);
-		}
-		if (pid == 0)
-			handle_child_process(current, ms, pipe_fds, cmd_index, pipe_count);
-		current = skip_pipe_tokens(current->next);
-		cmd_index++;
-	}
-	close_and_free_pipes(pipe_fds, pipe_count);
-	return (update_exit_status(ms, status));
+    status = 0;
+    current = ms->token;
+    pipe_count = ms->pipe;
+    pipe_fds = init_pipes(pipe_count);
+    if (!pipe_fds)
+        return (1);
+    cmd_index = 0;
+    while (current)
+    {
+        if (current->type == CMD_PIPE || current->type == CMD_ARG)
+        {
+            current = current->next;
+            continue;
+        }
+        pid = fork();
+        if (pid == -1)
+        {
+            perror("minishell: fork");
+            close_and_free_pipes(pipe_fds, pipe_count);
+            return (127);
+        }
+        if (pid == 0)
+            handle_child_process(current, ms, pipe_fds, cmd_index, pipe_count);
+        current = skip_pipe_tokens(current->next);
+        cmd_index++;
+    }
+    close_and_free_pipes(pipe_fds, pipe_count);
+    return (update_exit_status(ms, status));
 }

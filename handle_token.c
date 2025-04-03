@@ -5,8 +5,7 @@ void add_to_args(t_token *token, char *arg)
     int i = 0;
     char **new_args;
     
-    if (token->args)
-    {
+    if (token->args) {
         while (token->args[i])
             i++;
     }
@@ -15,13 +14,15 @@ void add_to_args(t_token *token, char *arg)
     if (!new_args)
         return;
     
-    if (token->args)
-        ft_memcpy(new_args, token->args, sizeof(char *) * i);
+    if (token->args) {
+        for (int j = 0; j < i; j++)
+            new_args[j] = token->args[j];
+        free(token->args);
+    }
     
-    new_args[i] = ft_strdup(arg);
+    new_args[i] = strdup(arg);
     new_args[i + 1] = NULL;
     
-    free(token->args);
     token->args = new_args;
 }
 
