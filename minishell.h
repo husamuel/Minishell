@@ -14,7 +14,6 @@ typedef struct s_token
 	int is_invalid;
 }	t_token;
 
-// RUI
 typedef struct s_env
 {
 	char			*var;
@@ -22,7 +21,6 @@ typedef struct s_env
 	struct s_env	*next;
 	struct s_env	*prev;
 }	t_env;
-///
 
 typedef struct s_mini
 {

@@ -69,24 +69,3 @@ int execute_command(t_token *cmd)
         return 2;
     }
 }
-
-
-void handle_exit_status(t_mini *ms, int status)
-{
-    int signal = WTERMSIG(status);
-
-    if(ms->exit_status == 2)
-        return;
-    else if (WIFEXITED(status))
-        ms->exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-    {
-        ms->exit_status = 127;
-        if (signal == SIGINT || signal == SIGQUIT)
-            ms->exit_status = 130;
-    }
-    else if (signal == SIGINT || signal == SIGQUIT)
-        ms->exit_status = 130;
-    else
-        ms->exit_status = 0;
-}
