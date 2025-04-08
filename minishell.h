@@ -33,6 +33,7 @@ typedef struct s_mini
 	char *current_cmd;
 	char *output;
 	int pipe;
+	int             redirect;
 }	t_mini;
 
 typedef enum e_cmd_type {
@@ -43,13 +44,15 @@ typedef enum e_cmd_type {
     CMD_ARG = 13,
     CMD_ARG_FILE = 14,
     CMD_REDIRECT = 15,
-    CMD_HEREDOC = 16,
-    CMD_SINGLE_QUOTE = 17,
-    CMD_DOUBLE_QUOTE = 18,
-    CMD_EXIT_STATUS = 19,
-    CMD_SUBSHELL = 20,
-	CMD_EXPR = 21,
-	CMD_PLUS = 22
+    CMD_REDIRECT_IN = 16,
+    CMD_REDIRECT_OUT = 17,
+    CMD_HEREDOC = 18,
+    CMD_SINGLE_QUOTE = 19,
+    CMD_DOUBLE_QUOTE = 20,
+    CMD_EXIT_STATUS = 21,
+    CMD_SUBSHELL = 22,
+    CMD_EXPR = 23,
+    CMD_PLUS = 24
 } t_cmd_type;
 
 
@@ -67,31 +70,25 @@ typedef enum e_cmd_type {
 
 #define BUFFER_SIZE 4096
 
-// RUI functions -- CD functions
 char	*get_new_cwd(char *buffer);
 void	free_pwd(char *oldpwd, char *pwd);
 void	update_var(char *oldpwd, char *pwd, t_mini *mini);
 
-// UTILS
 void	free_2strings(char *var, char *arg);
 int		ft_strcmp(char *s1, char *s2);
 int		list_size(t_token *token);
 t_env	*ft_last(t_env *head);
 t_env	*find_node(char *var, t_env *head);
 
-// EXPAND
 char	*expand_var(char *var, t_env *ev);
 
-// EXPORT
 void	append_node(char *var, char *content, t_env *head);
 void	order_var(t_mini *mini);
 void	print_export(t_env *head);
 
-// CD FUNCTIONS
 void	exec_cd_point(t_token *token, t_mini *mini);
 int		check_fullpath(t_token *next, t_mini *mini);
 void	cd_dollar(t_token *next, t_mini *mini);
-//
 
 t_mini init(char **envp);
 char *get_input(t_mini *ms, char *prompt);
@@ -127,4 +124,10 @@ void	free_tokens(t_token *token);
 int execute_command(t_token *cmd);
 void handle_exit_status(t_mini *ms, int status);
 void process_expr_command(t_token *current, t_mini *ms);
+void	handle_argument_token(t_token *current, t_token *prev,
+	t_token *last_cmd, t_mini *ms);
+int	is_subshell(t_token *current);
+void	handle_command_token(t_token *current, t_token **last_cmd,
+	int *command_seen);
+
 #endif

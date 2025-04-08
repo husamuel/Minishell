@@ -31,7 +31,7 @@ int execute_command(t_token *cmd)
     pid_t pid;
     int status;
 
-    if (!cmd || !cmd->cmd || !cmd->args_file)
+    if (!cmd || !cmd->cmd || !cmd->args)
         return -1;
 
     void (*old_sigint)(int) = signal(SIGINT, sigint_handler);
@@ -41,16 +41,13 @@ int execute_command(t_token *cmd)
     if (pid == 0)
     {
         reset_signals();
-        
-        execvp(cmd->cmd, cmd->args_file);
 
-        perror("minishell");
+        execvp(cmd->cmd, cmd->args);
         exit(127);
     }
     else if (pid > 0)
     {
         waitpid(pid, &status, 0);
-
         signal(SIGINT, old_sigint);
         signal(SIGQUIT, old_sigquit);
 
@@ -69,3 +66,28 @@ int execute_command(t_token *cmd)
         return 2;
     }
 }
+<<<<<<< HEAD
+=======
+
+
+
+void handle_exit_status(t_mini *ms, int status)
+{
+    int signal = WTERMSIG(status);
+
+    if(ms->exit_status == 2)
+        return;
+    else if (WIFEXITED(status))
+        ms->exit_status = WEXITSTATUS(status);
+    else if (WIFSIGNALED(status))
+    {
+        ms->exit_status = 127;
+        if (signal == SIGINT || signal == SIGQUIT)
+            ms->exit_status = 130;
+    }
+    else if (signal == SIGINT || signal == SIGQUIT)
+        ms->exit_status = 130;
+    else
+        ms->exit_status = 0;
+}
+>>>>>>> 16f7d18 (8/04)
