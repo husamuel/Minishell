@@ -42,7 +42,8 @@ int execute_command(t_token *cmd)
     {
         reset_signals();
 
-        execvp(cmd->cmd, cmd->args);
+        execvp(cmd->cmd, cmd->args); // args[0] = cmd->cmd, then args[1..n] = args
+        perror("minishell");
         exit(127);
     }
     else if (pid > 0)
@@ -66,9 +67,6 @@ int execute_command(t_token *cmd)
         return 2;
     }
 }
-<<<<<<< HEAD
-=======
-
 
 
 void handle_exit_status(t_mini *ms, int status)
@@ -90,4 +88,3 @@ void handle_exit_status(t_mini *ms, int status)
     else
         ms->exit_status = 0;
 }
->>>>>>> 16f7d18 (8/04)

@@ -91,12 +91,12 @@ void	handle_argument_token(t_token *current, t_token *prev,
 	}
 }
 
-int	is_subshell(t_token *current)
+int is_subshell(t_token *current)
 {
-	if (current && current->cmd && (ft_strcmp(current->cmd, "./minishell") == 0))
-	{
-		current->type = CMD_SUBSHELL;
-		return (1);
-	}
-	return (0);
+    if (current && current->cmd && ft_strcmp(current->cmd, "./minishell") == 0)
+    {
+        current->type = CMD_SUBSHELL;
+        return 1;
+    }
+    return 0;
 }

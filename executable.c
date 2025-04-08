@@ -15,7 +15,9 @@ void exec(t_mini *ms)
         {
             if (current->type == CMD_BUILDIN)
                 ms->exit_status = exec_builtin(current, ms);
-            else if (current->type == CMD_REDIRECT)
+            else if (current->type == CMD_REDIRECT_OUT)
+                ms->exit_status = exec_redirect(current);
+            else if (current->type == CMD_REDIRECT_IN)
                 ms->exit_status = exec_redirect(current);
             else if (current->type == CMD_HEREDOC)
                 ms->exit_status = exec_heredoc(current);
