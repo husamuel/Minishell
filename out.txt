@@ -1,0 +1,2 @@
+"Hello, world!" out.txt
+"Mais uma linha" out.txt

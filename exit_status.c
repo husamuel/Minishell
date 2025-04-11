@@ -42,8 +42,7 @@ int execute_command(t_token *cmd)
     {
         reset_signals();
 
-        execvp(cmd->cmd, cmd->args); // args[0] = cmd->cmd, then args[1..n] = args
-        perror("minishell");
+        execvp(cmd->cmd, cmd->args);
         exit(127);
     }
     else if (pid > 0)
@@ -59,12 +58,12 @@ int execute_command(t_token *cmd)
             write(1, "\n", 1);
             return WTERMSIG(status) + 128;
         }
-        return 2;
+        exit(1);
     }
     else
     {
         perror("minishell: fork");
-        return 2;
+        exit(1);
     }
 }
 

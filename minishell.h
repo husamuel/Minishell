@@ -29,6 +29,8 @@ typedef struct s_mini
 	t_env	*export;
 	t_token	*token;
 	int exit_status;
+	int exit_status_count;
+	int count;
 	int in_quotes;
 	char *current_cmd;
 	char *output;

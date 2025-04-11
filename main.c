@@ -22,6 +22,8 @@ int main(int argc, char *argv[], char **envp)
             }
         }
 		ms.pipe = 0;
+        ms.exit_status_count = 0;
+        ms.count++;
     }
 	free(&ms);
 }

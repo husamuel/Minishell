@@ -28,9 +28,12 @@ void exec(t_mini *ms)
 			else if (current->type == CMD_SUBSHELL)
                 ms->exit_status = execute_command(current);
             else if (current->type == CMD_EXIT_STATUS)
+            {
                 printf("command not found: %d\n", ms->exit_status);
-            
+                ms->exit_status = 127;
+            }
             current = current->next;
         }
     }
 }
+ 

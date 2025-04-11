@@ -1,26 +1,14 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   exec_echo.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: ruida-si <ruida-si@student.42porto.com>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/12 14:12:54 by ruida-si          #+#    #+#             */
-/*   Updated: 2025/03/01 14:53:24 by ruida-si         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "./../../minishell.h"
 
-char	*print_echo(char *input, int *i, char *var, t_mini *mini);
-void	echo_others(t_token *next, int i, t_mini *mini, char *input);
-void	echo_dollar(int *i, char *input, t_mini *mini);
-int		check_nl_echo(char *s);
+char *print_echo(char *input, int *i, char *var, t_mini *mini);
+void echo_others(t_token *next, int i, t_mini *mini, char *input);
+void echo_dollar(int *i, char *input, t_mini *mini);
+int check_nl_echo(char *s);
 
-void	exec_echo(t_token *token, t_mini *mini)
+void exec_echo(t_token *token, t_mini *mini)
 {
-	t_token	*next;
-	char	*content;
+	t_token *next;
+	char *content;
 
 	next = token->next;
 	if (!next)
@@ -34,9 +22,9 @@ void	exec_echo(t_token *token, t_mini *mini)
 		echo_others(next, 0, mini, mini->input + 5);
 }
 
-int	check_nl_echo(char *s)
+int check_nl_echo(char *s)
 {
-	int	i;
+	int i;
 
 	i = 1;
 	while (s[i] == 'n')
@@ -46,9 +34,9 @@ int	check_nl_echo(char *s)
 	return (i);
 }
 
-void	echo_others(t_token *next, int i, t_mini *mini, char *input)
+void echo_others(t_token *next, int i, t_mini *mini, char *input)
 {
-	int	j;
+	int j;
 
 	j = 0;
 	if (ft_strncmp(next->cmd, "-n", 2) == 0 && check_nl_echo(next->cmd))
@@ -59,10 +47,9 @@ void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 	while (input[i])
 	{
 		if (input[i] == '\"' || ((input[i -1] != '\"' && input[i +1] != '\"')
-				&& input[i] == '\''))
+			&& input[i] == '\''))
 			i++;
-		else if (input[i -1] != '\'' && input[i] == '$'
-			&& ft_isalnum(input[i + 1]))
+		else if (input[i -1] != '\'' && input[i] == '$')
 			echo_dollar(&i, input, mini);
 		else
 		{
@@ -74,12 +61,20 @@ void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 		printf("\n");
 }
 
-void	echo_dollar(int *i, char *input, t_mini *mini)
+void echo_dollar(int *i, char *input, t_mini *mini)
 {
-	char	*var;
-
+	char *var;
 	var = NULL;
-	if (ft_isdigit(input[*i + 1]))
+
+	if (input[*i + 1] == '?')
+	{
+		printf("0");
+		*i += 2;
+		if (input[*i] == ' ')
+			(*i)++;
+		return;
+	}
+	else if (ft_isdigit(input[*i + 1]))
 	{
 		if (input[*i + 1] == '0')
 			printf("minishell");
@@ -95,10 +90,10 @@ void	echo_dollar(int *i, char *input, t_mini *mini)
 	}
 }
 
-char	*print_echo(char *input, int *i, char *var, t_mini *mini)
+char *print_echo(char *input, int *i, char *var, t_mini *mini)
 {
-	char	*s;
-	int		j;
+	char *s;
+	int j;
 
 	j = 0;
 	while (ft_isalnum(var[j]))

@@ -12,6 +12,8 @@ t_mini init(char **envp)
     ms.token = NULL;
 	ms.prompt = "\001\033[31m\002m\001\033[33m\002i\001\033[32m\002n\001\033[36m\002i\001\033[34m\002s\001\033[35m\002h\001\033[31m\002e\001\033[33m\002l\001\033[32m\002l\001\033[0m\002$ ";
 	ms.exit_status = 0;
+	ms.exit_status_count = 0;
+	ms.count = 0;
 	ms.in_quotes = 0;
 	ms.pipe = 0;
     return (ms);
