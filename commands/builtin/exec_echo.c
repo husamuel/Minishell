@@ -117,28 +117,40 @@ void exec_echo(t_token *token, t_mini *mini)
 
 int check_nl_echo(char *s)
 {
-    int i;
-    i = 1;
+    int i = 0;
+
+    if (!s || s[i] != '-' || s[i + 1] != 'n')
+        return 0;
+
+    i++;
     while (s[i] == 'n')
         i++;
-    if (s[i] && s[i] != ' ')
-        return (0);
-    return (i);
+
+    if (s[i] == '\0')
+        return 1;
+
+    return 0;
 }
 
 void echo_others(t_token *next, int i, t_mini *mini, char *input)
 {
-    int j;
     int nl_flag = 0;
-    j = 0;
-    
-    if (next && ft_strncmp(next->cmd, "-n", 2) == 0 && check_nl_echo(next->cmd))
+
+    while (next && ft_strncmp(next->cmd, "-n", 2) == 0 && check_nl_echo(next->cmd))
     {
-        j = check_nl_echo(next->cmd) + 1;
-        input += j;
+        next = next->next;
         nl_flag = 1;
     }
-    
+
+    if (next)
+    {
+        while (*input == ' ')
+            input++;
+        char *next_pos = ft_custom_strstr(input, next->cmd);
+        if (next_pos)
+            input = next_pos;
+    }
+
     while (input && input[i])
     {
         if (input[i] == '\"' || ((input[i - 1] != '\"' && input[i + 1] != '\"') && input[i] == '\''))
@@ -155,10 +167,11 @@ void echo_others(t_token *next, int i, t_mini *mini, char *input)
             i++;
         }
     }
-    
+
     if (!nl_flag)
         printf("\n");
 }
+
 
 void echo_dollar(int *i, char *input, t_mini *mini)
 {

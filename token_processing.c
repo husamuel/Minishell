@@ -114,7 +114,6 @@ static void process_quotes(t_token *token)
     token->cmd = remove_quotes(token->cmd, token);
 }
 
-// Função para processar $? e substituir pelo status de saída
 static void process_exit_status(t_token *current, t_mini *ms)
 {
     char *exit_status_str;

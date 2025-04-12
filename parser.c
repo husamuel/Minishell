@@ -4,7 +4,8 @@ int is_builtin_command(const char *cmd)
 {
     static const char *builtins[] = {
         "cd", "echo", "pwd", "export",
-        "unset", "env", "exit", NULL
+        "unset", "env", "exit", "/bin/pwd",
+        "/bin/env", "/bin/echo", NULL
     };
     const char **check;
 
@@ -23,7 +24,10 @@ int is_exec_command(const char *cmd)
     static const char *executables[] = {
         "ls", "cat", "mkdir", "rm", "cp", "mv",
         "grep", "wc", "ps", "head", "tail",
-        "sort", "clear", "touch", NULL
+        "sort", "clear", "touch", "/bin/ls",
+        "/bin/grep", "/bin/mkdir", "/bin/rmdir",
+        "/bin/rm", "/bin/mv", "/bin/cp", 
+        "/bin/ps", NULL
     };
     const char **check;
 
