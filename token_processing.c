@@ -165,11 +165,7 @@ void process_token(t_token *current, t_token *prev, t_token **last_cmd,
         *last_cmd = NULL;
     }
     
-    if (is_subshell(current))
-    {
-        execute_command(current);
-        return;
-    }
+
     
     if (ft_strcmp(current->cmd, "$?") == 0 && !is_in_expr_context(prev))
     {

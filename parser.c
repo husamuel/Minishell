@@ -27,7 +27,7 @@ int is_exec_command(const char *cmd)
         "sort", "clear", "touch", "/bin/ls",
         "/bin/grep", "/bin/mkdir", "/bin/rmdir",
         "/bin/rm", "/bin/mv", "/bin/cp", 
-        "/bin/ps", NULL
+        "/bin/ps", "./minishell", NULL
     };
     const char **check;
 

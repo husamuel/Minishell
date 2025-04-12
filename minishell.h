@@ -52,7 +52,6 @@ typedef enum e_cmd_type {
     CMD_SINGLE_QUOTE = 19,
     CMD_DOUBLE_QUOTE = 20,
     CMD_EXIT_STATUS = 21,
-    CMD_SUBSHELL = 22,
     CMD_EXPR = 23,
     CMD_PLUS = 24
 } t_cmd_type;
