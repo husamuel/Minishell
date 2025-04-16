@@ -164,7 +164,15 @@ void process_token(t_token *current, t_token *prev, t_token **last_cmd,
         *command_seen = 0;
         *last_cmd = NULL;
     }
-    
+    if(ft_strcmp(current->cmd, "+") == 0 || 
+        ft_strcmp(current->cmd, "-") == 0 || 
+        ft_strcmp(current->cmd, "*") == 0 || 
+        ft_strcmp(current->cmd, "/") == 0 || 
+        ft_strcmp(current->cmd, "%") == 0)
+    {
+        current->type = CMD_PLUS;
+        return;
+    }
 
     
     if (ft_strcmp(current->cmd, "$?") == 0 && !is_in_expr_context(prev))
@@ -226,7 +234,7 @@ void process_token(t_token *current, t_token *prev, t_token **last_cmd,
     else if (current->cmd[0] == '\\' || current->cmd[0] == ';')
         current->type = CMD_NONE;
     else if (!(*command_seen))
-        handle_command_token(current, last_cmd, command_seen);
+        handle_command_token(current, last_cmd, command_seen, ms);
     else
         handle_argument_token(current, prev, *last_cmd, ms);
 }

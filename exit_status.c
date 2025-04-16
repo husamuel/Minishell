@@ -9,6 +9,12 @@ void sigint_handler(int sig)
     rl_redisplay();
 }
 
+void sigint_cmd_handler(int sig)
+{
+    (void)sig;
+    write(1, "\n", 1);
+}
+
 void sigquit_handler(int sig)
 {
     (void)sig;
@@ -18,6 +24,12 @@ void setup_signals(void)
 {
     signal(SIGINT, sigint_handler);
     signal(SIGQUIT, sigquit_handler);
+}
+
+void setup_exec_signals(void)
+{
+    signal(SIGINT, sigint_cmd_handler);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 void reset_signals(void)
@@ -30,48 +42,46 @@ int execute_command(t_token *cmd)
 {
     pid_t pid;
     int status;
-
+    
     if (!cmd || !cmd->cmd || !cmd->args)
         return -1;
-
-    void (*old_sigint)(int) = signal(SIGINT, sigint_handler);
-    void (*old_sigquit)(int) = signal(SIGQUIT, SIG_IGN);
-
+    
+    setup_exec_signals();
+    
     pid = fork();
     if (pid == 0)
     {
         reset_signals();
-
         execvp(cmd->cmd, cmd->args);
         exit(127);
     }
     else if (pid > 0)
     {
         waitpid(pid, &status, 0);
-        signal(SIGINT, old_sigint);
-        signal(SIGQUIT, old_sigquit);
-
+        
+        setup_signals();
+        
         if (WIFEXITED(status))
             return WEXITSTATUS(status);
         else if (WIFSIGNALED(status))
-        {
-            write(1, "\n", 1);
             return WTERMSIG(status) + 128;
-        }
+        
         exit(1);
     }
     else
     {
         perror("minishell: fork");
+        
+        setup_signals();
+        
         exit(1);
     }
 }
 
-
 void handle_exit_status(t_mini *ms, int status)
 {
     int signal = WTERMSIG(status);
-
+    
     if(ms->exit_status == 2)
         return;
     else if (WIFEXITED(status))

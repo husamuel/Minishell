@@ -16,6 +16,7 @@ t_mini init(char **envp)
 	ms.count = 0;
 	ms.in_quotes = 0;
 	ms.pipe = 0;
+	ms.none = 0;
     return (ms);
 }
 

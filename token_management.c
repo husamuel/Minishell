@@ -48,7 +48,7 @@ void add_to_args_file(t_token *token, char *arg)
 }
 
 void handle_command_token(t_token *current, t_token **last_cmd,
-    int *command_seen)
+    int *command_seen, t_mini *ms)
 {
     current->args_file = malloc(sizeof(char *) * 2);
     if (!current->args_file)
@@ -68,6 +68,7 @@ void handle_command_token(t_token *current, t_token **last_cmd,
     }
     else
     {
+        ms->none = 1;
         current->type = CMD_NONE;
     }
 }
@@ -90,17 +91,11 @@ void handle_argument_token(t_token *current, t_token *prev,
     t_token *last_cmd, t_mini *ms)
 {
     char *processed_arg;
-
+    (void)ms;
     (void)prev;
     
     if (!last_cmd)
         return ;
-    
-    if (ft_strcmp(current->cmd, "$?") == 0)
-    {
-        handle_exit_status_argument(current, last_cmd, ms);
-        return;
-    }
     
     processed_arg = ft_strdup(current->cmd);
     if (processed_arg)

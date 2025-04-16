@@ -34,6 +34,7 @@ typedef struct s_mini
 	int in_quotes;
 	char *current_cmd;
 	char *output;
+	int none;
 	int pipe;
 	int             redirect;
 }	t_mini;
@@ -128,7 +129,7 @@ void process_expr_command(t_token *current, t_mini *ms);
 void	handle_argument_token(t_token *current, t_token *prev,
 	t_token *last_cmd, t_mini *ms);
 int	is_subshell(t_token *current);
-void	handle_command_token(t_token *current, t_token **last_cmd,
-	int *command_seen);
+void handle_command_token(t_token *current, t_token **last_cmd,
+    int *command_seen, t_mini *ms);
 
 #endif

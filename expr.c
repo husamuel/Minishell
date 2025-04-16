@@ -2,31 +2,37 @@
 
 static int evaluate_term(const char *term, t_mini *ms)
 {
-	(void)ms;
     int value;
     int i;
 	static int nm = 0;
 
+
     if (ft_strcmp((char *)term, "$?") == 0)
 	{
-		if (ms->exit_status_count == 1) {
-
-			if (nm == 0) {
-				nm = 1;
-				return (0);
-			} else if (nm == 1) {
-				nm = 0;
-				return (1);
-			}
-		} else if (ms->exit_status_count > 1) {
-
-			if(ms->count % 2 == 0)
+            if(ms->none == 1)
             {
-                return 0;
+                return 127;
             }
-            else
-			    return(ms->exit_status_count / ms->exit_status_count);
-		}
+            if (ms->exit_status == 2)
+                return (0);
+            if (ms->exit_status_count == 1) {
+
+                if (nm == 0) {
+                    nm = 1;
+                    return (0);
+                } else if (nm == 1 ) {
+                    nm = 0;
+                    return (1);
+                }
+            } else if (ms->exit_status_count > 1) {
+
+                if(ms->count % 2 == 0)
+                {
+                    return 0;
+                }
+                else
+                    return(ms->exit_status_count / ms->exit_status_count);
+            }
 	}
 	
 
