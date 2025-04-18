@@ -18,15 +18,15 @@ void exec(t_mini *ms)
             if (current->type == CMD_BUILDIN)
                 ms->exit_status = exec_builtin(current, ms);
             else if (current->type == CMD_REDIRECT_OUT)
-                ms->exit_status = exec_redirect(current);
+                ms->exit_status = exec_redirect(current, ms);
             else if (current->type == CMD_REDIRECT_IN)
-                ms->exit_status = exec_redirect(current);
+                ms->exit_status = exec_redirect(current, ms);
             else if (current->type == CMD_HEREDOC)
-                ms->exit_status = exec_heredoc(current);
+                ms->exit_status = exec_heredoc(current, ms);
             else if (current->type == CMD_EXPR)
                 process_expr_command(current, ms);
             else if (current->type == CMD_EXEC)
-                ms->exit_status = execute_command(current);
+                ms->exit_status = execute_command(current, ms);
             else if (current->type == CMD_NONE)
                 ms->none = 1;
             else if (current->type == CMD_EXIT_STATUS && (!prev || prev->type != CMD_EXPR))

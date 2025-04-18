@@ -93,9 +93,9 @@ static void execute_child_process(t_token *current, t_mini *ms)
     if (current->type == CMD_BUILDIN)
         exit(exec_builtin(current, ms));
     else if (current->type == CMD_REDIRECT)
-        exit(exec_redirect(current));
+        exit(exec_redirect(current, ms));
     else if (current->type == CMD_HEREDOC)
-        exit(exec_heredoc(current));
+        exit(exec_heredoc(current, ms));
     else
     {
         if (current->args && current->args[0]) {

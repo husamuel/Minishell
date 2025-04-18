@@ -17,6 +17,5 @@ void	exec_env(t_token *token, t_mini *mini)
 		}
 		ev = ev->next;
 	}
-	printf("%i\n", i);
+	printf("\n");
 }
-// Destroy -u --unset Create VAR1=valor1 PATH=/custom/path ls

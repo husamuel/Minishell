@@ -12,7 +12,7 @@ SRCS = main.c init.c lexer.c input.c parser.c executable.c expr.c \
        ./commands/builtin/exec_export.c ./commands/builtin/export_utils.c \
 	   ./commands/builtin/export_3.c ./commands/builtin/export_4.c \
 	   ./commands/builtin/exec_pwd.c \
-       ./commands/builtin/exec_unset.c token_management.c free.c exit_status.c \
+       ./commands/builtin/exec_unset.c token_management.c free.c signals_handler.c \
 	   token_processing.c
 
 OBJS = $(SRCS:.c=.o)

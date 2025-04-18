@@ -1,6 +1,6 @@
 #include "./../minishell.h"
 
-int exec_heredoc(t_token *token)
+int exec_heredoc(t_token *token, t_mini *ms)
 {
     int fd[2];
     char *line;
@@ -41,9 +41,9 @@ int exec_heredoc(t_token *token)
     close(fd[0]);
 
     if (cmd_token)
-        status = execute_command(cmd_token);
+        status = execute_command(cmd_token, ms);
     else if (next->next && next->next->type != CMD_NONE)
-        status = execute_command(next->next);
+        status = execute_command(next->next, ms);
     else
         status = 0;
 

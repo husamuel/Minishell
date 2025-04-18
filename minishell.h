@@ -65,6 +65,7 @@ typedef enum e_cmd_type {
 # include <stdio.h>
 # include <errno.h>
 # include <stdlib.h>
+#include <termios.h>
 # include <sys/wait.h>
 #include <string.h>
 # include <unistd.h>
@@ -103,8 +104,8 @@ void process_token(t_token *current, t_token *prev,
 void    exec(t_mini *ms);
 int exec_pipe(t_mini *ms);
 int    exec_builtin(t_token *token, t_mini *ms);
-int    exec_redirect(t_token *token);
-int    exec_heredoc(t_token *token);
+int    exec_redirect(t_token *token, t_mini *ms);
+int exec_heredoc(t_token *token, t_mini *ms);
 
 void     exec_echo(t_token *token, t_mini *mini);
 void     exec_cd(t_token *token, t_mini *mini);
@@ -119,17 +120,16 @@ int is_exec_command(const char *cmd);
 void set_command_type(t_token *current);
 extern volatile sig_atomic_t g_signal_received;
 
+void disable_ctrl_backslash(void);
 void    sigint_handler(int sig);
 void    sigquit_handler(int sig);
 void    setup_signals(void);
 void	free_tokens(t_token *token);
-int execute_command(t_token *cmd);
-void handle_exit_status(t_mini *ms, int status);
+int execute_command(t_token *cmd, t_mini *ms);
 void process_expr_command(t_token *current, t_mini *ms);
 void	handle_argument_token(t_token *current, t_token *prev,
 	t_token *last_cmd, t_mini *ms);
-int	is_subshell(t_token *current);
 void handle_command_token(t_token *current, t_token **last_cmd,
     int *command_seen, t_mini *ms);
-
+	void set_env_var(const char *name, const char *value, t_mini *mini);
 #endif

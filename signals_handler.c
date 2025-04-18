@@ -1,5 +1,17 @@
 #include "minishell.h"
 
+void disable_ctrl_backslash(void)
+{
+    struct termios term;
+
+    if (tcgetattr(STDIN_FILENO, &term) == -1)
+        return;
+
+    term.c_cc[VQUIT] = _POSIX_VDISABLE;
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
 void sigint_handler(int sig)
 {
     (void)sig;
@@ -38,20 +50,21 @@ void reset_signals(void)
     signal(SIGQUIT, SIG_DFL);
 }
 
-int execute_command(t_token *cmd)
+int execute_command(t_token *cmd, t_mini *ms)
 {
     pid_t pid;
+    (void)ms;
     int status;
     
     if (!cmd || !cmd->cmd || !cmd->args)
         return -1;
     
     setup_exec_signals();
-    
     pid = fork();
     if (pid == 0)
     {
         reset_signals();
+    
         execvp(cmd->cmd, cmd->args);
         exit(127);
     }
@@ -76,24 +89,4 @@ int execute_command(t_token *cmd)
         
         exit(1);
     }
-}
-
-void handle_exit_status(t_mini *ms, int status)
-{
-    int signal = WTERMSIG(status);
-    
-    if(ms->exit_status == 2)
-        return;
-    else if (WIFEXITED(status))
-        ms->exit_status = WEXITSTATUS(status);
-    else if (WIFSIGNALED(status))
-    {
-        ms->exit_status = 127;
-        if (signal == SIGINT || signal == SIGQUIT)
-            ms->exit_status = 130;
-    }
-    else if (signal == SIGINT || signal == SIGQUIT)
-        ms->exit_status = 130;
-    else
-        ms->exit_status = 0;
 }

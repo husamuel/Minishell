@@ -26,7 +26,7 @@ void build_args_from_tokens(t_token *cmd)
     cmd->args[i] = NULL;
 }
 
-int exec_redirect(t_token *token)
+int exec_redirect(t_token *token, t_mini *ms)
 {
     int fd;
     int status;
@@ -69,9 +69,9 @@ int exec_redirect(t_token *token)
         build_args_from_tokens(cmd_token);
 
     if (cmd_token)
-        status = execute_command(cmd_token);
+        status = execute_command(cmd_token, ms);
     else if (after_file && after_file->type != CMD_NONE)
-        status = execute_command(after_file);
+        status = execute_command(after_file, ms);
     else
         status = 0;
 

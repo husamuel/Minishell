@@ -7,6 +7,7 @@ int main(int argc, char *argv[], char **envp)
     (void)(argc);
     (void)(argv);
     ms = init(envp);
+    disable_ctrl_backslash();
 	setup_signals();
     while(1)
     {
