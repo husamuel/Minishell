@@ -1,0 +1,53 @@
+#include "./../minishell.h"
+
+void	add_to_args(t_token *token, char *arg)
+{
+	int		i;
+	char	**new_args;
+
+	i = 0;
+	if (token->args)
+	{
+		while (token->args[i])
+			i++;
+	}
+	new_args = malloc(sizeof(char *) * (i + 2));
+	if (!new_args)
+		return ;
+	if (token->args)
+	{
+		i = 0;
+		while (token->args[i])
+		{
+			new_args[i] = token->args[i];
+			i++;
+		}
+		free(token->args);
+	}
+	new_args[i] = ft_strdup(arg);
+	new_args[i + 1] = NULL;
+	token->args = new_args;
+}
+
+void	add_to_args_file(t_token *token, char *arg)
+{
+	int		i;
+	char	**new_args;
+
+	i = 0;
+	while (token->args_file[i])
+		i++;
+	new_args = malloc(sizeof(char *) * (i + 2));
+	if (!new_args)
+		return ;
+	i = 0;
+	while (token->args_file[i])
+	{
+		new_args[i] = token->args_file[i];
+		i++;
+	}
+	new_args[i] = ft_strdup(arg);
+	new_args[i + 1] = NULL;
+	free(token->args_file);
+	token->args_file = new_args;
+}
