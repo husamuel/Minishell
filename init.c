@@ -1,23 +1,38 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/21 12:22:31 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/21 12:22:33 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_env	*get_envp(char **envp);
 void	create_node(t_env **head, char *s);
 
-t_mini init(char **envp)
+t_mini	init(char **envp)
 {
-    t_mini ms;
+	t_mini	ms;
 
-    ms.input = NULL;
+	ms.input = NULL;
 	ms.export = get_envp(envp);
-    ms.token = NULL;
-	ms.prompt = "\001\033[31m\002m\001\033[33m\002i\001\033[32m\002n\001\033[36m\002i\001\033[34m\002s\001\033[35m\002h\001\033[31m\002e\001\033[33m\002l\001\033[32m\002l\001\033[0m\002$ ";
+	ms.token = NULL;
+	ms.prompt = GREEN
+		"minishell"
+		RESET
+		"$ ";
 	ms.exit_status = 0;
 	ms.exit_status_count = 0;
 	ms.count = 0;
 	ms.in_quotes = 0;
 	ms.pipe = 0;
 	ms.none = 0;
-    return (ms);
+	return (ms);
 }
 
 t_env	*get_envp(char **envp)
@@ -27,7 +42,7 @@ t_env	*get_envp(char **envp)
 
 	head = NULL;
 	i = 0;
-	while(envp[i])
+	while (envp[i])
 	{
 		create_node(&head, envp[i]);
 		i++;
@@ -45,7 +60,7 @@ char	*get_var(char *s)
 		return (NULL);
 	while (s[i] != '=')
 		i++;
-	var = malloc(i + 1);	
+	var = malloc(i + 1);
 	i = 0;
 	while (s[i] != '=')
 	{
@@ -69,7 +84,7 @@ void	create_node(t_env **head, char *s)
 	node->next = NULL;
 	if (!(*head))
 	{
-		*head = node;		
+		*head = node;
 		node->prev = NULL;
 	}
 	else
