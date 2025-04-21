@@ -75,30 +75,41 @@ static t_token	*create_token_from_substr(char *input, int start, int end)
 	return (new_token);
 }
 
-static t_token	*add_previous_token(t_lexer_data *data, char *input, 
-							int start, int end)
+static t_token	*add_previous_token(t_token **head, t_token **tail,
+									char *input, int *pos)
 {
 	t_token	*new_token;
+	int		start;
+	int		end;
 
+	start = pos[0];
+	end = pos[1];
 	if (end <= start)
 		return (NULL);
 	new_token = create_token_from_substr(input, start, end);
 	if (!new_token)
 	{
-		free_token_list(data->head);
+		free_token_list(*head);
 		return (NULL);
 	}
-	append_token(&data->head, &data->tail, new_token);
+	append_token(head, tail, new_token);
 	return (new_token);
 }
 
-static int	handle_spaces(t_lexer_data *data, char *input, int i, int *start)
+static int	handle_spaces(t_token **head, t_token **tail, char *input, 
+						int *pos, int *in_quotes)
 {
-	if (!data->in_quotes && input[i] == ' ')
+	int	i;
+	int	*start;
+
+	i = pos[1];
+	start = &pos[0];
+	if (!(*in_quotes) && input[i] == ' ')
 	{
 		if (i > *start)
 		{
-			if (!add_previous_token(data, input, *start, i))
+			pos[1] = i;
+			if (!add_previous_token(head, tail, input, pos))
 				return (0);
 		}
 		*start = i + 1;
@@ -106,26 +117,26 @@ static int	handle_spaces(t_lexer_data *data, char *input, int i, int *start)
 	return (1);
 }
 
-static int	handle_quote(t_lexer_data *data, char current_char)
+static int	handle_quote(int *in_quotes, char *quote_type, char current_char)
 {
 	if (current_char == '"' || current_char == '\'')
 	{
-		if (!data->in_quotes)
+		if (!(*in_quotes))
 		{
-			data->in_quotes = 1;
-			data->quote_type = current_char;
+			*in_quotes = 1;
+			*quote_type = current_char;
 		}
-		else if (current_char == data->quote_type)
+		else if (current_char == *quote_type)
 		{
-			data->in_quotes = 0;
-			data->quote_type = '\0';
+			*in_quotes = 0;
+			*quote_type = '\0';
 		}
 	}
 	return (1);
 }
 
-static int	create_operator_token(t_lexer_data *data, char *input, 
-								int *i, int *start)
+static int	create_operator_token(t_token **head, t_token **tail,
+								char *input, int *i)
 {
 	char	op_str[3];
 	t_token	*new_token;
@@ -141,56 +152,76 @@ static int	create_operator_token(t_lexer_data *data, char *input,
 	new_token = create_new_token(op_str);
 	if (!new_token)
 	{
-		free_token_list(data->head);
+		free_token_list(*head);
 		return (0);
 	}
-	append_token(&data->head, &data->tail, new_token);
-	*start = *i + 1;
+	append_token(head, tail, new_token);
 	return (1);
 }
 
-static int	handle_operators(t_lexer_data *data, char *input, int *i, int *start)
+static int	handle_operators(t_token **head, t_token **tail, char *input,
+						int *pos, int in_quotes)
 {
-	if (!data->in_quotes && (input[*i] == '|' || input[*i] == '<' 
-		|| input[*i] == '>'))
+	int	i;
+	int	*start;
+
+	i = pos[1];
+	start = &pos[0];
+	if (!in_quotes && (input[i] == '|' || input[i] == '<' || input[i] == '>'))
 	{
-		if (*i > *start)
+		if (i > *start)
 		{
-			if (!add_previous_token(data, input, *start, *i))
+			pos[1] = i;
+			if (!add_previous_token(head, tail, input, pos))
 				return (0);
 		}
-		if (!create_operator_token(data, input, i, start))
+		if (!create_operator_token(head, tail, input, &i))
 			return (0);
+		*start = i + 1;
+		pos[1] = i;
 	}
+	return (1);
+}
+
+static int	process_char(t_token **head, t_token **tail, char *input,
+					int *pos, int *in_quotes, char *quote_type)
+{
+	int	i;
+
+	i = pos[1];
+	if (!handle_spaces(head, tail, input, pos, in_quotes))
+		return (0);
+	if (!handle_quote(in_quotes, quote_type, input[i]))
+		return (0);
+	if (!handle_operators(head, tail, input, pos, *in_quotes))
+		return (0);
 	return (1);
 }
 
 t_token	*lexer(char *input)
 {
-	t_lexer_data	data;
-	int				i;
-	int				start;
+	t_token	*head;
+	t_token	*tail;
+	int		pos[2];
+	int		in_quotes;
+	char	quote_type;
 
-	data.head = NULL;
-	data.tail = NULL;
-	data.in_quotes = 0;
-	data.quote_type = '\0';
-	i = 0;
-	start = 0;
-	while (input[i])
+	head = NULL;
+	tail = NULL;
+	in_quotes = 0;
+	quote_type = '\0';
+	pos[0] = 0;
+	pos[1] = 0;
+	while (input[pos[1]])
 	{
-		if (!handle_spaces(&data, input, i, &start))
+		if (!process_char(&head, &tail, input, pos, &in_quotes, &quote_type))
 			return (NULL);
-		if (!handle_quote(&data, input[i]))
-			return (NULL);
-		if (!handle_operators(&data, input, &i, &start))
-			return (NULL);
-		i++;
+		pos[1]++;
 	}
-	if (i > start)
+	if (pos[1] > pos[0])
 	{
-		if (!add_previous_token(&data, input, start, i))
+		if (!add_previous_token(&head, &tail, input, pos))
 			return (NULL);
 	}
-	return (data.head);
+	return (head);
 }
