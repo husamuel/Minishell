@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/21 13:15:11 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:48:50 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,8 @@ void	add_to_args(t_token *token, char *arg);
 void	process_token(t_token *current, t_token *prev,
 			t_token	**last_cmd, int *command_seen, t_mini *ms);
 void	exec(t_mini *ms);
+void	ft_exec_token_list(t_mini *ms);
+int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 int		exec_pipe(t_mini *ms);
 int		exec_builtin(t_token *token, t_mini *ms);
 int		exec_redirect(t_token *token, t_mini *ms);
