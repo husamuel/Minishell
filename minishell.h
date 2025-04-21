@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/21 13:48:50 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/21 19:14:26 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,5 +189,6 @@ void	process_exit_status(t_token *current, t_mini *ms);
 char	**free_mat(char **mat);
 void	build_args_from_tokens(t_token *cmd);
 void	ft_handle_zero(t_mini *ms);
+int		evaluate_term(const char *term, t_mini *ms);
 
 #endif
