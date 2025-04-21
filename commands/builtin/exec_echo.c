@@ -9,8 +9,9 @@ int has_redirection(t_token *token)
     t_token *current = token;
     while (current)
     {
-        if (current->type == CMD_REDIRECT_OUT || current->type == CMD_REDIRECT_IN || 
-            current->type == CMD_HEREDOC)
+        if (!current->is_literal && !current->quoted && 
+            (current->type == CMD_REDIRECT_OUT || current->type == CMD_REDIRECT_IN || 
+             current->type == CMD_HEREDOC))
             return 1;
         current = current->next;
     }
@@ -135,6 +136,8 @@ int check_nl_echo(char *s)
 void echo_others(t_token *next, int i, t_mini *mini, char *input)
 {
     int nl_flag = 0;
+    int in_quotes = 0;
+    char quote_type = '\0';
 
     while (next && ft_strncmp(next->cmd, "-n", 2) == 0 && check_nl_echo(next->cmd))
     {
@@ -153,11 +156,31 @@ void echo_others(t_token *next, int i, t_mini *mini, char *input)
 
     while (input && input[i])
     {
-        if (input[i] == '\"' || ((input[i - 1] != '\"' && input[i + 1] != '\"') && input[i] == '\''))
+        if ((input[i] == '\"' || input[i] == '\'') && (i == 0 || input[i-1] != '\\'))
         {
-            i++;
+            if (!in_quotes)
+            {
+                in_quotes = 1;
+                quote_type = input[i];
+                i++;
+            }
+            else if (input[i] == quote_type)
+            {
+                in_quotes = 0;
+                quote_type = '\0';
+                i++;
+            }
+            else
+            {
+                printf("%c", input[i]);
+                i++;
+            }
         }
-        else if (input[i - 1] != '\'' && input[i] == '$')
+        else if (!in_quotes && input[i] == '$')
+        {
+            echo_dollar(&i, input, mini);
+        }
+        else if (in_quotes && quote_type == '\"' && input[i] == '$')
         {
             echo_dollar(&i, input, mini);
         }
@@ -171,7 +194,6 @@ void echo_others(t_token *next, int i, t_mini *mini, char *input)
     if (!nl_flag)
         printf("\n");
 }
-
 
 void echo_dollar(int *i, char *input, t_mini *mini)
 {

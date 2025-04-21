@@ -7,6 +7,7 @@ void exec(t_mini *ms)
 
     current = ms->token;
     prev = NULL;
+
     if (ms->pipe != 0)
     {
         ms->exit_status = exec_pipe(ms);
@@ -38,7 +39,6 @@ void exec(t_mini *ms)
                 ms->exit_status = 127;
                 return ;
             }
-            printf("type: %d\n", current->type);
             prev = current;
             current = current->next;
         }

@@ -25,26 +25,38 @@ void	setup_command_after_exit_status(t_token *current, int *command_seen,
 	}
 }
 
-void	process_token_part2(t_token *current, t_token *prev,
-	t_token **last_cmd, int *command_seen, t_mini *ms)
+void process_token_part2(t_token *current, t_token *prev, t_token **last_cmd, int *command_seen, t_mini *ms)
 {
-	if (ft_strcmp(current->cmd, "expr") == 0)
-	{
-		setup_expr_command(current, command_seen, last_cmd);
-		return ;
-	}
-	if (current->cmd[0] == '|')
-		setup_pipe_token(current, ms);
-	else if (is_redirect_out(current->cmd))
-		setup_redirect_out_token(current, ms);
-	else if (is_redirect_in(current->cmd))
-		setup_redirect_in_token(current, ms);
-	else if (current->cmd[0] == '\\' || current->cmd[0] == ';')
-		current->type = CMD_NONE;
-	else if (!(*command_seen))
-		handle_command_token(current, last_cmd, command_seen, ms);
-	else
-		handle_argument_token(current, prev, *last_cmd, ms);
+    if (ft_strcmp(current->cmd, "expr") == 0)
+    {
+        setup_expr_command(current, command_seen, last_cmd);
+        return;
+    }
+    if (current->cmd[0] == '|')
+        setup_pipe_token(current, ms);
+    else if (is_redirect_out(current->cmd))
+        setup_redirect_out_token(current, ms);
+    else if (is_redirect_in(current->cmd))
+        setup_redirect_in_token(current, ms);
+    else if (current->cmd[0] == '\\' || current->cmd[0] == ';')
+        current->type = CMD_NONE;
+    else if (!(*command_seen))
+        handle_command_token(current, last_cmd, command_seen, ms);
+    else
+    {
+        if (prev && (prev->type == CMD_REDIRECT_IN || prev->type == CMD_REDIRECT_OUT || prev->type == CMD_HEREDOC))
+        {
+            char *processed_arg = ft_strdup(current->cmd);
+            if (processed_arg)
+            {
+                add_to_args_file(*last_cmd, processed_arg);
+                current->type = CMD_ARG_FILE;
+                free(processed_arg);
+            }
+        }
+        else
+            handle_argument_token(current, prev, *last_cmd, ms);
+    }
 }
 
 int	is_builtin_command(char *cmd)

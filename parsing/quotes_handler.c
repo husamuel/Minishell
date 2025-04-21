@@ -30,7 +30,7 @@ int	check_unclosed_quotes(const char *line)
 	return (0);
 }
 
-static char	*remove_quotes(char *str, t_token *token)
+char	*remove_quotes(char *str, t_token *token)
 {
 	int		len;
 	int		end;
@@ -46,6 +46,15 @@ static char	*remove_quotes(char *str, t_token *token)
 	{
 		token->quoted = 1;
 		token->quoted_type = (str[0] == '\'') ? CMD_SINGLE_QUOTE : CMD_DOUBLE_QUOTE;
+		i = 0;
+		while (++i < end)
+		{
+			if (str[i] == '|' || str[i] == '<' || str[i] == '>' || str[i] == ';')
+			{
+				token->is_literal = 1;
+				break ;
+			}
+		}
 		result = malloc(len);
 		if (!result)
 			return (str);
@@ -59,11 +68,49 @@ static char	*remove_quotes(char *str, t_token *token)
 	return (str);
 }
 
+static void	check_literal_chars(t_token *token, int len)
+{
+	int	i;
+
+	i = 1;
+	while (i < len - 1)
+	{
+		if (token->cmd[i] == '|' || token->cmd[i] == '<' ||
+			token->cmd[i] == '>' || token->cmd[i] == ';')
+		{
+			token->is_literal = 1;
+			break ;
+		}
+		i++;
+	}
+}
+
 void	process_quotes(t_token *token)
 {
+	int		len;
+	char	*result;
+	int		i;
+
 	if (!token || !token->cmd)
 		return ;
-	token->cmd = remove_quotes(token->cmd, token);
+	len = ft_strlen(token->cmd);
+	if (len >= 2 && ((token->cmd[0] == '"' && token->cmd[len - 1] == '"') ||
+		(token->cmd[0] == '\'' && token->cmd[len - 1] == '\'')))
+	{
+		token->quoted = 1;
+		token->quoted_type = (token->cmd[0] == '\'') ? CMD_SINGLE_QUOTE : CMD_DOUBLE_QUOTE;
+		check_literal_chars(token, len);
+		result = malloc(len - 1);
+		if (result)
+		{
+			i = 0;
+			while (++i < len - 1)
+				result[i - 1] = token->cmd[i];
+			result[len - 2] = '\0';
+			free(token->cmd);
+			token->cmd = result;
+		}
+	}
 }
 
 int	handle_input_line(char *line, t_mini *ms)

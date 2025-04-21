@@ -26,23 +26,32 @@ void	handle_command_token(t_token *current, t_token **last_cmd,
 	}
 }
 
-void	handle_argument_token(t_token *current, t_token *prev,
-	t_token *last_cmd, t_mini *ms)
+void handle_argument_token(t_token *current, t_token *prev, t_token *last_cmd, t_mini *ms)
 {
-	char	*processed_arg;
+    char *processed_arg;
 
-	(void)ms;
-	(void)prev;
-	if (!last_cmd)
-		return ;
-	processed_arg = ft_strdup(current->cmd);
-	if (processed_arg)
-	{
-		add_to_args_file(last_cmd, processed_arg);
-		add_to_args(last_cmd, processed_arg);
-		current->type = CMD_ARG;
-		free(processed_arg);
-	}
+    (void)ms;
+    
+    if (!last_cmd)
+        return;
+        
+    processed_arg = ft_strdup(current->cmd);
+    if (processed_arg)
+    {
+        if (prev && (is_redirect_in(prev->cmd) || is_redirect_out(prev->cmd)))
+        {
+            add_to_args_file(last_cmd, processed_arg);
+            current->type = CMD_ARG_FILE;
+        }
+        else
+        {
+            add_to_args(last_cmd, processed_arg);
+            current->type = CMD_ARG;
+            
+            add_to_args_file(last_cmd, processed_arg);
+        }
+        free(processed_arg);
+    }
 }
 
 void	process_token(t_token *current, t_token *prev, t_token **last_cmd,

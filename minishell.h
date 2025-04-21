@@ -12,6 +12,7 @@ typedef struct s_token
 	int quoted;
 	int quoted_type;
 	int is_invalid;
+	int is_literal;
 }	t_token;
 
 typedef struct s_env
@@ -21,6 +22,14 @@ typedef struct s_env
 	struct s_env	*next;
 	struct s_env	*prev;
 }	t_env;
+
+typedef struct s_lexer_data
+{
+	t_token	*head;
+	t_token	*tail;
+	int		in_quotes;
+	char	quote_type;
+}	t_lexer_data;
 
 typedef struct s_mini
 {
@@ -159,5 +168,6 @@ int	is_math_operator(t_token *current);
 int	is_in_expr_context(t_token *prev);
 void	process_exit_status(t_token *current, t_mini *ms);
 char	**free_mat(char **mat);
+void build_args_from_tokens(t_token *cmd);
 
 #endif
