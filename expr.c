@@ -25,25 +25,35 @@ static int	ft_handle_exit_status(t_mini *ms)
 	static int	nm;
 
 	nm = 0;
-	if (ms->none == 1)
-		return (127);
-	if (ms->exit_status == 2)
-		return (0);
-	if (ms->exit_status_count == 1)
+	if (ms->expr == 1)
 	{
-		if (nm == 0)
-		{
-			nm = 1;
-			return (0);
-		}
-		else if (nm == 1)
-		{
-			nm = 0;
-			return (1);
-		}
+		ms->expr = 0;
+		nm = 1;
+		return ((127 * ms->exit_status_count) - ms->exit_status_count + 1);
 	}
-	else if (ms->exit_status_count > 1)
-		return (ft_handle_exit_range(ms));
+	else
+	{
+		if (ms->none == 1)
+			return (127);
+		if (ms->exit_status == 2)
+			return (0);
+		if (ms->exit_status_count == 1)
+		{
+			if (nm == 0)
+			{
+				nm = 1;
+				return (0);
+			}
+			else if (nm == 1)
+			{
+				nm = 0;
+				return (1);
+			}
+		}
+		else if (ms->exit_status_count > 1)
+			return (ft_handle_exit_range(ms));
+	}
+	
 	return (0);
 }
 

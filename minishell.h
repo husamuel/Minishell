@@ -75,6 +75,7 @@ typedef struct s_mini
 	int		none;
 	int		pipe;
 	int		redirect;
+	int		expr;
 }	t_mini;
 
 typedef enum e_cmd_type

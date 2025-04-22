@@ -19,13 +19,11 @@ int	check_unclosed_quotes(const char *line)
 	}
 	if (in_single_quote)
 	{
-		ft_putstr_fd("minishell: erro de sintaxe: aspas simples não fechadas\n", 2);
-		return (1);
+		ft_putstr_fd("minishell: syntax error: unclosed single quotes\n", 2);		return (1);
 	}
 	else if (in_double_quote)
 	{
-		ft_putstr_fd("minishell: erro de sintaxe: aspas duplas não fechadas\n", 2);
-		return (1);
+		ft_putstr_fd("minishell: syntax error: unclosed double quotes\n", 2);		return (1);
 	}
 	return (0);
 }
