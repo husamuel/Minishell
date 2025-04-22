@@ -18,20 +18,33 @@ void	exec_unset(t_token *token, t_mini *mini)
 	}
 }
 
-void	unset_env(t_token *next, t_env **head)
+void unset_env(t_token *next, t_env **head)
 {
-	t_env	*ev;
-
+	t_env *ev;
+	t_env *temp;
+	
+	if (!head || !*head || !next || !next->cmd)
+		return;
+	
 	ev = *head;
-	while (ev)
+	if (ft_strcmp(ev->var, next->cmd) == 0)
 	{
-		if (ft_strcmp(ev->var, next->cmd) == 0)
+		*head = ev->next;
+		if (*head)
+			(*head)->prev = NULL;
+		free_node(ev);
+		return;
+	}
+	while (ev && ev->next)
+	{
+		if (ft_strcmp(ev->next->var, next->cmd) == 0)
 		{
-			if (ev == *head)
-				*head = ev->next;
-			delete_node(ev->prev, ev->next);
-			free_node(ev);
-			break ;
+			temp = ev->next;
+			ev->next = temp->next;
+			if (temp->next)
+				temp->next->prev = ev;
+			free_node(temp);
+			return;
 		}
 		ev = ev->next;
 	}

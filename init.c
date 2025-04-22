@@ -22,10 +22,7 @@ t_mini	init(char **envp)
 	ms.input = NULL;
 	ms.export = get_envp(envp);
 	ms.token = NULL;
-	ms.prompt = GREEN
-		"minishell"
-		RESET
-		"$ ";
+	ms.prompt = GREEN "minishell" RESET "$ ";
 	ms.exit_status = 0;
 	ms.exit_status_count = 0;
 	ms.count = 0;
@@ -79,7 +76,7 @@ void	create_node(t_env **head, char *s)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return ;
-	node->content = s;
+	node->content = strdup(s);
 	node->var = get_var(s);
 	node->next = NULL;
 	if (!(*head))
