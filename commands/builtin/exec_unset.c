@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_unset.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 19:10:07 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/23 19:12:05 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../../minishell.h"
 
 void	free_node(t_env *temp);
@@ -18,14 +30,13 @@ void	exec_unset(t_token *token, t_mini *mini)
 	}
 }
 
-void unset_env(t_token *next, t_env **head)
+void	unset_env(t_token *next, t_env **head)
 {
-	t_env *ev;
-	t_env *temp;
-	
+	t_env	*ev;
+	t_env	*temp;
+
 	if (!head || !*head || !next || !next->cmd)
-		return;
-	
+		return ;
 	ev = *head;
 	if (ft_strcmp(ev->var, next->cmd) == 0)
 	{
@@ -33,7 +44,7 @@ void unset_env(t_token *next, t_env **head)
 		if (*head)
 			(*head)->prev = NULL;
 		free_node(ev);
-		return;
+		return ;
 	}
 	while (ev && ev->next)
 	{
@@ -44,7 +55,7 @@ void unset_env(t_token *next, t_env **head)
 			if (temp->next)
 				temp->next->prev = ev;
 			free_node(temp);
-			return;
+			return ;
 		}
 		ev = ev->next;
 	}

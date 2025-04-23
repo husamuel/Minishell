@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_export.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 19:09:31 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/23 19:12:49 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../../minishell.h"
 
 // file export_3.c
@@ -78,7 +90,7 @@ int	parsing_export(char *input, t_mini *mini)
 char	*export_expand(char *input, t_mini *mini)
 {
 	char	*temp;
-	
+
 	while (input)
 	{
 		temp = ft_strchr(input, '$');
@@ -131,8 +143,8 @@ char	*get_var_name(char *input, int *a, t_mini *mini)
 	{
 		(*a)++;
 		if (input[0] == '0')
-			return (ft_strdup("minishell"));		
-		return (NULL);		
+			return (ft_strdup("minishell"));
+		return (NULL);
 	}
 	var = ft_strdup(input);
 	while (ft_isalnum(var[i]))

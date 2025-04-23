@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_pipe.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/23 18:41:22 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/23 18:47:05 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
 static void	close_and_free_pipes(int **pipe_fds, int pipe_count)
@@ -85,33 +97,37 @@ static void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 	}
 }
 
-static void execute_child_process(t_token *current, t_mini *ms)
+static void	execute_child_process(t_token *current, t_mini *ms)
 {
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    
-    if (current->type == CMD_BUILDIN)
-        exit(exec_builtin(current, ms));
-    else if (current->type == CMD_REDIRECT)
-        exit(exec_redirect(current, ms));
-    else if (current->type == CMD_HEREDOC)
-        exit(exec_heredoc(current, ms));
-    else
-    {
-        if (current->args && current->args[0]) {
-            execvp(current->args[0], current->args);
-            perror("minishell: command not found");
-        } else if (current->cmd) {
-            char *argv[] = {current->cmd, NULL};
-            execvp(current->cmd, argv);
-            perror("minishell: command not found");
-        }
-        exit(127);
-    }
+	char	*argv[];
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (current->type == CMD_BUILDIN)
+		exit(exec_builtin(current, ms));
+	else if (current->type == CMD_REDIRECT)
+		exit(exec_redirect(current, ms));
+	else if (current->type == CMD_HEREDOC)
+		exit(exec_heredoc(current, ms));
+	else
+	{
+		if (current->args && current->args[0])
+		{
+			execvp(current->args[0], current->args);
+			perror("minishell: command not found");
+		}
+		else if (current->cmd)
+		{
+			argv = {current->cmd, NULL};
+			execvp(current->cmd, argv);
+			perror("minishell: command not found");
+		}
+		exit(127);
+	}
 }
 
-static void	handle_child_process(t_token *current, t_mini *ms, 
-			int **pipe_fds, int cmd_index, int pipe_count)
+static void	handle_child_process(t_token *current, t_mini *ms,
+		int **pipe_fds, int cmd_index, int pipe_count)
 {
 	set_child_pipes(pipe_fds, cmd_index, pipe_count);
 	execute_child_process(current, ms);
@@ -135,41 +151,42 @@ static int	update_exit_status(t_mini *ms, int status)
 	}
 	return (status);
 }
-int exec_pipe(t_mini *ms)
-{
-    int     status;
-    pid_t   pid;
-    int     **pipe_fds;
-    t_token *current;
-    int     cmd_index;
-    int     pipe_count;
 
-    status = 0;
-    current = ms->token;
-    pipe_count = ms->pipe;
-    pipe_fds = init_pipes(pipe_count);
-    if (!pipe_fds)
-        return (1);
-    cmd_index = 0;
-    while (current)
-    {
-        if (current->type == CMD_PIPE || current->type == CMD_ARG)
-        {
-            current = current->next;
-            continue;
-        }
-        pid = fork();
-        if (pid == -1)
-        {
-            perror("minishell: fork");
-            close_and_free_pipes(pipe_fds, pipe_count);
-            return (127);
-        }
-        if (pid == 0)
-            handle_child_process(current, ms, pipe_fds, cmd_index, pipe_count);
-        current = skip_pipe_tokens(current->next);
-        cmd_index++;
-    }
-    close_and_free_pipes(pipe_fds, pipe_count);
-    return (update_exit_status(ms, status));
+int	exec_pipe(t_mini *ms)
+{
+	int		status;
+	pid_t	pid;
+	int		**pipe_fds;
+	t_token	*current;
+	int		cmd_index;
+	int		pipe_count;
+
+	status = 0;
+	current = ms->token;
+	pipe_count = ms->pipe;
+	pipe_fds = init_pipes(pipe_count);
+	if (!pipe_fds)
+		return (1);
+	cmd_index = 0;
+	while (current)
+	{
+		if (current->type == CMD_PIPE || current->type == CMD_ARG)
+		{
+			current = current->next;
+			continue ;
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("minishell: fork");
+			close_and_free_pipes(pipe_fds, pipe_count);
+			return (127);
+		}
+		if (pid == 0)
+			handle_child_process(current, ms, pipe_fds, cmd_index, pipe_count);
+		current = skip_pipe_tokens(current->next);
+		cmd_index++;
+	}
+	close_and_free_pipes(pipe_fds, pipe_count);
+	return (update_exit_status(ms, status));
 }
