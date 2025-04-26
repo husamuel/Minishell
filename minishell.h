@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/21 19:14:26 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 12:52:04 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@
 # include <sys/stat.h>
 # include <sys/types.h>
 # include "./42-libft/libft.h"
+
+# define BUFFER_SIZE 4096
+# define GREEN "\001\033[32m\002"
+# define RESET "\001\033[0m\002"
 
 extern volatile sig_atomic_t	g_signal_received;
 
@@ -97,99 +101,106 @@ typedef enum e_cmd_type
 	CMD_PLUS = 24
 }	t_cmd_type;
 
-# define BUFFER_SIZE 4096
-
-//COLORS
-# define GREEN "\001\033[32m\002"
-# define RESET "\001\033[0m\002"
-
-char	*get_new_cwd(char *buffer);
-void	free_pwd(char *oldpwd, char *pwd);
-void	update_var(char *oldpwd, char *pwd, t_mini *mini);
-
-void	free_2strings(char *var, char *arg);
-int		ft_strcmp(char *s1, char *s2);
-int		list_size(t_token *token);
-t_env	*ft_last(t_env *head);
-t_env	*find_node(char *var, t_env *head);
-
-char	*expand_var(char *var, t_env *ev);
-
-void	append_node(char *var, char *content, t_env *head);
-void	order_var(t_mini *mini);
-void	print_export(t_env *head);
-
-void	exec_cd_point(t_token *token, t_mini *mini);
-int		check_fullpath(t_token *next, t_mini *mini);
-void	cd_dollar(t_token *next, t_mini *mini);
-
+//Core initialization
 t_mini	init(char **envp);
+t_env	*ft_last(t_env *head);
 void	ft_update_ms(t_mini *ms);
 char	*get_input(t_mini *ms, char *prompt);
+
+//Lexer & Parsing
 t_token	*lexer(char *input);
+int		parser(t_mini *ms);
+void	process_token(t_token *current, t_token *prev,
+			t_token	**last_cmd, int *command_seen, t_mini *ms);
+void	process_token_part2(t_token *current, t_token *prev,
+			t_token **last_cmd, int *command_seen, t_mini *ms);
+void	process_quotes(t_token *token);
+void	build_args_from_tokens(t_token *cmd);
+void	set_command_type(t_token *current);
+
+//Token Processing
+void	process_expr_command(t_token *current, t_mini *ms);
+void	process_exit_status(t_token *current, t_mini *ms);
+int		evaluate_term(const char *term, t_mini *ms);
+
+//Argument Handling
 void	add_to_args_file(t_token *token, char *arg);
 void	add_to_args(t_token *token, char *arg);
 
-void	process_token(t_token *current, t_token *prev,
-			t_token	**last_cmd, int *command_seen, t_mini *ms);
-void	exec(t_mini *ms);
-void	ft_exec_token_list(t_mini *ms);
-int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
-int		exec_pipe(t_mini *ms);
-int		exec_builtin(t_token *token, t_mini *ms);
-int		exec_redirect(t_token *token, t_mini *ms);
-int		exec_heredoc(t_token *token, t_mini *ms);
-
-void	exec_echo(t_token *token, t_mini *mini);
-void	exec_cd(t_token *token, t_mini *mini);
-void	exec_pwd(t_token *token);
-void	exec_export(t_token *token, t_mini *mini);
-void	exec_unset(t_token *token, t_mini *mini);
-void	exec_env(t_token *token, t_mini *mini);
-void	exec_exit(t_token *token);
-
-void	set_command_type(t_token *current);
-void	disable_ctrl_backslash(void);
-void	sigint_handler(int sig);
-void	sigquit_handler(int sig);
-void	setup_signals(void);
-void	free_tokens(t_token *token);
-int		execute_command(t_token *cmd, t_mini *ms);
-int		ft_execute_child(t_token *cmd);
-int		ft_execute_parent(pid_t pid);
-void	process_expr_command(t_token *current, t_mini *ms);
-void	handle_argument_token(t_token *current, t_token *prev,
-			t_token	*last_cmd, t_mini *ms);
-void	handle_command_token(t_token *current, t_token **last_cmd,
-			int *command_seen, t_mini *ms);
-void	setup_expr_command(t_token *current,
-			int *command_seen, t_token **last_cmd);
-int		parser(t_mini *ms);
-void	setup_pipe_token(t_token *current, t_mini *ms);
-int		is_redirect_out(char *cmd);
-int		is_redirect_in(char *cmd);
-void	setup_redirect_out_token(t_token *current, t_mini *ms);
-void	setup_redirect_in_token(t_token *current, t_mini *ms);
-int		parser(t_mini *ms);
+//Token Type Handling
 void	handle_command_token(t_token *current, t_token **last_cmd,
 			int *command_seen, t_mini *ms);
 void	handle_argument_token(t_token *current, t_token *prev,
 			t_token	*last_cmd, t_mini *ms);
 void	handle_exit_status_argument(t_token *current, t_token *last_cmd,
 			t_mini *ms);
+//Setup Instructions
+void	setup_expr_command(t_token *current,
+			int *command_seen, t_token **last_cmd);
 void	setup_command_after_exit_status(t_token *current, int *command_seen,
 			t_token **last_cmd);
+void	ft_handle_zero(t_mini *ms);
+
+//Execution
+void	exec(t_mini *ms);
+void	ft_exec_token_list(t_mini *ms);
+int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
+int		execute_command(t_token *cmd, t_mini *ms);
+int		ft_execute_child(t_token *cmd);
+int		ft_execute_parent(pid_t pid);
+
+//Builtins
+int		exec_builtin(t_token *token, t_mini *ms);
+void	exec_echo(t_token *token, t_mini *mini);
+void	exec_pwd(t_token *token);
+void	exec_export(t_token *token, t_mini *mini);
+void	exec_unset(t_token *token, t_mini *mini);
+void	exec_env(t_token *token, t_mini *mini);
+void	exec_exit(t_token *token);
+
+//CD
+void	exec_cd(t_token *token, t_mini *mini);
+int		list_size(t_token *token);
+char	*get_new_cwd(char *buffer);
+void	exec_cd_point(t_token *token, t_mini *mini);
+void	cd_dollar(t_token *next, t_mini *mini);
+void	update_var(char *oldpwd, char *pwd, t_mini *mini);
+int		check_fullpath(t_token *next, t_mini *mini);
+
+//Redirection & Pipes
+int		exec_pipe(t_mini *ms);
+int		exec_redirect(t_token *token, t_mini *ms);
+int		exec_heredoc(t_token *token, t_mini *ms);
+void	setup_pipe_token(t_token *current, t_mini *ms);
+void	setup_redirect_out_token(t_token *current, t_mini *ms);
+void	setup_redirect_in_token(t_token *current, t_mini *ms);
+
+//Environmental variables
+t_env	*find_node(char *var, t_env *head);
+char	*expand_var(char *var, t_env *ev);
+void	append_node(char *var, char *content, t_env *head);
+void	order_var(t_mini *mini);
+void	print_export(t_env *head);
+
+//Signal Handling
+void	disable_ctrl_backslash(void);
+void	sigint_handler(int sig);
+void	sigquit_handler(int sig);
+void	setup_signals(void);
+
+//Memory Management
+void	free_tokens(t_token *token);
+void	free_2strings(char *var, char *arg);
+char	**free_mat(char **mat);
+void	free_pwd(char *oldpwd, char *pwd);
+
+//Utils
+int		ft_strcmp(char *s1, char *s2);
+int		is_redirect_out(char *cmd);
+int		is_redirect_in(char *cmd);
 int		is_exec_command(char *cmd);
-void	process_token_part2(t_token *current, t_token *prev,
-			t_token **last_cmd, int *command_seen, t_mini *ms);
 int		is_builtin_command(char *cmd);
-void	process_quotes(t_token *token);
 int		is_math_operator(t_token *current);
 int		is_in_expr_context(t_token *prev);
-void	process_exit_status(t_token *current, t_mini *ms);
-char	**free_mat(char **mat);
-void	build_args_from_tokens(t_token *cmd);
-void	ft_handle_zero(t_mini *ms);
-int		evaluate_term(const char *term, t_mini *ms);
 
 #endif
