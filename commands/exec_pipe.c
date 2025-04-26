@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:41:22 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/23 18:47:05 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 19:14:03 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,36 +97,36 @@ static void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 	}
 }
 
-static void execute_child_process(t_token *current, t_mini *ms)
+static void	execute_child_process(t_token *current, t_mini *ms)
 {
-    char *argv[2];
-    
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
-    
-    if (current->type == CMD_BUILDIN)
-        exit(exec_builtin(current, ms));
-    else if (current->type == CMD_REDIRECT)
-        exit(exec_redirect(current, ms));
-    else if (current->type == CMD_HEREDOC)
-        exit(exec_heredoc(current, ms));
-    else
-    {
-        if (current->args && current->args[0])
-        {
-            execvp(current->args[0], current->args);
-            perror("minishell: command not found");
-        }
-        else if (current->cmd)
-        {
-            argv[0] = current->cmd;
-            argv[1] = NULL;
-            execvp(current->cmd, argv);
-            perror("minishell: command not found");
-        }
-        exit(127);
-    }
+	char	*argv[2];
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (current->type == CMD_BUILDIN)
+		exit(exec_builtin(current, ms));
+	else if (current->type == CMD_REDIRECT)
+		exit(exec_redirect(current, ms));
+	else if (current->type == CMD_HEREDOC)
+		exit(exec_heredoc(current, ms));
+	else
+	{
+		if (current->args && current->args[0])
+		{
+			execvp(current->args[0], current->args);
+			perror("minishell: command not found");
+		}
+		else if (current->cmd)
+		{
+			argv[0] = current->cmd;
+			argv[1] = NULL;
+			execvp(current->cmd, argv);
+			perror("minishell: command not found");
+		}
+		exit(127);
+	}
 }
+
 static void	handle_child_process(t_token *current, t_mini *ms,
 		int **pipe_fds, int cmd_index, int pipe_count)
 {
