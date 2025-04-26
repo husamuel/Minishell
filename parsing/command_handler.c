@@ -59,7 +59,6 @@ void handle_argument_token(t_token *current, t_token *prev, t_token *last_cmd, t
             add_to_args(last_cmd, processed_arg);
             current->type = CMD_ARG;
             
-            add_to_args_file(last_cmd, processed_arg);
         }
         free(processed_arg);
     }
