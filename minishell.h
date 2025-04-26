@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 16:19:54 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 18:49:08 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,14 @@ typedef struct s_env
 	struct s_env	*next;
 	struct s_env	*prev;
 }	t_env;
+
+typedef struct s_arg
+{
+	int		i;
+	char	*temp;
+	char	*beg;
+	char	*content;
+}	t_arg;
 
 typedef struct s_lexer_data
 {
@@ -162,12 +170,20 @@ int		ft_execute_parent(pid_t pid);
 
 //Builtins
 int		exec_builtin(t_token *token, t_mini *ms);
-void	exec_echo(t_token *token, t_mini *mini);
 void	exec_pwd(t_token *token);
-void	exec_export(t_token *token, t_mini *mini);
 void	exec_unset(t_token *token, t_mini *mini);
 void	exec_env(t_token *token, t_mini *mini);
 void	exec_exit(t_token *token);
+//Echo
+void	exec_echo(t_token *token, t_mini *mini);
+int		has_redirection(t_token *token);
+char	*ft_get_redirect_pos(char *input_start);
+void	ft_handle_redirect_case(char *input_start, char *redirect_pos);
+char	*ft_custom_strstr(const char *haystack, const char *needle);
+char	*ft_custom_substr(char const *s, unsigned int start, size_t len);
+//Export
+void	exec_export(t_token *token, t_mini *mini);
+void	ft_init_arg_parts(t_arg *parts, char *input, t_mini *mini);
 //CD
 void	exec_cd(t_token *token, t_mini *mini);
 int		list_size(t_token *token);

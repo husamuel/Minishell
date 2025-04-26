@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:10:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/23 19:12:05 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 16:42:21 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,10 @@ void	exec_unset(t_token *token, t_mini *mini)
 	}
 }
 
-void	unset_env(t_token *next, t_env **head)
+static	void	unset_all(t_token *next, t_env *ev)
 {
-	t_env	*ev;
 	t_env	*temp;
 
-	if (!head || !*head || !next || !next->cmd)
-		return ;
-	ev = *head;
-	if (ft_strcmp(ev->var, next->cmd) == 0)
-	{
-		*head = ev->next;
-		if (*head)
-			(*head)->prev = NULL;
-		free_node(ev);
-		return ;
-	}
 	while (ev && ev->next)
 	{
 		if (ft_strcmp(ev->next->var, next->cmd) == 0)
@@ -59,6 +47,24 @@ void	unset_env(t_token *next, t_env **head)
 		}
 		ev = ev->next;
 	}
+}
+
+void	unset_env(t_token *next, t_env **head)
+{
+	t_env	*ev;
+
+	if (!head || !*head || !next || !next->cmd)
+		return ;
+	ev = *head;
+	if (ft_strcmp(ev->var, next->cmd) == 0)
+	{
+		*head = ev->next;
+		if (*head)
+			(*head)->prev = NULL;
+		free_node(ev);
+		return ;
+	}
+	unset_all(next, ev);
 }
 
 void	delete_node(t_env *prev, t_env *next)
