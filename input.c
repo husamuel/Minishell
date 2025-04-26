@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:24:30 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/21 12:24:31 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 13:08:25 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,12 @@ char	*get_input(t_mini *ms, char *prompt)
 	if (input && *input)
 		add_history(input);
 	return (input);
+}
+
+void	ft_update_ms(t_mini *ms)
+{
+	ms->pipe = 0;
+	ms->exit_status_count = 0;
+	ms->count++;
+	ms->none = 0;
 }

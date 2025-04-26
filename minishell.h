@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 12:52:04 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/26 16:19:54 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,24 +104,33 @@ typedef enum e_cmd_type
 //Core initialization
 t_mini	init(char **envp);
 t_env	*ft_last(t_env *head);
-void	ft_update_ms(t_mini *ms);
 char	*get_input(t_mini *ms, char *prompt);
+void	ft_update_ms(t_mini *ms);
 
 //Lexer & Parsing
 t_token	*lexer(char *input);
 int		parser(t_mini *ms);
 void	process_token(t_token *current, t_token *prev,
-			t_token	**last_cmd, int *command_seen, t_mini *ms);
+			t_token	**last_cmd, int *command_seen, t_mini *ms); //TODO
 void	process_token_part2(t_token *current, t_token *prev,
-			t_token **last_cmd, int *command_seen, t_mini *ms);
+			t_token **last_cmd, int *command_seen, t_mini *ms); //TODO
 void	process_quotes(t_token *token);
 void	build_args_from_tokens(t_token *cmd);
 void	set_command_type(t_token *current);
 
 //Token Processing
 void	process_expr_command(t_token *current, t_mini *ms);
+int		ft_check_args_validity(t_token *current, t_mini *ms);
+int		ft_determine_expression_type(t_token *current, t_mini *ms);
+int		ft_just_one_arg(t_token *current, t_mini *ms);
+int		ft_is_valid_operator_token(t_token *token);
 void	process_exit_status(t_token *current, t_mini *ms);
 int		evaluate_term(const char *term, t_mini *ms);
+int		ft_handle_exit_status(t_mini *ms);
+int		ft_is_valid_operator(char *symbol);
+int		handle_operator(char *op, t_token **current, int result, t_mini *ms);
+void	ft_handle_unknown_operator(t_token *current);
+void	mark_tokens_as_processed(t_token *start);
 
 //Argument Handling
 void	add_to_args_file(t_token *token, char *arg);
@@ -146,6 +155,8 @@ void	exec(t_mini *ms);
 void	ft_exec_token_list(t_mini *ms);
 int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 int		execute_command(t_token *cmd, t_mini *ms);
+int		loop(t_token *cmd, int *stdout_backup);
+int		handle_redirect_out(t_token *file_token, int stdout_backup);
 int		ft_execute_child(t_token *cmd);
 int		ft_execute_parent(pid_t pid);
 
@@ -157,7 +168,6 @@ void	exec_export(t_token *token, t_mini *mini);
 void	exec_unset(t_token *token, t_mini *mini);
 void	exec_env(t_token *token, t_mini *mini);
 void	exec_exit(t_token *token);
-
 //CD
 void	exec_cd(t_token *token, t_mini *mini);
 int		list_size(t_token *token);
@@ -187,6 +197,11 @@ void	disable_ctrl_backslash(void);
 void	sigint_handler(int sig);
 void	sigquit_handler(int sig);
 void	setup_signals(void);
+void	setup_exec_signals(void);
+void	reset_signals(void);
+
+//Errors Handling
+int		handle_fork_error(int stdout_backup);
 
 //Memory Management
 void	free_tokens(t_token *token);

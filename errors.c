@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 12:05:22 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 13:08:32 by gtretiak         ###   ########.fr       */
+/*   Created: 2025/04/26 13:53:40 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/26 13:54:24 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_handle_zero(t_mini *ms)
+int	handle_fork_error(int stdout_backup)
 {
-	free(ms->input);
-	free_tokens(ms->token);
-	printf("minishell: erro de sintaxe\n");
-	exit(EXIT_FAILURE);
+	perror("minishell: fork");
+	dup2(stdout_backup, STDOUT_FILENO);
+	close(stdout_backup);
+	setup_signals();
+	return (1);
 }
