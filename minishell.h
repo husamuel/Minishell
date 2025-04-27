@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 18:49:08 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/27 14:44:41 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,13 @@ typedef struct s_arg
 	char	*beg;
 	char	*content;
 }	t_arg;
+
+typedef struct s_pipe_ctx
+{
+	int	**pipe_fds;
+	int	cmd_index;
+	int	count;
+}	t_pipe_ctx;
 
 typedef struct s_lexer_data
 {
@@ -195,6 +202,9 @@ int		check_fullpath(t_token *next, t_mini *mini);
 
 //Redirection & Pipes
 int		exec_pipe(t_mini *ms);
+int	**init_pipes(int pipe_count);
+void	handle_child_process(t_token *current, t_mini *ms, t_pipe_ctx *ctx);
+void	close_and_free_pipes(t_pipe_ctx *ctx);
 int		exec_redirect(t_token *token, t_mini *ms);
 int		exec_heredoc(t_token *token, t_mini *ms);
 void	setup_pipe_token(t_token *current, t_mini *ms);
