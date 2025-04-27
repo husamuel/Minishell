@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 18:56:35 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/27 19:06:24 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ typedef struct s_lexer
 {
 	t_token	*head;
 	t_token	*tail;
-	int	pos[2];
-	int	in_quotes;
+	int		pos[2];
+	int		in_quotes;
 	char	quote_type;
 	char	*input;
 }	t_lexer;
@@ -138,7 +138,7 @@ void	ft_init_lexer_state(t_lexer *state, char *input);
 int		process_char(t_lexer *state);
 int		create_operator_token(t_lexer *state, int *i);
 t_token	*create_new_token(char *cmd);
-t_token	*add_previous_token(t_lexer *state); 
+t_token	*add_previous_token(t_lexer *state);
 int		parser(t_mini *ms);
 void	process_token(t_token *current, t_token *prev,
 			t_token	**last_cmd, int *command_seen, t_mini *ms); //TODO
@@ -219,7 +219,7 @@ int		check_fullpath(t_token *next, t_mini *mini);
 
 //Redirection & Pipes
 int		exec_pipe(t_mini *ms);
-int	**init_pipes(int pipe_count);
+int		**init_pipes(int pipe_count);
 void	handle_child_process(t_token *current, t_mini *ms, t_pipe_ctx *ctx);
 void	close_and_free_pipes(t_pipe_ctx *ctx);
 int		exec_redirect(t_token *token, t_mini *ms);
