@@ -1,8 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   token_processor2.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/27 15:25:21 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/27 15:27:06 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
 void	setup_redirect_in_token(t_token *current, t_mini *ms)
 {
-	current->type = (current->cmd[1] == '<') ? CMD_HEREDOC : CMD_REDIRECT_IN;
+	if (current->cmd[1] == '<')
+		current->type = CMD_HEREDOC;
+	else
+		current->type = CMD_REDIRECT_IN;
 	++ms->redirect;
 }
 

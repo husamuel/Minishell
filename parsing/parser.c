@@ -1,23 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parser.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/27 15:28:24 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/27 18:53:53 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
 int	parser(t_mini *ms)
 {
-	t_token	*current;
-	t_token	*prev;
-	t_token	*last_cmd;
-	int		command_seen;
+	t_parser	state;
 
 	if (ms->input == NULL)
 		return (0);
-	current = ms->token;
-	prev = NULL;
-	last_cmd = NULL;
-	command_seen = 0;
-	while (current)
+	state.curr = ms->token;
+	state.prev = NULL;
+	state.last_cmd = NULL;
+	state.cmd_seen = 0;
+	while (state.curr)
 	{
-		process_token(current, prev, &last_cmd, &command_seen, ms);
-		prev = current;
-		current = current->next;
+		process_token(state.curr, state.prev, &state.last_cmd, &state.cmd_seen, ms);//TODO
+		state.prev = state.curr;
+		state.curr = state.curr->next;
 	}
 	return (1);
 }

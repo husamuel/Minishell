@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 14:44:41 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/27 18:56:35 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,23 @@ typedef struct s_pipe_ctx
 	int	count;
 }	t_pipe_ctx;
 
-typedef struct s_lexer_data
+typedef struct s_lexer
 {
 	t_token	*head;
 	t_token	*tail;
-	int		in_quotes;
+	int	pos[2];
+	int	in_quotes;
 	char	quote_type;
-}	t_lexer_data;
+	char	*input;
+}	t_lexer;
+
+typedef struct s_parser
+{
+	t_token	*curr;
+	t_token	*prev;
+	t_token	*last_cmd;
+	int		cmd_seen;
+}	t_parser;
 
 typedef struct s_mini
 {
@@ -124,14 +134,22 @@ void	ft_update_ms(t_mini *ms);
 
 //Lexer & Parsing
 t_token	*lexer(char *input);
+void	ft_init_lexer_state(t_lexer *state, char *input);
+int		process_char(t_lexer *state);
+int		create_operator_token(t_lexer *state, int *i);
+t_token	*create_new_token(char *cmd);
+t_token	*add_previous_token(t_lexer *state); 
 int		parser(t_mini *ms);
 void	process_token(t_token *current, t_token *prev,
 			t_token	**last_cmd, int *command_seen, t_mini *ms); //TODO
 void	process_token_part2(t_token *current, t_token *prev,
 			t_token **last_cmd, int *command_seen, t_mini *ms); //TODO
+void	ft_handle_spec(t_token *curr, int *cmd_seen, t_token **last, t_mini *ms);//TODO
+void	ft_handle_norm(t_token *curr, t_token *prev, t_token *last, t_mini *ms);//TODO
 void	process_quotes(t_token *token);
 void	build_args_from_tokens(t_token *cmd);
 void	set_command_type(t_token *current);
+void	free_token_list(t_token *head);
 
 //Token Processing
 void	process_expr_command(t_token *current, t_mini *ms);
@@ -153,16 +171,15 @@ void	add_to_args(t_token *token, char *arg);
 
 //Token Type Handling
 void	handle_command_token(t_token *current, t_token **last_cmd,
-			int *command_seen, t_mini *ms);
-void	handle_argument_token(t_token *current, t_token *prev,
-			t_token	*last_cmd, t_mini *ms);
+			int *command_seen, t_mini *ms);//TODO
+void	handle_arg_token(t_token *curr, t_token *prev, t_token *last, t_mini *ms);//TODO
 void	handle_exit_status_argument(t_token *current, t_token *last_cmd,
 			t_mini *ms);
 //Setup Instructions
 void	setup_expr_command(t_token *current,
 			int *command_seen, t_token **last_cmd);
 void	setup_command_after_exit_status(t_token *current, int *command_seen,
-			t_token **last_cmd);
+			t_token **last_cmd);//TODO
 void	ft_handle_zero(t_mini *ms);
 
 //Execution

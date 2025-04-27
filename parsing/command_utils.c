@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   command_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/27 15:28:48 by gtretiak          #+#    #+#             */
+/*   Updated: 2025/04/27 15:34:22 by gtretiak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
 static int	is_executable(char *path)
@@ -30,12 +42,30 @@ static char	*check_command_in_dir(char *cmd, char *dir)
 	return (NULL);
 }
 
+static int	ft_check_path_dirs(char **dirs, char *cmd)
+{
+	char	*cmd_path;
+	int		i;
+
+	i = 0;
+	while (dirs[i])
+	{
+		cmd_path = check_command_in_dir(cmd, dirs[i]);
+		if (cmd_path)
+		{
+			free(cmd_path);
+			return (1);
+		}
+		i++;
+	}
+	return (0);
+}
+
 int	is_exec_command(char *cmd)
 {
 	char	*path_env;
 	char	**dirs;
-	char	*cmd_path;
-	int		i;
+	int		res;
 
 	if (!cmd || cmd[0] == '\0')
 		return (0);
@@ -47,18 +77,7 @@ int	is_exec_command(char *cmd)
 	dirs = ft_split(path_env, ':');
 	if (!dirs)
 		return (0);
-	i = 0;
-	while (dirs[i])
-	{
-		cmd_path = check_command_in_dir(cmd, dirs[i]);
-		if (cmd_path)
-		{
-			free(cmd_path);
-			free_mat(dirs);
-			return (1);
-		}
-		i++;
-	}
+	res = ft_check_path_dirs(dirs, cmd);
 	free_mat(dirs);
-	return (0);
+	return (res);
 }
