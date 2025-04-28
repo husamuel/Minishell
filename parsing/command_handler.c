@@ -34,13 +34,13 @@ void	handle_command_token(t_parser *state, t_mini *ms)
 	state->curr->args[0] = ft_strdup(state->curr->cmd);
 	state->curr->args[1] = NULL;
 	if (is_builtin_command(state->curr->cmd)
-		|| is_exec_command(state->curr->cmd))
+	|| is_exec_command(state->curr->cmd))
 	{
 		set_command_type(state->curr);
 		state->cmd_seen = 1;
 		state->last_cmd = state->curr;
 	}
-	else
+	else if(ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_HEREDOC && ms->token->type != CMD_PIPE)
 	{
 		ms->none = 1;
 		state->curr->type = CMD_NONE;

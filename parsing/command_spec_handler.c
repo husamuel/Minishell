@@ -45,6 +45,8 @@ void	ft_handle_norm(t_parser *state, t_mini *ms)
 			free(processed_arg);
 		}
 	}
-	else
+	else if(state->curr->type != CMD_HEREDOC && state->curr->type != CMD_REDIRECT_IN && state->curr->type != CMD_REDIRECT_OUT && state->curr->type != CMD_PIPE) 
+	{
 		handle_arg_token(state, ms);
+	}
 }

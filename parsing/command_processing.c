@@ -63,7 +63,7 @@ void	process_token(t_parser *state, t_mini *ms)
 		state->last_cmd = NULL;
 	}
 	if (is_math_operator(state->curr))
-		return ;
+	return ;
 	if (ft_strcmp(state->curr->cmd, "$?") == 0)
 	{
 		ft_decide_on_exit_status(state, ms);
@@ -76,7 +76,11 @@ void	process_token_part2(t_parser *state, t_mini *ms)
 {
 	ft_handle_spec(state, ms);
 	if (!state->cmd_seen)
+	{
 		handle_command_token(state, ms);
-	else
+	}
+	else if(ms->token->type != CMD_EXPR && ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_PIPE)
+	{
 		ft_handle_norm(state, ms);
+	}
 }
