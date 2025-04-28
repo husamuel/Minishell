@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 19:06:24 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/28 13:04:05 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,10 @@ int		create_operator_token(t_lexer *state, int *i);
 t_token	*create_new_token(char *cmd);
 t_token	*add_previous_token(t_lexer *state);
 int		parser(t_mini *ms);
-void	process_token(t_token *current, t_token *prev,
-			t_token	**last_cmd, int *command_seen, t_mini *ms); //TODO
-void	process_token_part2(t_token *current, t_token *prev,
-			t_token **last_cmd, int *command_seen, t_mini *ms); //TODO
-void	ft_handle_spec(t_token *curr, int *cmd_seen, t_token **last, t_mini *ms);//TODO
-void	ft_handle_norm(t_token *curr, t_token *prev, t_token *last, t_mini *ms);//TODO
+void	process_token(t_parser *state, t_mini *ms);
+void	process_token_part2(t_parser *state, t_mini *ms);
+void	ft_handle_spec(t_parser *state, t_mini *ms);
+void	ft_handle_norm(t_parser *state, t_mini *ms);
 void	process_quotes(t_token *token);
 void	build_args_from_tokens(t_token *cmd);
 void	set_command_type(t_token *current);
@@ -170,16 +168,14 @@ void	add_to_args_file(t_token *token, char *arg);
 void	add_to_args(t_token *token, char *arg);
 
 //Token Type Handling
-void	handle_command_token(t_token *current, t_token **last_cmd,
-			int *command_seen, t_mini *ms);//TODO
-void	handle_arg_token(t_token *curr, t_token *prev, t_token *last, t_mini *ms);//TODO
+void	handle_command_token(t_parser *state, t_mini *ms);
+void	handle_arg_token(t_parser *state, t_mini *ms);
 void	handle_exit_status_argument(t_token *current, t_token *last_cmd,
 			t_mini *ms);
 //Setup Instructions
 void	setup_expr_command(t_token *current,
 			int *command_seen, t_token **last_cmd);
-void	setup_command_after_exit_status(t_token *current, int *command_seen,
-			t_token **last_cmd);//TODO
+void	setup_command_after_exit_status(t_parser *state);
 void	ft_handle_zero(t_mini *ms);
 
 //Execution

@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:09:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 18:54:38 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/04/28 13:39:48 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,85 +21,75 @@ void	display_command_not_found(t_token *token, t_mini *ms)
 	ms->expr = 1;
 }
 
-void	handle_command_token(t_token *current, t_token **last_cmd,
-		int *command_seen, t_mini *ms) //TODO
+void	handle_command_token(t_parser *state, t_mini *ms)
 {
-	current->args_file = malloc(sizeof(char *) * 2);
-	if (!current->args_file)
+	state->curr->args_file = malloc(sizeof(char *) * 2);
+	if (!state->curr->args_file)
 		return ;
-	current->args_file[0] = ft_strdup(current->cmd);
-	current->args_file[1] = NULL;
-	current->args = malloc(sizeof(char *) * 2);
-	if (!current->args)
+	state->curr->args_file[0] = ft_strdup(state->curr->cmd);
+	state->curr->args_file[1] = NULL;
+	state->curr->args = malloc(sizeof(char *) * 2);
+	if (!state->curr->args)
 		return ;
-	current->args[0] = ft_strdup(current->cmd);
-	current->args[1] = NULL;
-	if (is_builtin_command(current->cmd) || is_exec_command(current->cmd))
+	state->curr->args[0] = ft_strdup(state->curr->cmd);
+	state->curr->args[1] = NULL;
+	if (is_builtin_command(state->curr->cmd)
+		|| is_exec_command(state->curr->cmd))
 	{
-		set_command_type(current);
-		*command_seen = 1;
-		*last_cmd = current;
+		set_command_type(state->curr);
+		state->cmd_seen = 1;
+		state->last_cmd = state->curr;
 	}
 	else
 	{
 		ms->none = 1;
-		current->type = CMD_NONE;
-		display_command_not_found(current, ms);
+		state->curr->type = CMD_NONE;
+		display_command_not_found(state->curr, ms);
 	}
 }
 
-void	handle_arg_token(t_token *curr, t_token *prev, t_token *last, t_mini *ms)//TODO
+void	handle_arg_token(t_parser *state, t_mini *ms)
 {
 	char	*processed_arg;
 
 	(void)ms;
-	if (!last)
+	if (!state->last_cmd)
 		return ;
-	processed_arg = ft_strdup(curr->cmd);
+	processed_arg = ft_strdup(state->curr->cmd);
 	if (processed_arg)
 	{
-		if (prev && (is_redirect_in(prev->cmd) || is_redirect_out(prev->cmd)))
+		if (state->prev && (is_redirect_in(state->prev->cmd)
+				|| is_redirect_out(state->prev->cmd)))
 		{
-			add_to_args_file(last, processed_arg);
-			curr->type = CMD_ARG_FILE;
+			add_to_args_file(state->last_cmd, processed_arg);
+			state->curr->type = CMD_ARG_FILE;
 		}
 		else
 		{
-			add_to_args(last, processed_arg);
-			curr->type = CMD_ARG;
+			add_to_args(state->last_cmd, processed_arg);
+			state->curr->type = CMD_ARG;
 		}
 		free(processed_arg);
 	}
 }
 
-void	process_token(t_token *current, t_token *prev, t_token **last_cmd,
-	int *command_seen, t_mini *ms) //TODO
+int	is_builtin_command(char *cmd)
 {
-	process_quotes(current);
-	if (prev && prev->cmd && prev->cmd[0] == '|')
-	{
-		*command_seen = 0;
-		*last_cmd = NULL;
-	}
-	if (is_math_operator(current))
-		return ;
-	if (ft_strcmp(current->cmd, "$?") == 0 && !is_in_expr_context(prev))
-	{
-		process_exit_status(current, ms);
-		if (!(*command_seen))
-		{
-			setup_command_after_exit_status(current, command_seen, last_cmd);
-		}
-		else if (*last_cmd)
-			handle_arg_token(current, prev, *last_cmd, ms);
-		return ;
-	}
-	else if (ft_strcmp(current->cmd, "$?") == 0 && is_in_expr_context(prev))
-	{
-		ms->exit_status_count++;
-		if (*last_cmd)
-			handle_arg_token(current, prev, *last_cmd, ms);
-		return ;
-	}
-	process_token_part2(current, prev, last_cmd, command_seen, ms);
+	if (!cmd)
+		return (0);
+	return (ft_strcmp(cmd, "echo") == 0
+		|| ft_strcmp(cmd, "cd") == 0
+		|| ft_strcmp(cmd, "pwd") == 0
+		|| ft_strcmp(cmd, "export") == 0
+		|| ft_strcmp(cmd, "unset") == 0
+		|| ft_strcmp(cmd, "env") == 0
+		|| ft_strcmp(cmd, "exit") == 0);
+}
+
+void	set_command_type(t_token *current)
+{
+	if (is_builtin_command(current->cmd))
+		current->type = CMD_BUILDIN;
+	else if (is_exec_command(current->cmd))
+		current->type = CMD_EXEC;
 }
