@@ -78,6 +78,7 @@ void	process_token_part2(t_parser *state, t_mini *ms)
 	if (!state->cmd_seen)
 	{
 		handle_command_token(state, ms);
+
 	}
 	else if(ms->token->type != CMD_EXPR && ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_PIPE)
 	{

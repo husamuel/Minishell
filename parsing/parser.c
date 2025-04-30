@@ -25,6 +25,7 @@ int	parser(t_mini *ms)
 	while (state.curr)
 	{
 		process_token(&state, ms);
+
 		state.prev = state.curr;
 		state.curr = state.curr->next;
 	}
