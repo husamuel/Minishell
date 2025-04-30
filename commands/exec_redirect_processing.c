@@ -14,18 +14,30 @@
 
 static int	ft_open_redirect_file(t_token *token, t_token *next)
 {
-	int		fd;
+	int	fd;
 
-	if (!next || !next->cmd || token->type != CMD_REDIRECT_OUT)
+	if (!next || !next->cmd)
 		return (-127);
-	if (ft_strcmp(token->cmd, ">") == 0)
-		fd = open(next->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	else if (ft_strcmp(token->cmd, ">>") == 0)
-		fd = open(next->cmd, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (token->type == CMD_REDIRECT_OUT)
+	{
+		if (ft_strcmp(token->cmd, ">") == 0)
+			fd = open(next->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		else if (ft_strcmp(token->cmd, ">>") == 0)
+			fd = open(next->cmd, O_WRONLY | O_CREAT | O_APPEND, 0644);
+		else
+			return (-127);
+	}
+	else if (token->type == CMD_REDIRECT_IN)
+	{
+		if (ft_strcmp(token->cmd, "<") == 0)
+			fd = open(next->cmd, O_RDONLY);
+		else
+			return (-127);
+	}
 	else
 		return (-127);
 	if (fd < 0)
-		ft_putstr_fd("minishell: error openning file\n", 2);
+		ft_putstr_fd("minishell: error opening file\n", 2);
 	return (fd);
 }
 
@@ -43,14 +55,30 @@ static void	ft_relink_tokens(t_token *token, t_token *next, t_token *after)
 		after->prev = next;
 }
 
-static int	ft_redirect_execution(t_token *cmd, t_mini *ms, int fd)
+static int	ft_redir_exec_setup(int fd, int is_input)
+{
+	int	original_fd;
+
+	if (is_input)
+	{
+		original_fd = dup(STDIN_FILENO);
+		dup2(fd, STDIN_FILENO);
+	}
+	else
+	{
+		original_fd = dup(STDOUT_FILENO);
+		dup2(fd, STDOUT_FILENO);
+	}
+	close(fd);
+	return (original_fd);
+}
+
+static int	ft_redirect_execution(t_token *cmd, t_mini *ms, int fd, int is_input)
 {
 	int	status;
-	int	original_stdout;
+	int	original_fd;
 
-	original_stdout = dup(STDOUT_FILENO);
-	dup2(fd, STDOUT_FILENO);
-	close(fd);
+	original_fd = ft_redir_exec_setup(fd, is_input);
 	if (cmd)
 	{
 		build_args_from_tokens(cmd);
@@ -58,8 +86,11 @@ static int	ft_redirect_execution(t_token *cmd, t_mini *ms, int fd)
 	}
 	else
 		status = 0;
-	dup2(original_stdout, STDOUT_FILENO);
-	close(original_stdout);
+	if (is_input)
+		dup2(original_fd, STDIN_FILENO);
+	else
+		dup2(original_fd, STDOUT_FILENO);
+	close(original_fd);
 	return (status);
 }
 
@@ -75,27 +106,36 @@ static t_token	*ft_unlink_tokens(t_token *token, t_token *next)
 	return (after);
 }
 
+static t_token	*ft_find_cmd(t_token *token, t_token *after)
+{
+	t_token	*cmd;
+
+	cmd = token->prev;
+	while (cmd && cmd->type != CMD_EXEC && cmd->type != CMD_BUILDIN)
+		cmd = cmd->prev;
+	if (!cmd && after && after->type != CMD_NONE)
+		cmd = after;
+	return (cmd);
+}
+
 int	exec_redirect(t_token *token, t_mini *ms)
 {
 	int		fd_and_status[2];
 	t_token	*next;
 	t_token	*cmd;
 	t_token	*after;
+	int		is_input;
 
 	next = token->next;
-	cmd = token->prev;
+	is_input = (token->type == CMD_REDIRECT_IN);
 	fd_and_status[0] = ft_open_redirect_file(token, next);
 	if (fd_and_status[0] < 0)
 		return (1);
 	else if (fd_and_status[0] == -127)
 		return (fd_and_status[0] * -1);
-	while (cmd && cmd->type != CMD_EXEC
-		&& cmd->type != CMD_BUILDIN)
-		cmd = cmd->prev;
 	after = ft_unlink_tokens(token, next);
-	if (!cmd && after && after->type != CMD_NONE)
-		cmd = after;
-	fd_and_status[1] = ft_redirect_execution(cmd, ms, fd_and_status[0]);
+	cmd = ft_find_cmd(token, after);
+	fd_and_status[1] = ft_redirect_execution(cmd, ms, fd_and_status[0], is_input);
 	ft_relink_tokens(token, next, after);
 	return (fd_and_status[1]);
 }
