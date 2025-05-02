@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:31:33 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/28 13:39:54 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:03:02 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	setup_command_after_exit_status(t_parser *state)
 			state->curr->args[0] = ft_strdup(state->curr->cmd);
 			state->curr->args[1] = NULL;
 		}
+		//TODO else?
 	}
 	if (!state->curr->args_file)
 	{
@@ -33,6 +34,7 @@ void	setup_command_after_exit_status(t_parser *state)
 			state->curr->args_file[0] = ft_strdup(state->curr->cmd);
 			state->curr->args_file[1] = NULL;
 		}
+		//TODO else?
 	}
 }
 

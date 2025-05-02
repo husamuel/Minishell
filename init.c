@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:22:31 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/21 12:22:33 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:39:12 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_mini	init(char **envp)
 	ms.input = NULL;
 	ms.export = get_envp(envp);
 	ms.token = NULL;
+	ms.state = NULL;
 	ms.prompt = GREEN "minishell" RESET "$ ";
 	ms.exit_status = 0;
 	ms.exit_status_count = 0;
@@ -29,6 +30,10 @@ t_mini	init(char **envp)
 	ms.in_quotes = 0;
 	ms.pipe = 0;
 	ms.none = 0;
+	ms.redirect = 0;
+	ms.expr = 0;
+	ms.output = NULL;
+	ms.current_cmd = NULL;
 	return (ms);
 }
 

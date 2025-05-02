@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:09:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/28 13:39:48 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/02 17:11:08 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,11 @@ void	handle_command_token(t_parser *state, t_mini *ms)
 	state->curr->args_file[1] = NULL;
 	state->curr->args = malloc(sizeof(char *) * 2);
 	if (!state->curr->args)
+	{
+		free(state->curr->args_file[0]);
+		free(state->curr->args_file);
 		return ;
+	}
 	state->curr->args[0] = ft_strdup(state->curr->cmd);
 	state->curr->args[1] = NULL;
 	if (is_builtin_command(state->curr->cmd)

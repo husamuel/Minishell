@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/28 13:04:05 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/02 16:57:11 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ typedef struct s_mini
 	char	*prompt;
 	t_env	*export;
 	t_token	*token;
+	t_parser	*state;
 	int		exit_status;
 	int		exit_status_count;
 	int		count;
@@ -139,7 +140,7 @@ int		process_char(t_lexer *state);
 int		create_operator_token(t_lexer *state, int *i);
 t_token	*create_new_token(char *cmd);
 t_token	*add_previous_token(t_lexer *state);
-int		parser(t_mini *ms);
+int		parser(t_parser *state, t_mini *ms);
 void	process_token(t_parser *state, t_mini *ms);
 void	process_token_part2(t_parser *state, t_mini *ms);
 void	ft_handle_spec(t_parser *state, t_mini *ms);
@@ -244,6 +245,7 @@ int		handle_fork_error(int stdout_backup);
 
 //Memory Management
 void	free_tokens(t_token *token);
+void	ft_free_minishell(t_mini *ms, int code);
 void	free_2strings(char *var, char *arg);
 char	**free_mat(char **mat);
 void	free_pwd(char *oldpwd, char *pwd);
