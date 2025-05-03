@@ -188,6 +188,7 @@ int		loop(t_token *cmd, int *stdout_backup);
 int		handle_redirect_out(t_token *file_token, int stdout_backup);
 int		ft_execute_child(t_token *cmd);
 int		ft_execute_parent(pid_t pid);
+int		is_builtin(const char *cmd);
 
 //Builtins
 int		exec_builtin(t_token *token, t_mini *ms);

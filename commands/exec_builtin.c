@@ -12,7 +12,7 @@
 
 #include "./../minishell.h"
 
-static int	is_builtin(const char *cmd)
+int	is_builtin(const char *cmd)
 {
 	int					i;
 	static const char	*builtins[] = {
