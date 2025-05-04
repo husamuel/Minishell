@@ -20,11 +20,13 @@ void	ft_free_minishell(t_mini *ms, int code)
 		{
 			free(ms->state->curr->args[0]);
 			free(ms->state->curr->args);
+			ms->state->curr->args = NULL;
 		}
 		if (ms->state->curr->args_file)
 		{
 			free(ms->state->curr->args_file[0]);
 			free(ms->state->curr->args_file);
+			ms->state->curr->args_file = NULL;
 		}
 		if (code != 100)
 			break ;
@@ -41,7 +43,10 @@ void	free_tokens(t_token *token)
 	{
 		tmp = token->next;
 		if (token->cmd)
+		{
 			free(token->cmd);
+			token->cmd = NULL;
+		}
 		if (token->args_file)
 		{
 			i = 0;
@@ -51,6 +56,7 @@ void	free_tokens(t_token *token)
 				i++;
 			}
 			free(token->args_file);
+			token->args_file = NULL;
 		}
 		if (token->args)
 		{
@@ -61,6 +67,7 @@ void	free_tokens(t_token *token)
 				i++;
 			}
 			free(token->args);
+			token->args = NULL;
 		}
 		free(token);
 		token = tmp;
