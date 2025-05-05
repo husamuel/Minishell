@@ -12,33 +12,45 @@
 
 #include "./../minishell.h"
 
-void	setup_command_after_exit_status(t_parser *state)
+void setup_command_after_exit_status(t_parser *state)
 {
 	state->cmd_seen = 1;
 	state->last_cmd = state->curr;
+	
 	if (!state->curr->args)
 	{
 		state->curr->args = malloc(sizeof(char *) * 2);
-		if (state->curr->args)
+		if (!state->curr->args)
+			return;
+		
+		state->curr->args[0] = ft_strdup(state->curr->cmd);
+		if (!state->curr->args[0])
 		{
-			state->curr->args[0] = ft_strdup(state->curr->cmd);
-			state->curr->args[1] = NULL;
+			free(state->curr->args);
+			state->curr->args = NULL;
+			return;
 		}
-		//TODO else?
+		state->curr->args[1] = NULL;
 	}
+	
 	if (!state->curr->args_file)
 	{
 		state->curr->args_file = malloc(sizeof(char *) * 2);
-		if (state->curr->args_file)
+		if (!state->curr->args_file)
+			return;
+		
+		state->curr->args_file[0] = ft_strdup(state->curr->cmd);
+		if (!state->curr->args_file[0])
 		{
-			state->curr->args_file[0] = ft_strdup(state->curr->cmd);
-			state->curr->args_file[1] = NULL;
+			free(state->curr->args_file);
+			state->curr->args_file = NULL;
+			return;
 		}
-		//TODO else?
+		state->curr->args_file[1] = NULL;
 	}
 }
 
-static void	ft_decide_on_exit_status(t_parser *state, t_mini *ms)
+static void ft_decide_on_exit_status(t_parser *state, t_mini *ms)
 {
 	if (!is_in_expr_context(state->prev))
 	{
@@ -56,33 +68,43 @@ static void	ft_decide_on_exit_status(t_parser *state, t_mini *ms)
 	}
 }
 
-void	process_token(t_parser *state, t_mini *ms)
+void process_token(t_parser *state, t_mini *ms)
 {
+	if (!state->curr)
+		return;
+		
 	process_quotes(state->curr);
+	
 	if (state->prev && state->prev->cmd && state->prev->cmd[0] == '|')
 	{
 		state->cmd_seen = 0;
 		state->last_cmd = NULL;
 	}
+	
 	if (is_math_operator(state->curr))
-	return ;
-	if (ft_strcmp(state->curr->cmd, "$?") == 0)
+		return;
+	
+	if (state->curr->cmd && ft_strcmp(state->curr->cmd, "$?") == 0)
 	{
 		ft_decide_on_exit_status(state, ms);
-		return ;
+		return;
 	}
+	
 	process_token_part2(state, ms);
 }
 
-void	process_token_part2(t_parser *state, t_mini *ms)
+void process_token_part2(t_parser *state, t_mini *ms)
 {
+	if (!state->curr)
+		return;
+		
 	ft_handle_spec(state, ms);
+	
 	if (!state->cmd_seen)
 	{
 		handle_command_token(state, ms);
-
 	}
-	else if(ms->token->type != CMD_EXPR && ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_PIPE)
+	else if(ms->token && ms->token->type != CMD_EXPR && ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_PIPE)
 	{
 		ft_handle_norm(state, ms);
 	}

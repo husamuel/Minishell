@@ -9,25 +9,27 @@
 /*   Updated: 2025/05/02 16:56:44 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 #include "./../minishell.h"
 
-int	parser(t_parser *state, t_mini *ms)
+int parser(t_parser *state, t_mini *ms)
 {
-	if (ms->input == NULL)
+	if (!ms || !ms->input)
 		return (0);
+	
 	if (state->curr)
 		ft_free_minishell(ms, 1);
+	
 	state->curr = ms->token;
 	state->prev = NULL;
 	state->last_cmd = NULL;
 	state->cmd_seen = 0;
+	
 	while (state->curr)
 	{
 		process_token(state, ms);
-
 		state->prev = state->curr;
 		state->curr = state->curr->next;
 	}
+	
 	return (1);
 }

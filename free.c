@@ -12,64 +12,90 @@
 
 #include "minishell.h"
 
-void	ft_free_minishell(t_mini *ms, int code)
+void ft_free_minishell(t_mini *ms, int code)
 {
-	while (ms->state->curr)
-	{
-		if (ms->state->curr->args)
-		{
-			free(ms->state->curr->args[0]);
-			free(ms->state->curr->args);
-			ms->state->curr->args = NULL;
-		}
-		if (ms->state->curr->args_file)
-		{
-			free(ms->state->curr->args_file[0]);
-			free(ms->state->curr->args_file);
-			ms->state->curr->args_file = NULL;
-		}
-		if (code != 100)
-			break ;
-		ms->state->curr = ms->state->curr->next;
-	}
+    t_token *current;
+    t_token *next;
+    
+    if (!ms || !ms->state)
+        return;
+    
+    current = ms->state->curr;
+    
+    while (current)
+    {
+        next = current->next;
+        
+        if (current->args)
+        {
+            int i = 0;
+            while (current->args[i])
+            {
+                free(current->args[i]);
+                current->args[i] = NULL;
+                i++;
+            }
+            free(current->args);
+            current->args = NULL;
+        }
+        
+        if (current->args_file)
+        {
+            int i = 0;
+            while (current->args_file[i])
+            {
+                free(current->args_file[i]);
+                current->args_file[i] = NULL;
+                i++;
+            }
+            free(current->args_file);
+            current->args_file = NULL;
+        }
+        if (code == 100)
+            current = next;
+        else
+            break;
+    }
 }
 
-void	free_tokens(t_token *token)
+void free_tokens(t_token *token)
 {
-	t_token	*tmp;
-	int		i;
+    t_token *tmp;
 
-	while (token)
-	{
-		tmp = token->next;
-		if (token->cmd)
-		{
-			free(token->cmd);
-			token->cmd = NULL;
-		}
-		if (token->args_file)
-		{
-			i = 0;
-			while (token->args_file[i])
-			{
-				free(token->args_file[i]);
-				i++;
-			}
-			free(token->args_file);
-			token->args_file = NULL;
-		}
-		if (token->args)
-		{
-			i = 0;
-			while (token->args[i])
-			{
-				free(token->args[i]);
-				i++;
-			}
-			free(token->args);
-			token->args = NULL;
-		}
-		free(token);
-		token = tmp;
-	}
+    while (token)
+    {
+        tmp = token->next;
+        if (token->cmd)
+        {
+            free(token->cmd);
+            token->cmd = NULL;
+        }
+        if (token->args_file)
+        {
+            int i = 0;
+            while (token->args_file[i])
+            {
+                free(token->args_file[i]);
+                token->args_file[i] = NULL;
+                i++;
+            }
+            free(token->args_file);
+            token->args_file = NULL;
+        }
+        if (token->args)
+        {
+            int i = 0;
+            while (token->args[i])
+            {
+                free(token->args[i]);
+                token->args[i] = NULL;
+                i++;
+            }
+            free(token->args);
+            token->args = NULL;
+        }
+        
+        free(token);
+        token = tmp;
+    }
 }
