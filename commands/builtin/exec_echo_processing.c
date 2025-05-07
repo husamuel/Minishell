@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:37:12 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 18:39:06 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/07 16:19:33 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,6 @@
 char	*print_echo(char *input, int *i, char *var, t_mini *mini);
 void	echo_others(t_token *next, int i, t_mini *mini, char *input);
 void	echo_dollar(int *i, char *input, t_mini *mini);
-int		check_nl_echo(char *s);
-
-int	check_nl_echo(char *s)
-{
-	int	i;
-
-	i = 0;
-	if (!s || s[i] != '-' || s[i + 1] != 'n')
-		return (0);
-	i++;
-	while (s[i] == 'n')
-		i++;
-	if (s[i] == '\0')
-		return (1);
-	return (0);
-}
 
 static void	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 {
@@ -57,17 +41,7 @@ static void	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 	}
 }
 
-static void	ft_handle_flag(t_token **next, int *nl_flag)
-{
-	*nl_flag = 0;
-	while (*next && ft_strncmp((*next)->cmd, "-n", 2) == 0
-		&& check_nl_echo((*next)->cmd))
-	{
-		*next = (*next)->next;
-		*nl_flag = 1;
-	}
-}
-
+/*
 static void	ft_adjust_starting_pos(t_token *next, char **input)
 {
 	char	*next_pos;
@@ -80,6 +54,9 @@ static void	ft_adjust_starting_pos(t_token *next, char **input)
 	if (next_pos)
 		*input = next_pos;
 }
+	+ call from echo_others:
+	ft_adjust_starting_pos(next, &input);
+*/
 
 void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 {
@@ -90,7 +67,7 @@ void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 	ft_handle_flag(&next, &nl_flag);
 	in_quotes = 0;
 	quote_type = '\0';
-	ft_adjust_starting_pos(next, &input);
+	i = ft_skip_n_flags(input, &nl_flag);
 	while (input && input[i])
 	{
 		ft_process_quotes(input, &i, &in_quotes, &quote_type);
