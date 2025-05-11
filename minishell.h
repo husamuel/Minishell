@@ -260,4 +260,8 @@ int		is_builtin_command(char *cmd);
 int		is_math_operator(t_token *current);
 int		is_in_expr_context(t_token *prev);
 
+void	ft_handle_flag(t_token **next, int *nl_flag);
+int		ft_is_valid_n_flag(char *s, int *len);
+int	ft_skip_n_flags(char *input, int *nl_flag);
+
 #endif

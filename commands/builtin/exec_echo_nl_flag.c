@@ -38,7 +38,7 @@ void	ft_handle_flag(t_token **next, int *nl_flag)
 	}
 }
 
-static int	ft_is_valid_n_flag(char *s, int *len)
+int	ft_is_valid_n_flag(char *s, int *len)
 {
 	int	i;
 
