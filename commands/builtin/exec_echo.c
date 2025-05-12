@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 18:45:17 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/12 15:43:44 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	echo_dollar(int *i, char *input, t_mini *mini)
 	var = NULL;
 	if (input[*i + 1] == '?')
 	{
-		printf("0");
+		printf("%s", mini->token->args[1]);
 		*i += 2;
 		if (input[*i] == ' ')
 			(*i)++;
