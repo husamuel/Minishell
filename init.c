@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:22:31 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/02 16:39:12 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:18:29 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	create_node(t_env **head, char *s)
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return ;
-	node->content = strdup(s);
+	node->content = ft_strdup(s);
 	node->var = get_var(s);
 	node->next = NULL;
 	if (!(*head))
