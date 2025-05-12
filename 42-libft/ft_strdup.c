@@ -3,33 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 10:24:36 by husamuel          #+#    #+#             */
-/*   Updated: 2024/10/29 21:30:47 by husamuel         ###   ########.fr       */
+/*   Created: 2024/11/04 19:02:26 by gtretiak          #+#    #+#             */
+/*   Updated: 2024/11/08 14:40:29 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strdup(const char *src)
+char	*ft_strdup(const char *s1)
 {
-	size_t	size;
-	char	*dest;
+	size_t	l;
+	char	*s;
+	char	*temp;
 
-	size = ft_strlen(src) + 1;
-	dest = malloc(size);
-	if (!dest)
+	l = 0;
+	temp = (char *)s1;
+	while (s1[l])
+		l++;
+	s = malloc(sizeof(char) * (l + 1));
+	if (s == NULL)
 		return (NULL);
-	ft_memcpy(dest, src, size);
-	return (dest);
+	temp = s;
+	while (*s1)
+		*temp++ = *s1++;
+	*temp = '\0';
+	return (s);
 }
-// Duplica uma string
-/*
-int main()
-{
-    char *str = "Hello World";
-    char *dest = strdup(str);
-    printf("%s\n", dest);
-}
-*/
