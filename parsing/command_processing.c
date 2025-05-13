@@ -72,9 +72,7 @@ void process_token(t_parser *state, t_mini *ms)
 {
 	if (!state->curr)
 		return;
-		
 	process_quotes(state->curr);
-	
 	if (state->prev && state->prev->cmd && state->prev->cmd[0] == '|')
 	{
 		state->cmd_seen = 0;

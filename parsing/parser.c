@@ -18,12 +18,10 @@ int parser(t_parser *state, t_mini *ms)
 	
 	if (state->curr)
 		ft_free_minishell(ms, 1);
-	
 	state->curr = ms->token;
 	state->prev = NULL;
 	state->last_cmd = NULL;
 	state->cmd_seen = 0;
-	
 	while (state->curr)
 	{
 		process_token(state, ms);

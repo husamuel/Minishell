@@ -16,7 +16,7 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini);
 void	echo_others(t_token *next, int i, t_mini *mini, char *input);
 void	echo_dollar(int *i, char *input, t_mini *mini);
 
-static void	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
+static int	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 {
 	if ((input[*i] == '\"' || input[*i] == '\'')
 		&& (*i == 0 || input[*i - 1] != '\\'))
@@ -25,7 +25,16 @@ static void	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 		{
 			*q_flag = 1;
 			*q_type = input[*i];
+
+			if (input[*i + 1] == *q_type)
+			{
+				(*i) += 2;
+				*q_flag = 0;
+				*q_type = '\0';
+				return (1);
+			}
 			(*i)++;
+			return (1);
 		}
 		else if (input[*i] == *q_type)
 		{
@@ -38,25 +47,10 @@ static void	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 			printf("%c", input[*i]);
 			(*i)++;
 		}
+		printf("\n");
 	}
+	return (0);
 }
-
-/*
-static void	ft_adjust_starting_pos(t_token *next, char **input)
-{
-	char	*next_pos;
-
-	if (!next)
-		return ;
-	while (**input == ' ')
-		(*input)++;
-	next_pos = ft_custom_strstr(*input, next->cmd);
-	if (next_pos)
-		*input = next_pos;
-}
-	+ call from echo_others:
-	ft_adjust_starting_pos(next, &input);
-*/
 
 void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 {

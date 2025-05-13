@@ -44,6 +44,7 @@ typedef struct s_token
 	struct s_token	*prev;
 	int				quoted;
 	int				quoted_type;
+	int				is_empty_quotes;
 	int				is_invalid;
 	int				is_literal;
 }	t_token;
