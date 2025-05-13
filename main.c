@@ -44,7 +44,7 @@ int	main(int argc, char *argv[], char **envp)
 			if (result == 0)
 				ft_handle_zero(&ms);
 			exec(&ms);
-			//free_tokens(ms.token);
+			free_tokens(ms.token);
 		}
 		ft_update_ms(&ms);
 	}
