@@ -12,33 +12,36 @@
 
 #include "./../minishell.h"
 
-static void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
+static void set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 {
-	int	i;
+    int i;
 
-	if (cmd_index > 0)
-	{
-		if (dup2(pipe_fds[cmd_index - 1][0], STDIN_FILENO) == -1)
-		{
-			perror("minishell: dup2 input");
-			exit(1);
-		}
-	}
-	if (cmd_index < pipe_count)
-	{
-		if (dup2(pipe_fds[cmd_index][1], STDOUT_FILENO) == -1)
-		{
-			perror("minishell: dup2 output");
-			exit(1);
-		}
-	}
-	i = 0;
-	while (i < pipe_count)
-	{
-		close(pipe_fds[i][0]);
-		close(pipe_fds[i][1]);
-		i++;
-	}
+    if (!pipe_fds || pipe_count <= 0)
+        exit(1);
+    if (cmd_index > 0)
+    {
+        if (cmd_index - 1 >= pipe_count || !pipe_fds[cmd_index - 1])
+            exit(1);
+        if (dup2(pipe_fds[cmd_index - 1][0], STDIN_FILENO) == -1)
+            exit(1);
+    }
+    if (cmd_index < pipe_count)
+    {
+        if (cmd_index >= pipe_count || !pipe_fds[cmd_index])
+            exit(1);
+        if (dup2(pipe_fds[cmd_index][1], STDOUT_FILENO) == -1)
+            exit(1);
+    }
+    i = 0;
+    while (i < pipe_count)
+    {
+        if (pipe_fds[i])
+        {
+            close(pipe_fds[i][0]);
+            close(pipe_fds[i][1]);
+        }
+        i++;
+    }
 }
 
 static int	ft_execute_special_in_child(t_token *current, t_mini *ms)
