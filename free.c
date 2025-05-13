@@ -58,20 +58,22 @@ void ft_free_minishell(t_mini *ms, int code)
     }
 }
 
-void	free_envp(t_env *env)
+void free_env_list(t_env *head)
 {
-	t_env *tmp;
-
-	while (env)
-	{
-		tmp = env->next;
-		if (env->var)
-			free(env->var);
-		if (env->content)
-			free(env->content);
-		free(env);
-		env = tmp;
-	}
+    t_env *current;
+    t_env *next;
+    
+    current = head;
+    while (current)
+    {
+        next = current->next;
+        if (current->content)
+            free(current->content);
+        if (current->var)
+            free(current->var);
+        free(current);
+        current = next;
+    }
 }
 
 void free_tokens(t_token *token)

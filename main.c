@@ -48,6 +48,7 @@ int	main(int argc, char *argv[], char **envp)
 		}
 		ft_update_ms(&ms);
 	}
+	free_env_list(ms.export);
 	ft_free_minishell(&ms, 100);
 	exit(EXIT_SUCCESS);
 }

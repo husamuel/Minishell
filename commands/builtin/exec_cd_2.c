@@ -21,10 +21,12 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini)
 	{
 		if (ft_strcmp(ev->var, "OLDPWD") == 0)
 		{
+			free(ev->content);
 			ev->content = ft_strjoin("OLDPWD=", oldpwd);
 		}
 		else if (ft_strcmp(ev->var, "PWD") == 0)
 		{
+			free(ev->content);
 			ev->content = ft_strjoin("PWD=", pwd);
 		}
 		ev = ev->next;

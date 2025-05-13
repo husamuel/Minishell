@@ -250,6 +250,7 @@ void	ft_free_minishell(t_mini *ms, int code);
 void	free_2strings(char *var, char *arg);
 char	**free_mat(char **mat);
 void	free_pwd(char *oldpwd, char *pwd);
+void	free_env_list(t_env *head);
 
 //Utils
 int		ft_strcmp(char *s1, char *s2);
