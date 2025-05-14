@@ -59,7 +59,6 @@ int	**init_pipes(int pipe_count)
 		}
 		if (pipe(pipe_fds[i]) == -1)
 		{
-			perror("minishell: pipe");
 			free_pipes_on_error(pipe_fds, i);
 			return (NULL);
 		}

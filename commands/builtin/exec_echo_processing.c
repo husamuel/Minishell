@@ -47,7 +47,6 @@ static int	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 			printf("%c", input[*i]);
 			(*i)++;
 		}
-		printf("\n");
 	}
 	return (0);
 }

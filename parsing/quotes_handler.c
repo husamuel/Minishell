@@ -56,25 +56,21 @@ void process_quotes(t_token *token)
     if (token->quoted)
     {
         check_literal_chars(token, len);
-        
-        // Caso especial: aspas vazias ("" ou '')
         if (len == 2 && 
             ((token->cmd[0] == '"' && token->cmd[1] == '"') || 
              (token->cmd[0] == '\'' && token->cmd[1] == '\'')))
         {
-            // Criar uma flag ou marcador especial para o token vazio
             token->is_empty_quotes = 1;
             result = malloc(1);
             if (result)
             {
-                result[0] = '\0';  // String vazia para o processamento normal
+                result[0] = '\0';
                 free(token->cmd);
                 token->cmd = result;
             }
         }
         else
         {
-            // Processamento normal para aspas não vazias
             result = malloc(len - 1);
             if (result)
             {

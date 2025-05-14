@@ -68,14 +68,12 @@ static void	execute_child_process(t_token *current, t_mini *ms)
 	if (current->args && current->args[0])
 	{
 		execvp(current->args[0], current->args);
-		perror("minishell: command not found");
 	}
 	else if (current->cmd)
 	{
 		argv[0] = current->cmd;
 		argv[1] = NULL;
 		execvp(current->cmd, argv);
-		perror("minishell: command not found");
 	}
 	exit(127);
 }
