@@ -25,6 +25,8 @@ int parser(t_parser *state, t_mini *ms)
 	while (state->curr)
 	{
 		process_token(state, ms);
+		printf("cmd: %s\n", state->curr->cmd);
+		printf("type: %d\n", state->curr->type);
 		state->prev = state->curr;
 		state->curr = state->curr->next;
 	}

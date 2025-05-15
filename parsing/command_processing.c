@@ -87,14 +87,13 @@ void process_token(t_parser *state, t_mini *ms)
 		ft_decide_on_exit_status(state, ms);
 		return;
 	}
-	
 	process_token_part2(state, ms);
 }
 
 void process_token_part2(t_parser *state, t_mini *ms)
 {
 	if (!state->curr)
-		return;
+		return ;
 		
 	ft_handle_spec(state, ms);
 	

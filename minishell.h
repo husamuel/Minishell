@@ -47,6 +47,8 @@ typedef struct s_token
 	int				is_empty_quotes;
 	int				is_invalid;
 	int				is_literal;
+	char			*infile;
+	char			*outfile;
 }	t_token;
 
 typedef struct s_env

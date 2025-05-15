@@ -33,7 +33,12 @@ t_token	*create_new_token(char *cmd)
 	if (cmd)
 		new_token->cmd = ft_strdup(cmd);
 	else
+	{
 		new_token->cmd = NULL;
+		new_token->type = CMD_NONE;
+	}
+		
+
 	new_token->type = CMD_NONE;
 	new_token->args_file = NULL;
 	new_token->args = NULL;

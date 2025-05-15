@@ -56,7 +56,6 @@ void handle_command_token(t_parser *state, t_mini *ms)
 		return;
 	}
 	state->curr->args[1] = NULL;
-	
 	if (is_builtin_command(state->curr->cmd)
 		|| is_exec_command(state->curr->cmd))
 	{
@@ -64,12 +63,23 @@ void handle_command_token(t_parser *state, t_mini *ms)
 		state->cmd_seen = 1;
 		state->last_cmd = state->curr;
 	}
-	else if(ms->token->type != CMD_REDIRECT_IN && ms->token->type != CMD_REDIRECT_OUT && ms->token->type != CMD_HEREDOC && ms->token->type != CMD_PIPE)
+	else if((state->curr->type == CMD_PIPE ||
+			state->curr->type == CMD_REDIRECT ||
+			state->curr->type == CMD_REDIRECT_IN ||
+ 			state->curr->type == CMD_REDIRECT_OUT ||
+			state->curr->type == CMD_ARG_FILE ||
+			state->curr->type == CMD_ARG ||
+			state->curr->type == CMD_HEREDOC) 
+			&& state->prev != NULL)
+	{
+
+	}
+	else
 	{
 		ms->none = 1;
-		state->curr->type = CMD_NONE;
 		display_command_not_found(state->curr, ms);
 	}
+
 }
 
 void handle_arg_token(t_parser *state, t_mini *ms)

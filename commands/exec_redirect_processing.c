@@ -126,30 +126,24 @@ int exec_redirect(t_token *token, t_mini *ms)
     t_token *after;
     int is_input;
     
-    // Loop para processar múltiplos redirecionamentos
     while (token && (token->type == CMD_REDIRECT_IN || token->type == CMD_REDIRECT_OUT || token->type == CMD_PIPE))
     {
         next = token->next;
         is_input = (token->type == CMD_REDIRECT_IN);
 
-        // Processar o arquivo de redirecionamento
         fd_and_status[0] = ft_open_redirect_file(token, next);
         if (fd_and_status[0] < 0)
             return (1);
         else if (fd_and_status[0] == -127)
             return (fd_and_status[0] * -1);
         
-        // Atualizar a lista de tokens para remover o redirecionamento
         after = ft_unlink_tokens(token, next);
         cmd = ft_find_cmd(token, after);
 
-        // Executar o redirecionamento
         fd_and_status[1] = ft_redirect_execution(cmd, ms, fd_and_status[0], is_input);
 
-        // Reverter as mudanças nos tokens
         ft_relink_tokens(token, next, after);
 
-        // Avançar para o próximo redirecionamento
         token = next;
     }
 
