@@ -12,108 +12,82 @@
 
 #include "minishell.h"
 
-void ft_free_minishell(t_mini *ms, int code)
+static void	free_args_array(char **args)
 {
-    t_token *current;
-    t_token *next;
-    
-    if (!ms || !ms->state)
-        return;
-    
-    current = ms->state->curr;
-    
-    while (current)
-    {
-        next = current->next;
-        
-        if (current->args)
-        {
-            int i = 0;
-            while (current->args[i])
-            {
-                free(current->args[i]);
-                current->args[i] = NULL;
-                i++;
-            }
-            free(current->args);
-            current->args = NULL;
-        }
-        
-        if (current->args_file)
-        {
-            int i = 0;
-            while (current->args_file[i])
-            {
-                free(current->args_file[i]);
-                current->args_file[i] = NULL;
-                i++;
-            }
-            free(current->args_file);
-            current->args_file = NULL;
-        }
-        if (code == 100)
-            current = next;
-        else
-            break;
-    }
+	int	i;
+
+	i = 0;
+	while (args[i])
+	{
+		free(args[i]);
+		args[i] = NULL;
+		i++;
+	}
+	free(args);
 }
 
-void free_env_list(t_env *head)
+void	ft_free_minishell(t_mini *ms, int code)
 {
-    t_env *current;
-    t_env *next;
-    
-    current = head;
-    while (current)
-    {
-        next = current->next;
-        if (current->content)
-            free(current->content);
-        if (current->var)
-            free(current->var);
-        free(current);
-        current = next;
-    }
+	t_token	*current;
+	t_token	*next;
+
+	if (!ms || !ms->state)
+		return ;
+	current = ms->state->curr;
+	while (current)
+	{
+		next = current->next;
+		if (current->args)
+			free_args_array(current->args);
+		if (current->args_file)
+			free_args_array(current->args_file);
+		if (code == 100)
+			current = next;
+		else
+			break ;
+	}
 }
 
-void free_tokens(t_token *token)
+void	free_env_list(t_env *head)
 {
-    t_token *tmp;
+	t_env	*current;
+	t_env	*next;
 
-    while (token)
-    {
-        tmp = token->next;
-        if (token->cmd)
-        {
-            free(token->cmd);
-            token->cmd = NULL;
-        }
-        if (token->args_file)
-        {
-            int i = 0;
-            while (token->args_file[i])
-            {
-                free(token->args_file[i]);
-                token->args_file[i] = NULL;
-                i++;
-            }
-            free(token->args_file);
-            token->args_file = NULL;
-        }
-        if (token->args)
-        {
-            int i = 0;
-            while (token->args[i])
-            {
-                free(token->args[i]);
-                token->args[i] = NULL;
-                i++;
-            }
-            free(token->args);
-            token->args = NULL;
-        }
-        
-        free(token);
-        token = tmp;
-    }
+	current = head;
+	while (current)
+	{
+		next = current->next;
+		if (current->content)
+			free(current->content);
+		if (current->var)
+			free(current->var);
+		free(current);
+		current = next;
+	}
+}
+
+void	free_token_content(t_token *token)
+{
+	if (token->cmd)
+	{
+		free(token->cmd);
+		token->cmd = NULL;
+	}
+	if (token->args_file)
+		free_args_array(token->args_file);
+	if (token->args)
+		free_args_array(token->args);
+}
+
+void	free_tokens(t_token *token)
+{
+	t_token	*tmp;
+
+	while (token)
+	{
+		tmp = token->next;
+		free_token_content(token);
+		free(token);
+		token = tmp;
+	}
 }

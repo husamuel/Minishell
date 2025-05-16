@@ -268,4 +268,10 @@ void	ft_handle_flag(t_token **next, int *nl_flag);
 int		ft_is_valid_n_flag(char *s, int *len);
 int	ft_skip_n_flags(char *input, int *nl_flag);
 
+void set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count);
+int	exec_pipe_with_redirects(t_mini *ms);
+t_token	*ft_unlink_tokens(t_token *token, t_token *next);
+int	ft_open_redirect_file(t_token *token, t_token *next);
+int	ft_redir_exec_setup(int fd, int is_input);
+
 #endif

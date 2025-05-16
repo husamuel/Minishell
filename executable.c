@@ -75,7 +75,6 @@ void	ft_exec_token_list(t_mini *ms)
 	prev = NULL;
 	while (current)
 	{
-		// Só processa redirecionamentos se NÃO houver pipes
 		if ((current->type == CMD_BUILDIN || current->type == CMD_EXEC) && ms->pipe == 0)
 		{
 			special_token = find_special_token(current);
@@ -99,8 +98,17 @@ void	ft_exec_token_list(t_mini *ms)
 
 void	exec(t_mini *ms)
 {
-	if (ms->pipe != 0)
+	if (ms->redirect > 0 && ms->pipe > 0)
+	{
+		ms->exit_status = exec_pipe_with_redirects(ms);
+	}
+	else if (ms->pipe > 0 && ms->redirect == 0)
+	{
 		ms->exit_status = exec_pipe(ms);
+	}
 	else
+	{
 		ft_exec_token_list(ms);
+	}
+		
 }

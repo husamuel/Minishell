@@ -16,26 +16,33 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini);
 void	echo_others(t_token *next, int i, t_mini *mini, char *input);
 void	echo_dollar(int *i, char *input, t_mini *mini);
 
-static int	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
+static int	ft_handle_quote_start(char *input, int *i, int *q_flag,
+	char *q_type)
+{
+	if (!*q_flag)
+	{
+		*q_flag = 1;
+		*q_type = input[*i];
+		if (input[*i + 1] == *q_type)
+		{
+			(*i) += 2;
+			*q_flag = 0;
+			*q_type = '\0';
+			return (1);
+		}
+		(*i)++;
+		return (1);
+	}
+	return (0);
+}
+
+static	int	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 {
 	if ((input[*i] == '\"' || input[*i] == '\'')
 		&& (*i == 0 || input[*i - 1] != '\\'))
 	{
-		if (!*q_flag)
-		{
-			*q_flag = 1;
-			*q_type = input[*i];
-
-			if (input[*i + 1] == *q_type)
-			{
-				(*i) += 2;
-				*q_flag = 0;
-				*q_type = '\0';
-				return (1);
-			}
-			(*i)++;
+		if (ft_handle_quote_start(input, i, q_flag, q_type))
 			return (1);
-		}
 		else if (input[*i] == *q_type)
 		{
 			*q_flag = 0;
