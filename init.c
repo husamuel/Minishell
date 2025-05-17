@@ -77,12 +77,24 @@ void	create_node(t_env **head, char *s)
 {
 	t_env	*node;
 	t_env	*last;
+	char	*equal_sign;
 
 	node = malloc(sizeof(t_env));
 	if (!node)
 		return ;
-	node->content = ft_strdup(s);
-	node->var = get_var(s);
+
+	equal_sign = ft_strchr(s, '=');
+	if (equal_sign)
+	{
+		node->var = ft_substr(s, 0, equal_sign - s);
+		node->content = ft_strdup(equal_sign + 1);
+	}
+	else
+	{
+		node->var = ft_strdup(s);
+		node->content = NULL;
+	}
+
 	node->next = NULL;
 	if (!(*head))
 	{
@@ -96,6 +108,7 @@ void	create_node(t_env **head, char *s)
 		last->next = node;
 	}
 }
+
 
 t_env	*ft_last(t_env *head)
 {

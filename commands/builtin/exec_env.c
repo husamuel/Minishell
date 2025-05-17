@@ -15,19 +15,13 @@
 void	exec_env(t_token *token, t_mini *mini)
 {
 	t_env	*ev;
-	int		i;
 
-	i = 0;
-	ev = mini->export;
 	(void)token;
+	ev = mini->export;
 	while (ev)
 	{
-		if (ev->content)
-		{
-			printf("%s\n", ev->content);
-			i++;
-		}
+		if (ev->var && ev->content) // garante que ambas existem
+			printf("%s=%s\n", ev->var, ev->content);
 		ev = ev->next;
 	}
-	printf("\n");
 }

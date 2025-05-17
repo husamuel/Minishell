@@ -83,10 +83,7 @@ static void	execute_cmd(t_token *cmd, t_mini *ms)
 	reset_signals();
 	env_array = env_to_array(ms->export);
 	if (!env_array)
-	{
-		fprintf(stderr, "minishell: failed to create environment\n");
 		exit(1);
-	}
 	cmd_path = find_command_path(cmd->cmd, ms);
 	if (!cmd_path)
 	{
@@ -95,7 +92,6 @@ static void	execute_cmd(t_token *cmd, t_mini *ms)
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, env_array);
-	fprintf(stderr, "minishell: %s: %s\n", cmd->cmd, strerror(errno));
 	free(cmd_path);
 	free_env_array(env_array);
 	exit(127);
@@ -117,6 +113,8 @@ int	ft_execute_parent(pid_t pid)
 
 	waitpid(pid, &status, 0);
 	setup_signals();
+	if (WIFEXITED(status) || WIFSIGNALED(status))
+		printf("\n");
 	if (WIFEXITED(status))
 		return (WEXITSTATUS(status));
 	else if (WIFSIGNALED(status))
