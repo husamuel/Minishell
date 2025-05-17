@@ -14,26 +14,26 @@
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	char	*substr;
-	size_t	str_len;
+	size_t	i;
+	size_t	j;
+	char	*str;
 
-	if (!s)
+	str = (char*)malloc(sizeof(*s) * (len + 1));
+	if (!str)
 		return (NULL);
-	str_len = ft_strlen(s);
-	if (start >= str_len)
+	i = 0;
+	j = 0;
+	while (s[i])
 	{
-		substr = malloc(1);
-		if (substr)
-			substr[0] = '\0';
-		return (substr);
+		if (i >= start && j < len)
+		{
+			str[j] = s[i];
+			j++;
+		}
+		i++;
 	}
-	if (len > str_len - start)
-		len = str_len - start;
-	substr = malloc(len + 1);
-	if (!substr)
-		return (NULL);
-	ft_strlcpy (substr, s + start, len + 1);
-	return (substr);
+	str[j] = 0;
+	return (str);
 }
 // Extrai uma substring de uma string a partir do comeco e do tamanho
 /* int main()

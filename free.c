@@ -12,40 +12,48 @@
 
 #include "minishell.h"
 
-static void	free_args_array(char **args)
+void free_args_array(char **args)
 {
-	int	i;
-
-	i = 0;
-	while (args[i])
-	{
-		free(args[i]);
-		args[i] = NULL;
-		i++;
-	}
-	free(args);
+    int i;
+    
+    if (!args)
+        return;
+    
+    i = 0;
+    while (args[i])
+    {
+        free(args[i]);
+        args[i] = NULL; // Set to NULL after freeing
+        i++;
+    }
+    free(args);
 }
 
-void	ft_free_minishell(t_mini *ms, int code)
+void ft_free_minishell(t_mini *ms, int code)
 {
-	t_token	*current;
-	t_token	*next;
+    (void)code; // Ignore code for now, free all tokens
+    if (!ms)
+        return;
 
-	if (!ms || !ms->state)
-		return ;
-	current = ms->state->curr;
-	while (current)
-	{
-		next = current->next;
-		if (current->args)
-			free_args_array(current->args);
-		if (current->args_file)
-			free_args_array(current->args_file);
-		if (code == 100)
-			current = next;
-		else
-			break ;
-	}
+    // Free the entire token list
+    if (ms->token)
+    {
+        free_tokens(ms->token);
+        ms->token = NULL;
+    }
+
+    // Free other minishell resources if needed
+    if (ms->input)
+        free(ms->input);
+    if (ms->prompt)
+        free(ms->prompt);
+    if (ms->export)
+        free_env_list(ms->export);
+    if (ms->state)
+    {
+        free(ms->state);
+        ms->state = NULL;
+    }
 }
 
 void	free_env_list(t_env *head)
@@ -66,17 +74,22 @@ void	free_env_list(t_env *head)
 	}
 }
 
-void	free_token_content(t_token *token)
+void free_token_content(t_token *token)
 {
-	if (token->cmd)
-	{
-		free(token->cmd);
-		token->cmd = NULL;
-	}
-	if (token->args_file)
-		free_args_array(token->args_file);
-	if (token->args)
-		free_args_array(token->args);
+    if (token->cmd)
+    {
+        // Only free cmd if it's not referenced by args or args_file
+        if (token->args && token->args[0] != token->cmd &&
+            token->args_file && token->args_file[0] != token->cmd)
+        {
+            free(token->cmd);
+            token->cmd = NULL;
+        }
+    }
+    if (token->args_file)
+        free_args_array(token->args_file);
+    if (token->args)
+        free_args_array(token->args);
 }
 
 void	free_tokens(t_token *token)

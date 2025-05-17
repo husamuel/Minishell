@@ -42,46 +42,58 @@ void	set_command_type(t_token *current)
 		current->type = CMD_EXEC;
 }
 
-static int	allocate_cmd_args(t_parser *state)
+static int allocate_cmd_args(t_parser *state)
 {
-	state->curr->args_file = malloc(sizeof(char *) * 2);
-	if (!state->curr->args_file)
-		return (0);
-	state->curr->args_file[0] = ft_strdup(state->curr->cmd);
-	if (!state->curr->args_file[0])
-	{
-		free(state->curr->args_file);
-		state->curr->args_file = NULL;
-		return (0);
-	}
-	state->curr->args_file[1] = NULL;
-	state->curr->args = malloc(sizeof(char *) * 2);
-	if (!state->curr->args)
-	{
-		free(state->curr->args_file[0]);
-		free(state->curr->args_file);
-		state->curr->args_file = NULL;
-		return (0);
-	}
-	return (1);
+    state->curr->args_file = malloc(sizeof(char *) * 2);
+    if (!state->curr->args_file)
+        return (0);
+    state->curr->args_file[0] = NULL; // Initialize to NULL, set later if needed
+    state->curr->args_file[1] = NULL;
+
+    state->curr->args = malloc(sizeof(char *) * 2);
+    if (!state->curr->args)
+    {
+        free(state->curr->args_file);
+        state->curr->args_file = NULL;
+        return (0);
+    }
+    state->curr->args[0] = NULL; // Initialize to NULL, set later
+    state->curr->args[1] = NULL;
+    
+    return (1);
 }
 
-static int	set_cmd_args(t_parser *state)
+static int set_cmd_args(t_parser *state)
 {
-	state->curr->args[0] = ft_strdup(state->curr->cmd);
-	if (!state->curr->args[0])
-	{
-		free(state->curr->args_file[0]);
-		free(state->curr->args_file);
-		state->curr->args_file = NULL;
-		free(state->curr->args);
-		state->curr->args = NULL;
-		return (0);
-	}
-	state->curr->args[1] = NULL;
-	return (1);
+    // Only set args[0] if not already set
+    if (!state->curr->args[0])
+    {
+        state->curr->args[0] = ft_strdup(state->curr->cmd);
+        if (!state->curr->args[0])
+        {
+            free(state->curr->args_file);
+            state->curr->args_file = NULL;
+            free(state->curr->args);
+            state->curr->args = NULL;
+            return (0);
+        }
+    }
+    // Only set args_file[0] if not already set
+    if (!state->curr->args_file[0])
+    {
+        state->curr->args_file[0] = ft_strdup(state->curr->cmd);
+        if (!state->curr->args_file[0])
+        {
+            free(state->curr->args[0]);
+            free(state->curr->args);
+            free(state->curr->args_file);
+            state->curr->args_file = NULL;
+            state->curr->args = NULL;
+            return (0);
+        }
+    }
+    return (1);
 }
-
 static int	check_special_token(t_parser *state)
 {
 	return (state->curr->type == CMD_PIPE
@@ -108,7 +120,7 @@ void	handle_command_token(t_parser *state, t_mini *ms)
 	}
 	else if (check_special_token(state) && state->prev != NULL)
 	{
-		/* Do nothing for special tokens with a previous token */
+
 	}
 	else
 	{

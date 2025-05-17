@@ -23,32 +23,20 @@ void	ft_init_lexer_state(t_lexer *state, char *input)
 	state->input = input;
 }
 
-t_token	*create_new_token(char *cmd)
+t_token *create_new_token(char *cmd)
 {
-	t_token	*new_token;
+    t_token *new_token;
 
-	new_token = malloc(sizeof(t_token));
-	if (!new_token)
-		return (NULL);
-	if (cmd)
-		new_token->cmd = ft_strdup(cmd);
-	else
-	{
-		new_token->cmd = NULL;
-		new_token->type = CMD_NONE;
-	}
-		
-
-	new_token->type = CMD_NONE;
-	new_token->args_file = NULL;
-	new_token->args = NULL;
-	new_token->next = NULL;
-	new_token->prev = NULL;
-	new_token->quoted = 0;
-	new_token->quoted_type = 0;
-	new_token->is_invalid = 0;
-	new_token->is_literal = 0;
-	return (new_token);
+    new_token = malloc(sizeof(t_token));
+    if (!new_token)
+        return (NULL);
+    ft_memset(new_token, 0, sizeof(t_token)); // Zero out all fields
+    if (cmd)
+        new_token->cmd = ft_strdup(cmd);
+    else
+        new_token->cmd = NULL;
+    new_token->type = CMD_NONE;
+    return (new_token);
 }
 
 void	free_token_list(t_token *head)

@@ -14,22 +14,31 @@
 
 char *ft_strdup(char *src)
 {
-	int i = 0;
-	char *res;
-
-	if (!src)
-		return (NULL);
-	while(src[i])
-		i++;
-	res = (char*)malloc((sizeof(*res) * i) + 1);
-	if (res == NULL)
-		return (NULL);
-	i = 0;
-	while(src[i])
-	{
-		res[i]=src[i];
-		i++;
-	}
-	res[i] = '\0';
-	return (res);
+    int i = 0;
+    char *res;
+    
+    if (!src)
+        return (NULL);
+    
+    // Count the length of the source string
+    while(src[i])
+        i++;
+    
+    // Allocate memory for the new string including null terminator
+    res = (char*)malloc(sizeof(char) * (i + 1)); // +1 for null terminator
+    if (res == NULL)
+        return (NULL);
+    
+    // Copy the string
+    i = 0;
+    while(src[i])
+    {
+        res[i] = src[i];
+        i++;
+    }
+    
+    // Add null terminator
+    res[i] = '\0';
+    
+    return (res);
 }

@@ -44,11 +44,11 @@ int	main(int argc, char *argv[], char **envp)
 			if (result == 0)
 				ft_handle_zero(&ms);
 			exec(&ms);
-			//free_tokens(ms.token);
+			free_tokens(ms.token);
 		}
 		ft_update_ms(&ms);
 	}
 	free_env_list(ms.export);
-	ft_free_minishell(&ms, 100);
+	ft_free_minishell(&ms, 0);
 	exit(EXIT_SUCCESS);
 }
