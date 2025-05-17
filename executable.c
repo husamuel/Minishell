@@ -95,7 +95,6 @@ void	ft_exec_token_list(t_mini *ms)
 	}
 }
 
-
 void	exec(t_mini *ms)
 {
 	if (ms->redirect > 0 && ms->pipe > 0)

@@ -189,7 +189,7 @@ int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 int		execute_command(t_token *cmd, t_mini *ms);
 int		loop(t_token *cmd, int *stdout_backup);
 int		handle_redirect_out(t_token *file_token, int stdout_backup);
-int		ft_execute_child(t_token *cmd);
+int		ft_execute_child(t_token *cmd, t_mini *ms);
 int		ft_execute_parent(pid_t pid);
 int		is_builtin(const char *cmd);
 
@@ -273,5 +273,7 @@ int	exec_pipe_with_redirects(t_mini *ms);
 t_token	*ft_unlink_tokens(t_token *token, t_token *next);
 int	ft_open_redirect_file(t_token *token, t_token *next);
 int	ft_redir_exec_setup(int fd, int is_input);
+char **env_to_array(t_env *env);
+void free_env_array(char **env_array);
 
 #endif
