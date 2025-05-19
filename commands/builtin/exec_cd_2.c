@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:04 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 15:57:31 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:24:32 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	ft_strcmp(char *s1, char *s2)
 
 	if (!s1 || !s2)
 	{
-		printf("Error strcmp: NULL string");
+		printf("Error ft_strcmp: NULL string");
 		return (1);
 	}
 	i = 0;
