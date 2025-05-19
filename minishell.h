@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/02 16:57:11 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:32:16 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,7 +190,7 @@ int		execute_command(t_token *cmd, t_mini *ms);
 int		loop(t_token *cmd, int *stdout_backup);
 int		handle_redirect_out(t_token *file_token, int stdout_backup);
 int		ft_execute_child(t_token *cmd, t_mini *ms);
-int		ft_execute_parent(pid_t pid);
+int		ft_execute_parent(t_mini *ms, pid_t pid);
 int		is_builtin(const char *cmd);
 
 //Builtins
@@ -198,7 +198,7 @@ int		exec_builtin(t_token *token, t_mini *ms);
 void	exec_pwd(t_token *token);
 void	exec_unset(t_token *token, t_mini *mini);
 void	exec_env(t_token *token, t_mini *mini);
-void	exec_exit(t_token *token);
+void	exec_exit(t_token *token, t_mini *ms);
 //Echo
 void	exec_echo(t_token *token, t_mini *mini);
 int		has_redirection(t_token *token);

@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:30:36 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 13:37:30 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 13:27:25 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,6 @@ int	exec_builtin(t_token *token, t_mini *mini)
 	else if ((strcmp(token->cmd, "env") == 0) || !strcmp(token->cmd, s[2]))
 		exec_env(token, mini);
 	else if (strcmp(token->cmd, "exit") == 0)
-		exec_exit(token);
+		exec_exit(token, mini);
 	return (status);
 }

@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:15:02 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 14:07:28 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 14:49:07 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,14 +87,29 @@ static void	execute_cmd(t_token *cmd, t_mini *ms)
 	cmd_path = find_command_path(cmd->cmd, ms);
 	if (!cmd_path)
 	{
-		fprintf(stderr, "minishell: %s: command not found\n", cmd->cmd);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->cmd, 2);
+		ft_putstr_fd(": command not found\n", 2);
 		free_env_array(env_array);
 		exit(127);
 	}
 	execve(cmd_path, cmd->args, env_array);
+	if (errno == EACCES)
+	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(cmd->cmd, 2);
+		ft_putstr_fd(": permission denied\n", 2);
+		ms->exit_status = 126;
+		exit(126);
+	}
+	else
+	{
+		perror("minishell");
+		ms->exit_status = 2;
+		exit(EXIT_FAILURE);
+	}
 	free(cmd_path);
 	free_env_array(env_array);
-	exit(127);
 }
 
 int	ft_execute_child(t_token *cmd, t_mini *ms)
@@ -107,19 +122,20 @@ int	ft_execute_child(t_token *cmd, t_mini *ms)
 	return (pid);
 }
 
-int	ft_execute_parent(pid_t pid)
+int	ft_execute_parent(t_mini *ms, pid_t pid)
 {
 	int	status;
 
 	waitpid(pid, &status, 0);
 	setup_signals();
-	if (WIFEXITED(status) || WIFSIGNALED(status))
+//	if (WIFEXITED(status) || WIFSIGNALED(status))
+	if (WIFSIGNALED(status))
 		printf("\n");
 	if (WIFEXITED(status))
-		return (WEXITSTATUS(status));
+		ms->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		return (WTERMSIG(status) + 128);
-	return (1);
+		ms->exit_status = WTERMSIG(status) + 128;
+	return (ms->exit_status);
 }
 
 int	handle_redirect_out(t_token *file_token, int stdout_backup)
@@ -181,8 +197,12 @@ int	execute_command(t_token *cmd, t_mini *ms)
 	pid = ft_execute_child(cmd, ms);
 	if (pid <= 0)
 		return (handle_fork_error1(stdout_backup));
-	status = ft_execute_parent(pid);
-	dup2(stdout_backup, STDOUT_FILENO);
+	status = ft_execute_parent(ms, pid);
+	if (dup2(stdout_backup, STDOUT_FILENO) == -1)
+	{
+		perror("minishell: dup2");
+		status = 1;
+	}
 	close(stdout_backup);
 	return (status);
 }
