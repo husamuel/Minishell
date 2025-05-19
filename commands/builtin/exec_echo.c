@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_echo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/12 15:43:44 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:00:09 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini)
 	int		j;
 
 	j = 0;
-	while (ft_isalnum(var[j]))
+	while (ft_isalnum(var[j]) || var[j] == '_')  // <-- Corrigido aqui
 		j++;
 	var[j] = '\0';
 	s = expand_var(var, mini->export);
@@ -96,7 +96,7 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini)
 		printf("%s", s);
 		free(s);
 	}
-	while (ft_isalnum(input[*i]))
+	while (ft_isalnum(input[*i]) || input[*i] == '_')  // <-- Corrigido aqui também
 		(*i)++;
 	return (s);
 }

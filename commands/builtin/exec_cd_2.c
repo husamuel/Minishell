@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_cd_2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:04 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/23 18:54:07 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 15:57:31 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,21 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini)
 // return var content with malloc or NULL if not found
 char	*expand_var(char *var, t_env *ev)
 {
-	int		i;
-	char	*content;
+	char	*content = NULL;
 
-	i = ft_strlen(var) + 1;
-	content = NULL;
 	while (ev)
 	{
 		if (ft_strcmp(ev->var, var) == 0)
 		{
 			if (ev->content)
-				content = ft_strdup(ev->content + i);
+				content = ft_strdup(ev->content);  // Corrigido aqui
 			break ;
 		}
 		ev = ev->next;
 	}
 	return (content);
 }
+
 
 void	free_pwd(char *oldpwd, char *pwd)
 {
