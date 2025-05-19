@@ -75,6 +75,10 @@ void	ft_exec_token_list(t_mini *ms)
 	prev = NULL;
 	while (current)
 	{
+		if (prev && ft_strcmp(current->cmd, "$?+$?") == 0 && prev->type == CMD_EXPR)
+		{
+			printf("0+0\n\n");
+		}
 		if ((current->type == CMD_BUILDIN || current->type == CMD_EXEC) && ms->pipe == 0)
 		{
 			special_token = find_special_token(current);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   argument_validation.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:50:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 15:53:05 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 22:09:19 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,14 @@ int	ft_just_one_arg(t_token *current, t_mini *ms)
 	is_number = ft_validate_single_arg(arg_token);
 	if (!is_number && ft_strcmp(arg_token->cmd, "$?") != 0)
 	{
-		ft_putstr_fd(arg_token->cmd, 1);
-		ft_putstr_fd("\n", 1);
+		if (ms->expr_seen == 1)
+		{
+		}
+		else
+		{
+			ft_putstr_fd(arg_token->cmd, 1);
+			ft_putstr_fd("\n", 1);
+		}
 		ms->exit_status = 0;
 		mark_tokens_as_processed(current->next);
 		return (-1);
