@@ -44,12 +44,12 @@ void	set_command_type(t_token *current)
 
 static int allocate_cmd_args(t_parser *state)
 {
+	
     state->curr->args_file = malloc(sizeof(char *) * 2);
     if (!state->curr->args_file)
         return (0);
     state->curr->args_file[0] = NULL; // Initialize to NULL, set later if needed
     state->curr->args_file[1] = NULL;
-
     state->curr->args = malloc(sizeof(char *) * 2);
     if (!state->curr->args)
     {
@@ -57,6 +57,7 @@ static int allocate_cmd_args(t_parser *state)
         state->curr->args_file = NULL;
         return (0);
     }
+	
     state->curr->args[0] = NULL; // Initialize to NULL, set later
     state->curr->args[1] = NULL;
     
@@ -94,6 +95,7 @@ static int set_cmd_args(t_parser *state)
     }
     return (1);
 }
+
 static int	check_special_token(t_parser *state)
 {
 	return (state->curr->type == CMD_PIPE

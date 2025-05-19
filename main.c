@@ -23,24 +23,24 @@ static void	ft_init_parser(t_parser *state)
 static void	main_loop(t_mini *ms, t_parser *state)
 {
 	int	result;
-
 	while (1)
 	{
 		ms->input = get_input(ms, ms->prompt);
 		if (!ms->input)
 			break;
+		
 		ms->token = lexer(ms->input);
 		if (ms->token)
 		{
+			
 			result = parser(state, ms);
 			if (result == 0)
 				ft_handle_zero(ms);
 			exec(ms);
+			
 			free_tokens(ms->token);
 			ms->token = NULL;
 		}
-		free(ms->input);
-		ms->input = NULL;
 		ft_update_ms(ms);
 	}
 }

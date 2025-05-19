@@ -18,6 +18,17 @@ void	build_args_from_tokens(t_token *cmd)
 	int		count;
 	int		i;
 
+	if (!cmd)
+		return ;
+
+	if (cmd->args)
+	{
+		int j = 0;
+		while (cmd->args[j])
+			free(cmd->args[j++]);
+		free(cmd->args);
+		cmd->args = NULL;
+	}
 	current = cmd;
 	count = 0;
 	while (current && current->type != CMD_REDIRECT_OUT
@@ -30,6 +41,7 @@ void	build_args_from_tokens(t_token *cmd)
 	cmd->args = malloc(sizeof(char *) * (count + 1));
 	if (!cmd->args)
 		return ;
+
 	current = cmd;
 	i = 0;
 	while (current && i < count)

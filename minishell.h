@@ -275,5 +275,6 @@ int	ft_open_redirect_file(t_token *token, t_token *next);
 int	ft_redir_exec_setup(int fd, int is_input);
 char **env_to_array(t_env *env);
 void free_env_array(char **env_array);
+void	free_args_array(char **args);
 
 #endif

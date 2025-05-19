@@ -80,6 +80,7 @@ void	ft_exec_token_list(t_mini *ms)
 			special_token = find_special_token(current);
 			if (special_token)
 			{
+				
 				process_special_token(special_token, ms);
 				temp = current->next;
 				while (current && current != temp)
@@ -103,6 +104,7 @@ void	exec(t_mini *ms)
 	}
 	else if (ms->pipe > 0 && ms->redirect == 0)
 	{
+		
 		ms->exit_status = exec_pipe(ms);
 	}
 	else
