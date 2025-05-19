@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:05:22 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 18:04:40 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:59:45 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,19 @@ static int	count_env_vars(t_env *env)
 static char	*create_env_string(t_env *current)
 {
 	char	*temp;
-	size_t	len;
+	char	*res;
 
-	len = ft_strlen(current->var) + (current->content ? ft_strlen(current->content) : 0) + 2;
-	temp = malloc(len);
+	temp = ft_strjoin(current->var, "=");
 	if (!temp)
 		return (NULL);
-	snprintf(temp, len, "%s=%s", current->var, 
-		current->content ? current->content : ""); //TODO
+	if (current->content)
+	{
+		res = ft_strjoin(temp, current->content);
+		free(temp);
+		if (!res)
+			return (NULL);
+		return (res);
+	}
 	return (temp);
 }
 
