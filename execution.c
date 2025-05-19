@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:15:02 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 14:49:07 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:23:02 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,24 @@ static char	*find_in_path_dir(char *path, const char *cmd)
 	char	*full_path;
 	size_t	len;
 
-	dir = strtok(path, ":");
+	dir = strtok(path, ":"); //TODO
 	while (dir)
 	{
-		len = strlen(dir) + strlen(cmd) + 2;
+		len = ft_strlen(dir) + ft_strlen(cmd) + 2;
 		full_path = malloc(len);
 		if (!full_path)
 		{
 			free(path);
 			return (NULL);
 		}
-		snprintf(full_path, len, "%s/%s", dir, cmd);
+		snprintf(full_path, len, "%s/%s", dir, cmd); //TODO
 		if (access(full_path, X_OK) == 0)
 		{
 			free(path);
 			return (full_path);
 		}
 		free(full_path);
-		dir = strtok(NULL, ":");
+		dir = strtok(NULL, ":"); //TODO
 	}
 	free(path);
 	return (NULL);
@@ -69,7 +69,7 @@ char	*find_command_path(const char *cmd, t_mini *ms)
 	env_path = get_env_path(ms);
 	if (!env_path || !*env_path)
 		return (NULL);
-	path = strdup(env_path);
+	path = ft_strdup(env_path);
 	if (!path)
 		return (NULL);
 	return (find_in_path_dir(path, cmd));
