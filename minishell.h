@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 13:32:16 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/19 17:43:58 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,9 +187,11 @@ void	exec(t_mini *ms);
 void	ft_exec_token_list(t_mini *ms);
 int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 int		execute_command(t_token *cmd, t_mini *ms);
+char	*find_command_path(const char *cmd, t_mini *ms);
 int		loop(t_token *cmd, int *stdout_backup);
 int		handle_redirect_out(t_token *file_token, int stdout_backup);
 int		ft_execute_child(t_token *cmd, t_mini *ms);
+void	execute_child_process(t_token *current, t_mini *ms);
 int		ft_execute_parent(t_mini *ms, pid_t pid);
 int		is_builtin(const char *cmd);
 
