@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 16:00:09 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/19 16:22:59 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,6 @@ void	echo_dollar(int *i, char *input, t_mini *mini)
 	{
 		printf("%s", mini->token->args[1]);
 		*i += 2;
-		if (input[*i] == ' ')
-			(*i)++;
 		return ;
 	}
 	else if (ft_isdigit(input[*i + 1]))
@@ -69,16 +67,14 @@ void	echo_dollar(int *i, char *input, t_mini *mini)
 		if (input[*i + 1] == '0')
 			printf("minishell");
 		*i += 2;
-		if (input[*i] == ' ' && input[*i - 1] != '0')
-			(*i)++;
 	}
 	else if (ft_isalpha(input[*i + 1]))
 	{
 		var = ft_strdup(&input[++(*i)]);
-		if (!print_echo(input, i, var, mini) && input[*i] == ' ')
-			(*i)++;
+		print_echo(input, i, var, mini);
 	}
 }
+
 
 char	*print_echo(char *input, int *i, char *var, t_mini *mini)
 {
@@ -86,7 +82,7 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini)
 	int		j;
 
 	j = 0;
-	while (ft_isalnum(var[j]) || var[j] == '_')  // <-- Corrigido aqui
+	while (ft_isalnum(var[j]) || var[j] == '_')
 		j++;
 	var[j] = '\0';
 	s = expand_var(var, mini->export);
@@ -96,7 +92,7 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini)
 		printf("%s", s);
 		free(s);
 	}
-	while (ft_isalnum(input[*i]) || input[*i] == '_')  // <-- Corrigido aqui também
+	while (ft_isalnum(input[*i]) || input[*i] == '_')
 		(*i)++;
 	return (s);
 }
