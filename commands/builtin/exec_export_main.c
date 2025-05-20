@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_export_main.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 17:26:51 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 22:07:27 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	parsing_export(char *input, t_mini *mini)
 	var = export_expand(var, mini);
 	if (syntax_export(var, arg))
 		create_export(var, arg, mini);
+	free(var);
+	free(arg);
 	return (i + 1);
 }
 
@@ -103,9 +105,9 @@ void	create_export(char *var, char *content, t_mini *mini)
 		if (content)
 		{
 			free(export->content);
-			export->content = content;
+			export->content = ft_strdup(content);
 		}
 		return ;
 	}
-	append_node(var, content, mini->export);
+	append_node(ft_strdup(var), ft_strdup(content), mini->export);
 }
