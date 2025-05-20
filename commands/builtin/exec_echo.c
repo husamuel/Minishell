@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 16:22:59 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/20 12:59:20 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ void	exec_echo(t_token *token, t_mini *mini)
 		printf("\n");
 	else if (ft_strcmp(next->cmd, "~") == 0)
 		ft_handle_home();
+	else if (ft_strcmp(next->cmd, "$?+$?") == 0)
+	{
+		
+	}
 	else
 	{
 		input_start = mini->input + 5;
