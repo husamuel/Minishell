@@ -77,7 +77,7 @@ void	ft_exec_token_list(t_mini *ms)
 	{
 		if (ft_strcmp(current->cmd, "$?+$?") == 0 && (prev->type == CMD_EXPR || prev->type == CMD_BUILDIN))
 		{
-			printf("0+0\n");
+			printf("%d+%d\n", ms->exit_status, ms->exit_status);
 		}
 		if ((current->type == CMD_BUILDIN || current->type == CMD_EXEC) && ms->pipe == 0)
 		{
