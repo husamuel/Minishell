@@ -34,6 +34,7 @@ t_mini	init(char **envp)
 	ms.expr = 0;
 	ms.output = NULL;
 	ms.current_cmd = NULL;
+	ms.heredoc = 0;
 	return (ms);
 }
 

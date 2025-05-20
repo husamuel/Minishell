@@ -23,17 +23,15 @@ int	ft_handle_token(t_token *current, t_token *prev, t_mini *ms)
 		&& (!prev || prev->type != CMD_EXPR))
 	{
 		printf("command not found: %d\n", ms->exit_status);
-//		ms->exit_status = 127;
 	}
 	else if ((!prev || prev->type != CMD_EXPR) && current->type != CMD_PLUS)
 	{
-//		ms->exit_status = 2;
 		return (1);
 	}
 	return (0);
 }
 
-static void	process_special_token(t_token *special_token, t_mini *ms)
+void	process_special_token(t_token *special_token, t_mini *ms)
 {
 	if (special_token->type == CMD_REDIRECT_OUT)
 		ms->exit_status = exec_redirect(special_token, ms);
@@ -102,18 +100,20 @@ void	ft_exec_token_list(t_mini *ms)
 
 void	exec(t_mini *ms)
 {
-	if (ms->redirect > 0 && ms->pipe > 0)
+	if (ms->heredoc > 0 && ms->pipe > 0)
 	{
-		ms->exit_status = exec_pipe_with_redirects(ms);
+		ms->exit_status = exec_heredoc_with_pipes(ms);
 	}
 	else if (ms->pipe > 0 && ms->redirect == 0)
 	{
-		
 		ms->exit_status = exec_pipe(ms);
+	}
+	else if (ms->redirect > 0 && ms->pipe > 0)
+	{
+		ms->exit_status = exec_pipe_with_redirects(ms);
 	}
 	else
 	{
 		ft_exec_token_list(ms);
 	}
-		
 }

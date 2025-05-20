@@ -19,7 +19,7 @@ static t_token	*skip_pipe_tokens(t_token *current)
 	return (current);
 }
 
-static int	update_exit_status(t_mini *ms, int status)
+int	update_exit_status(t_mini *ms, int status)
 {
 	while (wait(&status) > 0)
 	{

@@ -5,9 +5,13 @@ LIBS = -lreadline -L./42-libft -lft
 NAME = minishell
 
 SRCS = $(wildcard *.c) \
-	   $(wildcard commands/*.c) \
-	   $(wildcard commands/builtin/*.c) \
-	   $(wildcard parsing/*.c)
+		$(wildcard commands/*.c) \
+		$(wildcard commands/heredoc/*.c) \
+		$(wildcard commands/heredoc/heredoc_with_pipe/*.c) \
+		$(wildcard commands/pipe/*.c) \
+		$(wildcard commands/redirect/*.c) \
+		$(wildcard commands/builtin/*.c) \
+		$(wildcard parsing/*.c) \
 
 OBJS = $(SRCS:.c=.o)
 

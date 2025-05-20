@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command_handler.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:09:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/02 17:11:08 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 13:22:09 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	handle_arg_token(t_parser *state, t_mini *ms)
 	(void)ms;
 	if (!state->last_cmd || !state->curr || !state->curr->cmd)
 		return ;
-	if (state->prev && (is_redirect_in(state->prev->cmd)
+	if (state->prev && (is_redirect_in(state->prev->cmd, ms)
 			|| is_redirect_out(state->prev->cmd)))
 	{
 		add_to_args_file(state->last_cmd, state->curr->cmd);

@@ -110,6 +110,7 @@ typedef struct s_mini
 	int		redirect;
 	int		expr;
 	int		expr_seen;
+	int		heredoc;
 }	t_mini;
 
 typedef enum e_cmd_type
@@ -261,7 +262,7 @@ void	free_env_list(t_env *head);
 //Utils
 int		ft_strcmp(char *s1, char *s2);
 int		is_redirect_out(char *cmd);
-int		is_redirect_in(char *cmd);
+int		is_redirect_in(char *cmd, t_mini *ms);
 int		is_exec_command(char *cmd);
 int		is_builtin_command(char *cmd);
 int		is_math_operator(t_token *current);
@@ -279,5 +280,34 @@ int	ft_redir_exec_setup(int fd, int is_input);
 char **env_to_array(t_env *env);
 void free_env_array(char **env_array);
 void	free_args_array(char **args);
+int exec_heredoc_with_pipes(t_mini *ms);
+
+int	exec_heredoc_with_pipes(t_mini *ms);
+int	process_special_token2(t_token *token, t_mini *ms, int *has_output_redirect);
+void	setup_child_pipes(int **pipe_fds, int cmd_index, int pipe_count, int has_output_redirect);
+int	handle_redirect(t_token *token, t_mini *ms);
+int	setup_heredoc(t_token *token, t_mini *ms);
+t_token	*find_command(t_token *current);
+void	execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
+t_token	*next_command(t_token *current);
+int	process_command(t_token **current, t_mini *ms, t_pipe_ctx *ctx);
+int	execute_pipeline(t_mini *ms, t_pipe_ctx *ctx);
+int **init_pipes2(int pipe_count);
+void close_pipes(t_pipe_ctx *ctx);
+void setup_child_pipes(int **pipe_fds, int cmd_index, int pipe_count, int has_output_redirect);
+t_token *find_command(t_token *current);
+void execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
+t_token *next_command(t_token *current);
+int process_command(t_token **current, t_mini *ms, t_pipe_ctx *ctx);
+int execute_pipeline(t_mini *ms, t_pipe_ctx *ctx);
+int	update_exit_status(t_mini *ms, int status);
+void	close_all_pipe_fds(int **pipe_fds, int pipe_count);
+void	dup_pipe_ends(int **pipe_fds, int cmd_index,
+	int pipe_count, int has_output_redirect);
+void	execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
+void	execute_child_part2(t_token *cmd_token, t_mini *ms,
+	t_pipe_ctx *ctx, int has_output_redirect);
+t_token	*find_command(t_token *current);
+int	process_special_token2(t_token *token, t_mini *ms, int *has_output_redirect);
 
 #endif
