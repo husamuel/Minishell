@@ -6,73 +6,55 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 13:15:02 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 18:23:02 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 12:39:32 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*find_in_path_dir(char *path, const char *cmd)
-{
-	char	*dir;
-	char	*full_path;
-	size_t	len;
-
-	dir = strtok(path, ":"); //TODO
-	while (dir)
-	{
-		len = ft_strlen(dir) + ft_strlen(cmd) + 2;
-		full_path = malloc(len);
-		if (!full_path)
-		{
-			free(path);
-			return (NULL);
-		}
-		snprintf(full_path, len, "%s/%s", dir, cmd); //TODO
-		if (access(full_path, X_OK) == 0)
-		{
-			free(path);
-			return (full_path);
-		}
-		free(full_path);
-		dir = strtok(NULL, ":"); //TODO
-	}
-	free(path);
-	return (NULL);
-}
-
-static char	*get_env_path(t_mini *ms)
+static char	**get_env_path(t_mini *ms)
 {
 	t_env	*current;
+	char	**paths;
 
 	current = ms->export;
 	while (current)
 	{
 		if (strcmp(current->var, "PATH") == 0)
-			return (current->content);
+			break ;
 		current = current->next;
 	}
-	return (NULL);
+	if (!current)
+		return (NULL);
+	paths = ft_split(current->content + 5, ':');
+	return (paths);
 }
 
 char	*find_command_path(const char *cmd, t_mini *ms)
 {
-	char	*path;
-	char	*env_path;
+	char	*prepath;
+	char	*pathname;
+	char	**env_paths;
+	int			i;
 
-	if (strchr(cmd, '/'))
+	i = 0;
+	env_paths = get_env_path(ms);
+	if (!env_paths)
+		return (NULL);
+	while (env_paths[i])
 	{
-		if (access(cmd, X_OK) == 0)
-			return (strdup(cmd));
-		return (NULL);
+		prepath = ft_strjoin(env_paths[i++], "/");
+		pathname = ft_strjoin(prepath, cmd);
+		free(prepath);
+		if (access(pathname, F_OK) == 0)
+		{
+			free_args_array(env_paths);
+			return (pathname);
+		}
+		free(pathname);
 	}
-	env_path = get_env_path(ms);
-	if (!env_path || !*env_path)
-		return (NULL);
-	path = ft_strdup(env_path);
-	if (!path)
-		return (NULL);
-	return (find_in_path_dir(path, cmd));
+	free_args_array(env_paths);
+	return (NULL);
 }
 
 static void	execute_cmd(t_token *cmd, t_mini *ms)
@@ -84,7 +66,10 @@ static void	execute_cmd(t_token *cmd, t_mini *ms)
 	env_array = env_to_array(ms->export);
 	if (!env_array)
 		exit(1);
-	cmd_path = find_command_path(cmd->cmd, ms);
+	if (access(cmd->cmd, F_OK != 0) || ft_strncmp(cmd->cmd, "/", 1))
+		cmd_path = find_command_path(cmd->cmd, ms);
+	else
+		cmd_path = cmd->cmd;
 	if (!cmd_path)
 	{
 		ft_putstr_fd("minishell: ", 2);
