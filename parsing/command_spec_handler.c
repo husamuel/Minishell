@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:35:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 13:20:13 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:19:24 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,10 @@ void	ft_handle_norm(t_parser *state, t_mini *ms)
 			free(processed_arg);
 		}
 	}
-	else if(state->curr->type != CMD_HEREDOC && state->curr->type != CMD_REDIRECT_IN && state->curr->type != CMD_REDIRECT_OUT && state->curr->type != CMD_PIPE) 
+	else if (state->curr->type != CMD_HEREDOC
+		&& state->curr->type != CMD_REDIRECT_IN
+		&& state->curr->type != CMD_REDIRECT_OUT
+		&& state->curr->type != CMD_PIPE)
 	{
 		handle_arg_token(state, ms);
 	}

@@ -41,7 +41,7 @@ void	process_special_token(t_token *special_token, t_mini *ms)
 		ms->exit_status = exec_heredoc(special_token, ms);
 }
 
-static t_token	*find_special_token(t_token *current)
+t_token	*find_special_token(t_token *current)
 {
 	t_token	*temp;
 	t_token	*special_token;
@@ -60,42 +60,6 @@ static t_token	*find_special_token(t_token *current)
 		temp = temp->next;
 	}
 	return (special_token);
-}
-
-void	ft_exec_token_list(t_mini *ms)
-{
-	t_token	*current;
-	t_token	*prev;
-	t_token	*temp;
-	t_token	*special_token;
-
-	current = ms->token;
-	prev = NULL;
-	while (current)
-	{
-		if (ft_strcmp(current->cmd, "$?+$?") == 0 && (prev->type == CMD_EXPR || prev->type == CMD_BUILDIN))
-		{
-			printf("%d+%d\n", ms->exit_status, ms->exit_status);
-		}
-		if ((current->type == CMD_BUILDIN || current->type == CMD_EXEC) && ms->pipe == 0)
-		{
-			special_token = find_special_token(current);
-			if (special_token)
-			{
-				
-				process_special_token(special_token, ms);
-				temp = current->next;
-				while (current && current != temp)
-					current = current->next;
-				prev = current ? current->prev : NULL;
-				continue ;
-			}
-		}
-		if (ft_handle_token(current, prev, ms))
-			return ;
-		prev = current;
-		current = current->next;
-	}
 }
 
 void	exec(t_mini *ms)

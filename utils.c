@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:05:22 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 18:59:45 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:31:31 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,14 +90,4 @@ char	**env_to_array(t_env *env)
 	}
 	env_array[i] = NULL;
 	return (env_array);
-}
-
-void	free_env_array(char **env_array)
-{
-	int	i;
-
-	i = 0;
-	while (env_array && env_array[i])
-		free(env_array[i++]);
-	free(env_array);
 }

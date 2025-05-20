@@ -1,27 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_env.c                                         :+:      :+:    :+:   */
+/*   execution3.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/23 19:08:37 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 18:09:42 by husamuel         ###   ########.fr       */
+/*   Created: 2025/05/20 19:35:09 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/20 19:35:57 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./../../minishell.h"
+#include "minishell.h"
 
-void	exec_env(t_token *token, t_mini *mini)
+int	ft_execute_child(t_token *cmd, t_mini *ms)
 {
-	t_env	*ev;
+	pid_t	pid;
 
-	(void)token;
-	ev = mini->export;
-	while (ev)
-	{
-		if (ev->var && ev->content)
-			printf("%s=%s\n", ev->var, ev->content);
-		ev = ev->next;
-	}
+	pid = fork();
+	if (pid == 0)
+		execute_cmd(cmd, ms);
+	return (pid);
 }

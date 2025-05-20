@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_init_and_free.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:28:34 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 17:31:25 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 19:18:01 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,20 +23,20 @@ void	ft_init_lexer_state(t_lexer *state, char *input)
 	state->input = input;
 }
 
-t_token *create_new_token(char *cmd)
+t_token	*create_new_token(char *cmd)
 {
-    t_token *new_token;
+	t_token	*new_token;
 
-    new_token = malloc(sizeof(t_token));
-    if (!new_token)
-        return (NULL);
-    ft_memset(new_token, 0, sizeof(t_token)); // Zero out all fields
-    if (cmd)
-        new_token->cmd = ft_strdup(cmd);
-    else
-        new_token->cmd = NULL;
-    new_token->type = CMD_NONE;
-    return (new_token);
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		return (NULL);
+	ft_memset(new_token, 0, sizeof(t_token));
+	if (cmd)
+		new_token->cmd = ft_strdup(cmd);
+	else
+		new_token->cmd = NULL;
+	new_token->type = CMD_NONE;
+	return (new_token);
 }
 
 void	free_token_list(t_token *head)

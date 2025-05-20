@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:04 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 18:24:32 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:09:54 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,24 +33,23 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini)
 	}
 }
 
-// return var content with malloc or NULL if not found
 char	*expand_var(char *var, t_env *ev)
 {
-	char	*content = NULL;
+	char	*content;
 
+	content = NULL;
 	while (ev)
 	{
 		if (ft_strcmp(ev->var, var) == 0)
 		{
 			if (ev->content)
-				content = ft_strdup(ev->content);  // Corrigido aqui
+				content = ft_strdup(ev->content);
 			break ;
 		}
 		ev = ev->next;
 	}
 	return (content);
 }
-
 
 void	free_pwd(char *oldpwd, char *pwd)
 {

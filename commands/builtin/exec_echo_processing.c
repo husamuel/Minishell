@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_echo_processing.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:37:12 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/07 16:19:33 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:08:15 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,29 +60,28 @@ static	int	ft_process_quotes(char *input, int *i, int *q_flag, char *q_type)
 
 void	echo_others(t_token *next, int i, t_mini *mini, char *input)
 {
-    int nl_flag;
-    int in_quotes;
-    char quote_type;
-    
-    ft_handle_flag(&next, &nl_flag);
-    in_quotes = 0;
-    quote_type = '\0';
-    i = ft_skip_n_flags(input, &nl_flag);
-    while (input && input[i])
-    {
-        ft_process_quotes(input, &i, &in_quotes, &quote_type);
-        
-        if (!input[i])
-            break;
-        if ((in_quotes && quote_type == '\"' && input[i] == '$')
-            || (!in_quotes && input[i] == '$'))
-            echo_dollar(&i, input, mini);
-        else
-        {
-            printf("%c", input[i]);
-            i++;
-        }
-    }
-    if (!nl_flag)
-        printf("\n");
+	char	quote_type;
+	int		nl_flag;
+	int		in_quotes;
+
+	ft_handle_flag(&next, &nl_flag);
+	in_quotes = 0;
+	quote_type = '\0';
+	i = ft_skip_n_flags(input, &nl_flag);
+	while (input && input[i])
+	{
+		ft_process_quotes(input, &i, &in_quotes, &quote_type);
+		if (!input[i])
+			break ;
+		if ((in_quotes && quote_type == '\"' && input[i] == '$')
+			|| (!in_quotes && input[i] == '$'))
+			echo_dollar(&i, input, mini);
+		else
+		{
+			printf("%c", input[i]);
+			i++;
+		}
+	}
+	if (!nl_flag)
+		printf("\n");
 }

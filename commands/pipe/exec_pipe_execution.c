@@ -12,12 +12,8 @@
 
 #include "./../minishell.h"
 
-void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
+static void	setup_pipe_dup(int **pipe_fds, int cmd_index, int pipe_count)
 {
-	int		i;
-
-	if (!pipe_fds || pipe_count <= 0)
-		exit(1);
 	if (cmd_index > 0)
 	{
 		if (cmd_index - 1 >= pipe_count || !pipe_fds[cmd_index - 1])
@@ -32,6 +28,12 @@ void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 		if (dup2(pipe_fds[cmd_index][1], STDOUT_FILENO) == -1)
 			exit(1);
 	}
+}
+
+static void	close_all_child_pipes(int **pipe_fds, int pipe_count)
+{
+	int	i;
+
 	i = 0;
 	while (i < pipe_count)
 	{
@@ -44,7 +46,15 @@ void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
 	}
 }
 
-static int	ft_execute_special_in_child(t_token *current, t_mini *ms)
+void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count)
+{
+	if (!pipe_fds || pipe_count <= 0)
+		exit(1);
+	setup_pipe_dup(pipe_fds, cmd_index, pipe_count);
+	close_all_child_pipes(pipe_fds, pipe_count);
+}
+
+int	ft_execute_special_in_child(t_token *current, t_mini *ms)
 {
 	if (current->type == CMD_BUILDIN)
 		return (exec_builtin(current, ms));
@@ -55,71 +65,19 @@ static int	ft_execute_special_in_child(t_token *current, t_mini *ms)
 	return (-1);
 }
 
-void	execute_child_process(t_token *current, t_mini *ms)
+void	handle_execve_with_args(t_token *current, t_mini *ms, char **envp)
 {
-	char	*argv[2];
-	int		is_special;
 	char	*path;
-	char	**envp;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	is_special = ft_execute_special_in_child(current, ms);
-	if (is_special != -1)
-		exit(is_special);
-	envp = env_to_array(ms->export);
-	if (!envp)
-		exit(1);
-	if (current->args && current->args[0])
+	path = find_command_path(current->args[0], ms);
+	if (!path)
 	{
-		path = find_command_path(current->args[0], ms);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(current->args[0], 2);
-			ft_putstr_fd(": command not found\n", 2);
-			free_env_array(envp);
-			exit(127);
-		}
-		execve(path, current->args, envp);
-	}
-	else if	(current->cmd)
-	{
-		path = find_command_path(current->cmd, ms);
-		if (!path)
-		{
-			ft_putstr_fd("minishell: ", 2);
-			ft_putstr_fd(current->cmd, 2);
-			ft_putstr_fd(": command not found\n", 2);
-			free_env_array(envp);
-			exit(127);
-		}
-		argv[0] = current->cmd;
-		argv[1] = NULL;
-		execve(path, argv, envp);
-	}
-	else
-	{
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd(current->args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
 		free_env_array(envp);
 		exit(127);
 	}
-	if (errno == EACCES)
-	{
-		ft_putstr_fd("minishell: ", 2);
-		ft_putstr_fd(path, 2);
-		ft_putstr_fd(": permission denied\n", 2);
-		free(path);
-		free_env_array(envp);
-		exit(126);
-	}
-	perror("minishell");
-	free(path);
-	free_env_array(envp);
-	exit(127);
-}
-
-void	handle_child_process(t_token *current, t_mini *ms, t_pipe_ctx *ctx)
-{
-	set_child_pipes(ctx->pipe_fds, ctx->cmd_index, ctx->count);
-	execute_child_process(current, ms);
+	execve(path, current->args, envp);
+	handle_execve_error(path, envp);
 }

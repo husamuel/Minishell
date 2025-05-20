@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/17 16:00:00 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 20:47:30 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,19 @@ static void	ft_init_parser(t_parser *state)
 static void	main_loop(t_mini *ms, t_parser *state)
 {
 	int	result;
+
 	while (1)
 	{
 		ms->input = get_input(ms, ms->prompt);
 		if (!ms->input)
-			break;
-		
+			break ;
 		ms->token = lexer(ms->input);
 		if (ms->token)
 		{
-			
 			result = parser(state, ms);
 			if (result == 0)
 				ft_handle_zero(ms);
 			exec(ms);
-			
 			free_tokens(ms->token);
 			ms->token = NULL;
 		}
@@ -47,12 +45,11 @@ static void	main_loop(t_mini *ms, t_parser *state)
 
 int	main(int argc, char *argv[], char **envp)
 {
-	t_mini	ms;
 	t_parser	state;
+	t_mini		ms;
 
 	(void)(argc);
 	(void)(argv);
-	
 	ms = init(envp);
 	ft_init_parser(&state);
 	ms.state = &state;

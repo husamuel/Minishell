@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:56 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 13:26:41 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:11:09 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,5 @@ void	exec_exit(t_token *token, t_mini *ms)
 		exit(ms->exit_status);
 	}
 	else
-	{
-		ms->exit_status = 0;
-		exit(ms->exit_status);
-	}
+		exit(ms->exit_status = 0);
 }

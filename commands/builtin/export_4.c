@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 16:11:15 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/20 18:10:13 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,8 @@ char	*get_end_arg(char *input, int *i)
 
 	if (input[*i] != '=')
 		return (NULL);
-
 	(*i)++;
 	start = *i;
-
 	while (input[*i] && input[*i] != ' ')
 	{
 		if (input[*i] == '\'' || input[*i] == '\"')
@@ -37,7 +35,6 @@ char	*get_end_arg(char *input, int *i)
 	arg = ft_substr(input, start, *i - start);
 	return (arg);
 }
-
 
 char	*append_info_to_var(char *var, char *input, int *i, t_mini *mini)
 {
@@ -58,7 +55,6 @@ char	*append_info_to_var(char *var, char *input, int *i, t_mini *mini)
 	return (join);
 }
 
-// create string with i elements via malloc / taking out the quotes
 char	*get_2var(char *input, int i)
 {
 	char	*content;
@@ -84,7 +80,6 @@ char	*get_2var(char *input, int i)
 	return (arg);
 }
 
-// increment i till found char return position char
 void	count_till_char(char *input, int *i, char c)
 {
 	if (c == '\'' || c == '\"')
