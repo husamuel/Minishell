@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:32:43 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/21 08:45:46 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:23:24 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,24 @@
 int	ft_execute_parent(t_mini *ms, pid_t pid)
 {
 	int	status;
+	int	sig;
 
 	waitpid(pid, &status, 0);
 	setup_signals();
-	if (WIFSIGNALED(status))
-		printf("\n");
 	if (WIFEXITED(status))
 		ms->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		ms->exit_status = WTERMSIG(status) + 128;
+	{
+		sig = WTERMSIG(status);
+		if (sig == SIGQUIT)
+		{
+			write(1, "Quit (core dumped)\n", 18);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			write(1, "\n", 1);
+		}
+		ms->exit_status = sig + 128;
+	}
 	return (ms->exit_status);
 }
 

@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:39:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/26 14:31:44 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:24:51 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	disable_ctrl_backslash(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
-void	restore_ctrl_c_only(void)
+void	restore_child_tty(void)
 {
 	struct termios	term;
 
@@ -32,6 +32,7 @@ void	restore_ctrl_c_only(void)
 		return ;
 	term.c_lflag |= ECHOCTL;
 	term.c_cc[VQUIT] = _POSIX_VDISABLE;
+	term.c_cc[VQUIT] = 28;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 

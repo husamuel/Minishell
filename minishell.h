@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 17:43:58 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/21 17:24:38 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -342,6 +342,6 @@ void	process_special_token(t_token *special_token, t_mini *ms);
 int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 t_token	*find_special_token(t_token *current);
 int		handle_input_line(char *line, t_mini *ms);
-void	restore_ctrl_c_only(void);
+void	restore_child_tty(void);
 
 #endif
