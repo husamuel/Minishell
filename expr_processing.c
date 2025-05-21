@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 16:02:04 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 19:37:09 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 12:31:33 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	process_expr_command(t_token *current, t_mini *ms)
 		return ;
 	result = process_expression(current->next, ms);
 	ft_putnbr_fd(result, 1);
-	ft_putstr_fd("\n\n", 2);
+	ft_putstr_fd("\n", 2);
 	ms->exit_status = result;
 	mark_tokens_as_processed(current->next);
 }
