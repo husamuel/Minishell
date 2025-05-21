@@ -21,7 +21,17 @@ void	disable_ctrl_backslash(void)
 	if (tcgetattr(STDIN_FILENO, &term) == -1)
 		return ;
 	term.c_cc[VQUIT] = _POSIX_VDISABLE;
-	term.c_lflag &= ~ECHOCTL;
+	tcsetattr(STDIN_FILENO, TCSANOW, &term);
+}
+
+void	restore_ctrl_c_only(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+		return ;
+	term.c_lflag |= ECHOCTL;
+	term.c_cc[VQUIT] = _POSIX_VDISABLE;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
