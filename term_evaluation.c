@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 16:01:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 22:15:22 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:27:38 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_validate_numeric_term(const char *term)
 			{
 				ft_putstr_fd("expr: invalid value: '", 2);
 				ft_putstr_fd((char *)term, 2);
-				ft_putstr_fd("\n\n", 2);
+				ft_putstr_fd("\n", 2);
 				return (0);
 			}
 		}

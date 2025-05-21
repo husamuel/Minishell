@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 15:49:31 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 22:15:02 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 13:27:26 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	handle_operator(char *op, t_token **current, int result, t_mini *ms)
 	{
 		ft_putstr_fd("expr: missing operand after '", 2);
 		ft_putstr_fd(op, 2);
-		ft_putstr_fd("\n\n", 2);
+		ft_putstr_fd("\n", 2);
 		return (result);
 	}
 	if (ft_strcmp(op, "+") == 0)
@@ -68,7 +68,7 @@ void	ft_handle_unknown_operator(t_token *current)
 {
 	ft_putstr_fd("expr: unknown operator '", 2);
 	ft_putstr_fd(current->cmd, 2);
-	ft_putstr_fd("\n\n", 2);
+	ft_putstr_fd("\n", 2);
 }
 
 int	ft_is_valid_operator_token(t_token *token)
