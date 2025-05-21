@@ -88,10 +88,10 @@ void	execute_cmd(t_token *cmd, t_mini *ms)
 	env_array = env_to_array(ms->export);
 	if (!env_array)
 		exit(1);
-	if (access(cmd->cmd, F_OK != 0) || ft_strncmp(cmd->cmd, "/", 1))
-		cmd_path = find_command_path(cmd->cmd, ms);
+	if (cmd->cmd[0] == '.' || cmd->cmd[0] == '/')
+		cmd_path = ft_strdup(cmd->cmd);
 	else
-		cmd_path = cmd->cmd;
+		cmd_path = find_command_path(cmd->cmd, ms);
 	if (!cmd_path)
 	{
 		print_command_error(cmd->cmd);

@@ -111,6 +111,7 @@ typedef struct s_mini
 	int			expr;
 	int			expr_seen;
 	int			heredoc;
+	int			echo;
 }	t_mini;
 
 typedef enum e_cmd_type
@@ -340,5 +341,6 @@ void	ft_exec_token_list(t_mini *ms);
 void	process_special_token(t_token *special_token, t_mini *ms);
 int		ft_handle_token(t_token *current, t_token *prev, t_mini *ms);
 t_token	*find_special_token(t_token *current);
+int		handle_input_line(char *line, t_mini *ms);
 
 #endif

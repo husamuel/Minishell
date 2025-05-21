@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 18:08:42 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 09:43:18 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,38 @@ static void	ft_handle_home(void)
 	printf("%s\n", s);
 }
 
+static void	handle_echo_output(t_token *next, t_mini *mini, int has_redirect)
+{
+	char	*input_start;
+	char	*redirect_pos;
+
+	input_start = mini->input + 5;
+	redirect_pos = NULL;
+	if (has_redirect)
+		redirect_pos = ft_get_redirect_pos(input_start);
+	if (has_redirect && redirect_pos)
+		ft_handle_redirect_case(input_start, redirect_pos);
+	else
+		echo_others(next, 0, mini, input_start);
+}
+
 void	exec_echo(t_token *token, t_mini *mini)
 {
 	t_token	*next;
 	int		has_redirect;
-	char	*input_start;
-	char	*redirect_pos;
 
 	has_redirect = has_redirection(token);
 	next = token->next;
 	if (!next)
 		printf("\n");
+	else if (mini->echo != 0)
+		return ;
 	else if (ft_strcmp(next->cmd, "~") == 0)
 		ft_handle_home();
 	else if (ft_strcmp(next->cmd, "$?+$?") == 0)
-	{
-	}
+		return ;
 	else
-	{
-		input_start = mini->input + 5;
-		redirect_pos = NULL;
-		if (has_redirect)
-			redirect_pos = ft_get_redirect_pos(input_start);
-		if (has_redirect && redirect_pos)
-			ft_handle_redirect_case(input_start, redirect_pos);
-		else
-			echo_others(next, 0, mini, input_start);
-	}
+		handle_echo_output(next, mini, has_redirect);
 }
 
 void	echo_dollar(int *i, char *input, t_mini *mini)

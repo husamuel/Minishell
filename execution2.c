@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:32:43 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/20 19:33:07 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 08:45:46 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,10 @@ int	execute_command(t_token *cmd, t_mini *ms)
 	int		stdout_backup;
 	int		status;
 
-	if (!cmd || !cmd->cmd || !cmd->args)
+	if ((!cmd || !cmd->cmd || !cmd->args))
+	{
 		return (-1);
+	}
 	if (loop(cmd, &stdout_backup) != 0)
 		return (1);
 	setup_exec_signals();

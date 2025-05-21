@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:56:02 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/20 18:56:27 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 09:44:25 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,13 @@ void	process_token(t_parser *state, t_mini *ms)
 	{
 		ft_decide_on_exit_status(state, ms);
 		return ;
+	}
+	if (state->curr->cmd
+		&& ft_strncmp(state->curr->cmd, "./minishell", 11) == 0)
+	{
+		free(state->curr->cmd);
+		state->curr->cmd = ft_strdup("./minishell");
+		state->curr->type = CMD_EXEC;
 	}
 	process_token_part2(state, ms);
 }

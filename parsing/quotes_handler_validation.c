@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   quotes_handler_validation.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 16:11:20 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 16:11:58 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/21 07:52:52 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ int	check_unclosed_quotes(const char *line)
 	i = 0;
 	while (line[i] != '\0')
 	{
-		if (line[i] == '\'' && !in_double_quote)
-			in_single_quote = !in_single_quote;
-		else if (line[i] == '\"' && !in_single_quote)
+		if (line[i] == '\"' && !in_single_quote)
 			in_double_quote = !in_double_quote;
+		else if (line[i] == '\'' && !in_double_quote)
+			in_single_quote = !in_single_quote;
 		i++;
 	}
 	return (ft_report_unclosed_err(in_single_quote, in_double_quote));

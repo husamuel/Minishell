@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 22:15:36 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/21 09:29:08 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	main_loop(t_mini *ms, t_parser *state)
 	{
 		ms->input = get_input(ms, ms->prompt);
 		if (!ms->input)
-			break ;
+			return ;
 		ms->token = lexer(ms->input);
 		if (ms->token)
 		{
