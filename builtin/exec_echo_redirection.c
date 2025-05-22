@@ -27,7 +27,8 @@ int	has_redirection(t_token *token)
 		if (!current->is_literal && !current->quoted
 			&& (current->type == CMD_REDIRECT_OUT
 				|| current->type == CMD_REDIRECT_IN
-				|| current->type == CMD_HEREDOC))
+				|| current->type == CMD_HEREDOC
+				|| current->type == CMD_APPEND))
 			return (1);
 		current = current->next;
 	}

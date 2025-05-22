@@ -12,44 +12,41 @@
 
 #include "./../minishell.h"
 
-static void	execute_pipeline_command(char *command, t_pipe_ctx *ctx, t_mini *ms)
+void execute_pipeline_command(t_token *token_list, t_pipe_ctx *ctx, t_mini *ms, int type)
 {
-	t_token *token_list;
 	char	*cmd_path;
 
-	token_list = lexer(command);
 	if (!token_list || !is_valid_command(token_list))
 		exit(1);
 
+	// Redireciona input do comando anterior
 	if (ctx->cmd_index > 0)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index - 1][0], STDIN_FILENO) == -1)
 		{
-            perror("dup2 out");
-            exit(1);
-        }
+			perror("dup2 in");
+			exit(1);
+		}
 	}
+	// Redireciona output para o próximo comando
 	if (ctx->cmd_index < ctx->count - 1)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index][1], STDOUT_FILENO) == -1)
 		{
-            perror("dup2 out");
-            exit(1);
-        }
+			perror("dup2 out");
+			exit(1);
+		}
 	}
 	close_all_pipes(ctx);
 
-	if (setup_redirections(token_list) == -1)
-		exit(1);
-
-	if (token_list->type == CMD_BUILDIN)
+	if (type == CMD_BUILDIN)
 		exit(exec_builtin(token_list, ms));
-	else if (token_list->type == CMD_EXPR)
+	else if (type == CMD_EXPR)
 	{
 		process_expr_command(token_list, ms);
 		exit(0);
 	}
-	else if (token_list->type == CMD_EXEC)
+	else if (type == CMD_EXEC)
 	{
 		cmd_path = find_command_path(token_list->cmd, ms->export);
 		if (!cmd_path)
@@ -80,6 +77,7 @@ int	execute_pipeline(t_mini *ms)
 
 	if (!ms || !ms->token || !ms->token->pipes_cmd)
 		return (1);
+
 	pipes = ms->token->pipes_cmd;
 	for (ctx.count = 0; pipes[ctx.count]; ctx.count++);
 
@@ -91,16 +89,37 @@ int	execute_pipeline(t_mini *ms)
 	if (!pids)
 		return (close_all_pipes(&ctx), 1);
 
+	// Inicializa ponteiro para tokens
+	t_token *token_ptr = ms->token;
+
 	i = -1;
 	while (++i < ctx.count)
 	{
 		ctx.cmd_index = i;
+
+		// Guarda o token atual (início do comando i)
+		t_token *current_cmd_token = token_ptr;
+
+		// Avança até ao próximo pipe (fim do comando atual)
+		while (token_ptr && token_ptr->type != CMD_PIPE)
+			token_ptr = token_ptr->next;
+		// Salta o pipe para o próximo comando
+		if (token_ptr && token_ptr->type == CMD_PIPE)
+			token_ptr = token_ptr->next;
+
 		pids[i] = fork();
 		if (pids[i] == 0)
 		{
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
-			execute_pipeline_command(pipes[i], &ctx, ms);
+
+			if (ctx.cmd_index == ctx.count - 1)
+			{
+				if (setup_redirections(current_cmd_token) == -1)
+					exit(1);
+			}
+
+			execute_pipeline_command(current_cmd_token, &ctx, ms, current_cmd_token->type);
 		}
 		else if (pids[i] < 0)
 		{

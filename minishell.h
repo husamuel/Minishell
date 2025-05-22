@@ -50,6 +50,7 @@ typedef struct s_token
 	char			*infile;
 	char			*outfile;
 	char			**pipes_cmd;
+	int				*pipes_type;
 }	t_token;
 
 typedef struct s_env
@@ -59,7 +60,6 @@ typedef struct s_env
 	struct s_env	*next;
 	struct s_env	*prev;
 }	t_env;
-
 
 typedef struct s_arg
 {
@@ -258,7 +258,6 @@ void	free_env_list(t_env *head);
 //Utils
 int		ft_strcmp(char *s1, char *s2);
 int		is_redirect_out(char *cmd);
-int		is_redirect_in(char *cmd, t_mini *ms);
 int		is_exec_command(char *cmd);
 int		is_builtin_command(char *cmd);
 int		is_math_operator(t_token *current);
@@ -347,6 +346,10 @@ void	close_all_pipes(t_pipe_ctx *ctx);
 int	**create_pipes(int cmd_count);
 int	count_commands(t_token *tokens);
 void	fill_pipes_cmd(t_token *token);
-
+int	is_append(char *cmd);
+void	setup_append_token(t_token *current, t_mini *ms);
+int		is_redirect_in(char *cmd);
+void	setup_heredoc_in_token(t_token *current, t_mini *ms);
+int	is_heredoc(char *cmd);
 
 #endif

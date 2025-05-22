@@ -29,14 +29,5 @@ int	parser(t_parser *state, t_mini *ms)
 		state->curr = state->curr->next;
 	}
 	fill_pipes_cmd(ms->token);
-	int i = 0;
-	char **pipe_cmds = ms->token->pipes_cmd;
-
-	printf("\n[DEBUG] Conteúdo de pipes_cmd:\n");
-	while (pipe_cmds && pipe_cmds[i])
-	{
-		printf("pipe_cmd[%d]: %s\n", i, pipe_cmds[i]);
-		i++;
-	}
 	return (1);
 }

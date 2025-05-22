@@ -83,5 +83,6 @@ int	is_valid_for_processing(t_mini *ms)
 	return (ms->token && ms->token->type != CMD_EXPR
 		&& ms->token->type != CMD_REDIRECT_IN
 		&& ms->token->type != CMD_REDIRECT_OUT
-		&& ms->token->type != CMD_PIPE);
+		&& ms->token->type != CMD_PIPE
+		&& ms->token->type != CMD_APPEND);
 }

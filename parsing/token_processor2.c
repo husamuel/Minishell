@@ -14,12 +14,16 @@
 
 void	setup_redirect_in_token(t_token *current, t_mini *ms)
 {
-	if (current->cmd[1] == '<')
-		current->type = CMD_HEREDOC;
-	else
-		current->type = CMD_REDIRECT_IN;
+	current->type = CMD_HEREDOC;
 	++ms->redirect;
 }
+
+void	setup_heredoc_in_token(t_token *current, t_mini *ms)
+{
+	current->type = CMD_HEREDOC;
+	++ms->redirect;
+}
+
 
 void	process_exit_status(t_token *current, t_mini *ms)
 {

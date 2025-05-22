@@ -36,24 +36,34 @@ void	setup_pipe_token(t_token *current, t_mini *ms)
 	++ms->pipe;
 }
 
-int	is_redirect_out(char *cmd)
+int	is_append(char *cmd)
 {
-	return (cmd[0] == '>'
-		|| (ft_strlen(cmd) >= 2 && cmd[0] == '>' && cmd[1] == '>'));
+	return (ft_strlen(cmd) >= 2 && cmd[0] == '>' && cmd[1] == '>');
 }
 
-int	is_redirect_in(char *cmd, t_mini *ms)
+int	is_redirect_out(char *cmd)
 {
-	if (!cmd)
-		return (0);
-	if (ft_strlen(cmd) >= 2 && cmd[0] == '<' && cmd[1] == '<')
-		ms->heredoc = 1;
-	return (cmd[0] == '<'
-		|| (ft_strlen(cmd) >= 2 && cmd[0] == '<' && cmd[1] == '<'));
+	return (cmd[0] == '>');
+}
+
+int	is_heredoc(char *cmd)
+{
+	return (cmd && ft_strlen(cmd) >= 2 && cmd[0] == '<' && cmd[1] == '<');
+}
+
+int	is_redirect_in(char *cmd)
+{
+	return (cmd[0] == '<');
 }
 
 void	setup_redirect_out_token(t_token *current, t_mini *ms)
 {
 	current->type = CMD_REDIRECT_OUT;
+	++ms->redirect;
+}
+
+void	setup_append_token(t_token *current, t_mini *ms)
+{
+	current->type = CMD_APPEND;
 	++ms->redirect;
 }

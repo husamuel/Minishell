@@ -25,6 +25,7 @@ void	process_token_part2(t_parser *state, t_mini *ms)
 	{
 		ft_handle_norm(state, ms);
 	}
+	
 }
 
 void	process_token(t_parser *state, t_mini *ms)

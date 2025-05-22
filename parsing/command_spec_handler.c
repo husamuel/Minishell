@@ -21,10 +21,14 @@ void	ft_handle_spec(t_parser *state, t_mini *ms)
 	}
 	if (state->curr->cmd[0] == '|')
 		setup_pipe_token(state->curr, ms);
+	else if (is_append(state->curr->cmd))
+		setup_append_token(state->curr, ms);
 	else if (is_redirect_out(state->curr->cmd))
 		setup_redirect_out_token(state->curr, ms);
-	else if (is_redirect_in(state->curr->cmd, ms))
+	else if (is_redirect_in(state->curr->cmd))
 		setup_redirect_in_token(state->curr, ms);
+	else if (is_heredoc(state->curr->cmd))
+		setup_heredoc_in_token(state->curr, ms);
 	else if (state->curr->cmd[0] == '\\' || state->curr->cmd[0] == ';')
 		state->curr->type = CMD_NONE;
 }
@@ -35,7 +39,8 @@ void	ft_handle_norm(t_parser *state, t_mini *ms)
 
 	if (state->prev && (state->prev->type == CMD_REDIRECT_IN
 			|| state->prev->type == CMD_REDIRECT_OUT
-			|| state->prev->type == CMD_HEREDOC))
+			|| state->prev->type == CMD_HEREDOC
+			|| state->prev->type == CMD_APPEND))
 	{
 		processed_arg = ft_strdup(state->curr->cmd);
 		if (processed_arg)
@@ -48,7 +53,8 @@ void	ft_handle_norm(t_parser *state, t_mini *ms)
 	else if (state->curr->type != CMD_HEREDOC
 		&& state->curr->type != CMD_REDIRECT_IN
 		&& state->curr->type != CMD_REDIRECT_OUT
-		&& state->curr->type != CMD_PIPE)
+		&& state->curr->type != CMD_PIPE
+		&& state->curr->type != CMD_APPEND)
 	{
 		handle_arg_token(state, ms);
 	}
