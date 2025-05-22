@@ -8,7 +8,6 @@ void exec(t_mini *ms)
         return;
     }
 
-    // Set up signal handling for parent
     signal(SIGINT, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 
@@ -26,7 +25,6 @@ void exec(t_mini *ms)
         }
     }
 
-    // Restore default signal handling
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
 }

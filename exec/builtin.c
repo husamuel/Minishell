@@ -10,8 +10,8 @@ int execute_external_builtin(t_token *token, t_mini *ms)
     {
         if (setup_redirections(token) == -1)
             exit(1);
-        exec_builtin(token, ms);  // não retorna
-        exit(0); // builtins não têm retorno direto
+        exec_builtin(token, ms);
+        exit(0);
     }
     else if (pid > 0)
     {
