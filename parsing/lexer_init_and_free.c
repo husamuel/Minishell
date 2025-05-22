@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 17:28:34 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 19:18:01 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/22 15:41:18 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ t_token	*create_new_token(char *cmd)
 		new_token->cmd = ft_strdup(cmd);
 	else
 		new_token->cmd = NULL;
-	new_token->type = CMD_NONE;
 	return (new_token);
 }
 

@@ -49,6 +49,7 @@ typedef struct s_token
 	int				is_literal;
 	char			*infile;
 	char			*outfile;
+	char			**pipes_cmd;
 }	t_token;
 
 typedef struct s_env
@@ -345,5 +346,7 @@ int execute_external_builtin(t_token *token, t_mini *ms);
 void	close_all_pipes(t_pipe_ctx *ctx);
 int	**create_pipes(int cmd_count);
 int	count_commands(t_token *tokens);
+void	fill_pipes_cmd(t_token *token);
+
 
 #endif

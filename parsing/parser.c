@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:28:24 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/02 16:56:44 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:12:16 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,16 @@ int	parser(t_parser *state, t_mini *ms)
 		process_token(state, ms);
 		state->prev = state->curr;
 		state->curr = state->curr->next;
+	}
+	fill_pipes_cmd(ms->token);
+	int i = 0;
+	char **pipe_cmds = ms->token->pipes_cmd;
+
+	printf("\n[DEBUG] Conteúdo de pipes_cmd:\n");
+	while (pipe_cmds && pipe_cmds[i])
+	{
+		printf("pipe_cmd[%d]: %s\n", i, pipe_cmds[i]);
+		i++;
 	}
 	return (1);
 }

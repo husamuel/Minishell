@@ -1,48 +1,67 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                            :::      ::::::::   */
+/*   execute_pipeline.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/22 17:40:00 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/22 17:45:00 by husamuel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
-static void	execute_pipeline_command(t_token *token, t_pipe_ctx *ctx, t_mini *ms)
+static void	execute_pipeline_command(char *command, t_pipe_ctx *ctx, t_mini *ms)
 {
+	t_token *token_list;
 	char	*cmd_path;
+
+	token_list = lexer(command);
+	if (!token_list || !is_valid_command(token_list))
+		exit(1);
 
 	if (ctx->cmd_index > 0)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index - 1][0], STDIN_FILENO) == -1)
 		{
-			perror("dup2 pipe input");
-			exit(1);
-		}
+            perror("dup2 out");
+            exit(1);
+        }
 	}
 	if (ctx->cmd_index < ctx->count - 1)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index][1], STDOUT_FILENO) == -1)
 		{
-			perror("dup2 pipe output");
-			exit(1);
-		}
+            perror("dup2 out");
+            exit(1);
+        }
 	}
 	close_all_pipes(ctx);
-	if (setup_redirections(token) == -1)
+
+	if (setup_redirections(token_list) == -1)
 		exit(1);
-	if (token->type == CMD_BUILDIN)
-		exit(exec_builtin(token, ms));
-	else if (token->type == CMD_EXPR)
+
+	if (token_list->type == CMD_BUILDIN)
+		exit(exec_builtin(token_list, ms));
+	else if (token_list->type == CMD_EXPR)
 	{
-		process_expr_command(token, ms);
+		process_expr_command(token_list, ms);
 		exit(0);
 	}
-	else if (token->type == CMD_EXEC)
+	else if (token_list->type == CMD_EXEC)
 	{
-		cmd_path = find_command_path(token->cmd, ms->export);
+		cmd_path = find_command_path(token_list->cmd, ms->export);
 		if (!cmd_path)
 		{
 			ft_putstr_fd("minishell: command not found: ", 2);
-			ft_putstr_fd(token->cmd, 2);
+			ft_putstr_fd(token_list->cmd, 2);
 			ft_putstr_fd("\n", 2);
 			exit(127);
 		}
-		if (execve(cmd_path, token->args, get_env_array(ms->export)) == -1)
+		if (execve(cmd_path, token_list->args, get_env_array(ms->export)) == -1)
 		{
-			perror(token->cmd);
+			perror(token_list->cmd);
 			free(cmd_path);
 			exit(127);
 		}
@@ -52,60 +71,55 @@ static void	execute_pipeline_command(t_token *token, t_pipe_ctx *ctx, t_mini *ms
 
 int	execute_pipeline(t_mini *ms)
 {
-	t_token		*current;
 	t_pipe_ctx	ctx;
 	pid_t		*pids;
 	int			status;
-	int			last_status;
+	int			last_status = 0;
 	int			i;
+	char		**pipes;
 
-	current = ms->token;
-	ctx.count = count_commands(ms->token);
+	if (!ms || !ms->token || !ms->token->pipes_cmd)
+		return (1);
+	pipes = ms->token->pipes_cmd;
+	for (ctx.count = 0; pipes[ctx.count]; ctx.count++);
+
 	ctx.pipe_fds = create_pipes(ctx.count);
 	if (!ctx.pipe_fds && ctx.count > 1)
 		return (perror("pipe creation"), 1);
-	if (ctx.count <= 1)
-		return (execute_token(current, ms));
+
 	pids = malloc(sizeof(pid_t) * ctx.count);
 	if (!pids)
 		return (close_all_pipes(&ctx), 1);
-	ctx.cmd_index = 0;
-	while (current && ctx.cmd_index < ctx.count)
+
+	i = -1;
+	while (++i < ctx.count)
 	{
-		if (is_valid_command(current))
+		ctx.cmd_index = i;
+		pids[i] = fork();
+		if (pids[i] == 0)
 		{
-			pids[ctx.cmd_index] = fork();
-			if (pids[ctx.cmd_index] == 0)
-			{
-				signal(SIGINT, SIG_DFL);
-				signal(SIGQUIT, SIG_DFL);
-				execute_pipeline_command(current, &ctx, ms);
-			}
-			else if (pids[ctx.cmd_index] < 0)
-			{
-				perror("fork");
-				last_status = 1;
-				break ;
-			}
-			ctx.cmd_index++;
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
+			execute_pipeline_command(pipes[i], &ctx, ms);
 		}
-		current = current->next;
+		else if (pids[i] < 0)
+		{
+			perror("fork");
+			last_status = 1;
+			break ;
+		}
 	}
+
+	close_all_pipes(&ctx);
+
 	i = -1;
-	while (++i < ctx.count - 1)
-	{
-		close(ctx.pipe_fds[i][0]);
-		close(ctx.pipe_fds[i][1]);
-		free(ctx.pipe_fds[i]);
-	}
-	free(ctx.pipe_fds);
-	i = -1;
-	while (++i < ctx.cmd_index)
+	while (++i < ctx.count)
 	{
 		waitpid(pids[i], &status, 0);
-		if (i == ctx.cmd_index - 1)
+		if (i == ctx.count - 1)
 			last_status = WEXITSTATUS(status);
 	}
+
 	free(pids);
 	return (last_status);
 }
