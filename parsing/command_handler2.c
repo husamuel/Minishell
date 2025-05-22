@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:58:13 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/21 08:20:48 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/22 14:10:46 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static	int	set_cmd_args(t_parser *state)
 static int	check_special_token(t_parser *state)
 {
 	return (state->curr->type == CMD_PIPE
-		|| state->curr->type == CMD_REDIRECT
+		|| state->curr->type == CMD_APPEND
 		|| state->curr->type == CMD_REDIRECT_IN
 		|| state->curr->type == CMD_REDIRECT_OUT
 		|| state->curr->type == CMD_ARG_FILE
