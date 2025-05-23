@@ -17,47 +17,77 @@ void	echo_others(t_token *next, int i, t_mini *mini, char *input);
 void	echo_dollar(int *i, char *input, t_mini *mini);
 int		check_nl_echo(char *s);
 
-static void	ft_handle_home(void)
+int	has_unclosed_quotes(const char *input)
 {
-	char	*s;
+	int		i = 0;
+	char	quote = '\0';
 
-	s = getenv("HOME");
-	printf("%s\n", s);
-}
-
-static void	handle_echo_output(t_token *next, t_mini *mini, int has_redirect)
-{
-	char	*input_start;
-	char	*redirect_pos;
-
-	input_start = mini->input + 5;
-	redirect_pos = NULL;
-	if (has_redirect)
-		redirect_pos = ft_get_redirect_pos(input_start);
-	if (has_redirect && redirect_pos)
-		ft_handle_redirect_case(input_start, redirect_pos);
-	else
-		echo_others(next, 0, mini, input_start);
+	while (input[i])
+	{
+		if ((input[i] == '\'' || input[i] == '\"'))
+		{
+			if (!quote)
+				quote = input[i];
+			else if (quote == input[i])
+				quote = '\0';
+		}
+		i++;
+	}
+	return (quote != '\0');
 }
 
 void	exec_echo(t_token *token, t_mini *mini)
 {
-	t_token	*next;
-	int		has_redirect;
+	if (has_unclosed_quotes(mini->input))
+	{
+		mini->exit_status = 2;
+		return ;
+	}
+	if (ft_strchr(mini->input, '\'') || ft_strchr(mini->input, '\"') || ft_strchr(mini->input, '$'))
+	{
+		echo_others(token->next, 0, mini, mini->input + 5);
+		return ;
+	}
 
-	has_redirect = has_redirection(token);
-	next = token->next;
-	if (!next)
+	int		i = 1;
+	int		newline = 1;
+
+	if (token->args[1] && ft_strncmp(token->args[1], "-n", 3) == 0)
+	{
+		newline = 0;
+		i++;
+	}
+
+	while (token->args[i])
+	{
+		char *arg = token->args[i];
+
+		if (arg[0] == '$')
+		{
+			if (arg[1] == '?')
+				printf("%d", mini->exit_status);
+			else
+			{
+				char *value = get_env_value(mini->export, arg + 1);
+				if (value)
+				{
+					printf("%s", value);
+					free(value);
+				}
+			}
+		}
+		else
+			printf("%s", arg);
+
+		if (token->args[i + 1])
+			printf(" ");
+		i++;
+	}
+
+	if (newline)
 		printf("\n");
-	else if (mini->echo != 0)
-		return ;
-	else if (ft_strcmp(next->cmd, "~") == 0)
-		ft_handle_home();
-	else if (ft_strcmp(next->cmd, "$?+$?") == 0)
-		return ;
-	else
-		handle_echo_output(next, mini, has_redirect);
 }
+
 
 void	echo_dollar(int *i, char *input, t_mini *mini)
 {

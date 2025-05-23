@@ -19,7 +19,6 @@ void execute_pipeline_command(t_token *token_list, t_pipe_ctx *ctx, t_mini *ms, 
 	if (!token_list || !is_valid_command(token_list))
 		exit(1);
 
-	// Redireciona input do comando anterior
 	if (ctx->cmd_index > 0)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index - 1][0], STDIN_FILENO) == -1)
@@ -28,7 +27,6 @@ void execute_pipeline_command(t_token *token_list, t_pipe_ctx *ctx, t_mini *ms, 
 			exit(1);
 		}
 	}
-	// Redireciona output para o próximo comando
 	if (ctx->cmd_index < ctx->count - 1)
 	{
 		if (dup2(ctx->pipe_fds[ctx->cmd_index][1], STDOUT_FILENO) == -1)
