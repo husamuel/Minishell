@@ -89,7 +89,6 @@ int	execute_pipeline(t_mini *ms)
 	if (!pids)
 		return (close_all_pipes(&ctx), 1);
 
-	// Inicializa ponteiro para tokens
 	t_token *token_ptr = ms->token;
 
 	i = -1;
@@ -97,13 +96,10 @@ int	execute_pipeline(t_mini *ms)
 	{
 		ctx.cmd_index = i;
 
-		// Guarda o token atual (início do comando i)
 		t_token *current_cmd_token = token_ptr;
 
-		// Avança até ao próximo pipe (fim do comando atual)
 		while (token_ptr && token_ptr->type != CMD_PIPE)
 			token_ptr = token_ptr->next;
-		// Salta o pipe para o próximo comando
 		if (token_ptr && token_ptr->type == CMD_PIPE)
 			token_ptr = token_ptr->next;
 
@@ -113,11 +109,9 @@ int	execute_pipeline(t_mini *ms)
 			signal(SIGINT, SIG_DFL);
 			signal(SIGQUIT, SIG_DFL);
 
-			if (ctx.cmd_index == ctx.count - 1)
-			{
-				if (setup_redirections(current_cmd_token) == -1)
-					exit(1);
-			}
+			if (setup_redirections(current_cmd_token) == -1)
+				exit(1);
+
 
 			execute_pipeline_command(current_cmd_token, &ctx, ms, current_cmd_token->type);
 		}

@@ -95,7 +95,7 @@ void	handle_arg_token(t_parser *state, t_mini *ms)
 	(void)ms;
 	if (!state->last_cmd || !state->curr || !state->curr->cmd)
 		return ;
-	if (state->prev && (is_redirect_in(state->prev->cmd, ms) || is_redirect_out(state->prev->cmd)
+	if (state->prev && (is_redirect_in(state->prev->cmd) || is_redirect_out(state->prev->cmd)
 		|| is_append(state->prev->cmd)))
 	{
 		add_to_args_file(state->last_cmd, state->curr->cmd);
