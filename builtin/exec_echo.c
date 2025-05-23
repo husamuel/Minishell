@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:13 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/23 18:01:07 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@ int		check_nl_echo(char *s);
 
 int	has_unclosed_quotes(const char *input)
 {
-	int		i = 0;
-	char	quote = '\0';
+	int		i;
+	char	quote;
 
+	i = 0;
+	quote = '\0';
 	while (input[i])
 	{
 		if ((input[i] == '\'' || input[i] == '\"'))
@@ -36,100 +38,72 @@ int	has_unclosed_quotes(const char *input)
 	return (quote != '\0');
 }
 
+static void	handle_dollar_variable(t_token *token, t_mini *mini, int i)
+{
+	char	*arg;
+	char	*value;
+
+	arg = token->args[i];
+	if (arg[1] == '?')
+		printf("%d", mini->exit_status);
+	else
+	{
+		value = get_env_value(mini->export, arg + 1);
+		if (value)
+		{
+			printf("%s", value);
+			free(value);
+		}
+	}
+}
+
+static void	print_args(t_token *token, t_mini *mini, int start_index)
+{
+	int		i;
+	char	*arg;
+
+	i = start_index;
+	while (token->args[i])
+	{
+		arg = token->args[i];
+		if (arg[0] == '$')
+			handle_dollar_variable(token, mini, i);
+		else
+			printf("%s", arg);
+		if (token->args[i + 1])
+			printf(" ");
+		i++;
+	}
+}
+
+static int	check_newline_flag(t_token *token)
+{
+	if (token->args[1] && ft_strncmp(token->args[1], "-n", 3) == 0)
+		return (0);
+	return (1);
+}
+
 void	exec_echo(t_token *token, t_mini *mini)
 {
+	int	start_index;
+	int	newline;
+
 	if (has_unclosed_quotes(mini->input))
 	{
 		mini->exit_status = 2;
 		return ;
 	}
-	if (ft_strchr(mini->input, '\'') || ft_strchr(mini->input, '\"') || ft_strchr(mini->input, '$'))
+	if (ft_strchr(mini->input, '\'') || ft_strchr(mini->input, '\"')
+		|| ft_strchr(mini->input, '$'))
 	{
 		echo_others(token->next, 0, mini, mini->input + 5);
 		return ;
 	}
-
-	int		i = 1;
-	int		newline = 1;
-
-	if (token->args[1] && ft_strncmp(token->args[1], "-n", 3) == 0)
-	{
-		newline = 0;
-		i++;
-	}
-
-	while (token->args[i])
-	{
-		char *arg = token->args[i];
-
-		if (arg[0] == '$')
-		{
-			if (arg[1] == '?')
-				printf("%d", mini->exit_status);
-			else
-			{
-				char *value = get_env_value(mini->export, arg + 1);
-				if (value)
-				{
-					printf("%s", value);
-					free(value);
-				}
-			}
-		}
-		else
-			printf("%s", arg);
-
-		if (token->args[i + 1])
-			printf(" ");
-		i++;
-	}
-
+	start_index = 1;
+	newline = check_newline_flag(token);
+	if (!newline)
+		start_index++;
+	print_args(token, mini, start_index);
 	if (newline)
 		printf("\n");
-}
-
-
-void	echo_dollar(int *i, char *input, t_mini *mini)
-{
-	char	*var;
-
-	var = NULL;
-	if (input[*i + 1] == '?')
-	{
-		printf("%s", mini->token->args[1]);
-		*i += 2;
-		return ;
-	}
-	else if (ft_isdigit(input[*i + 1]))
-	{
-		if (input[*i + 1] == '0')
-			printf("minishell");
-		*i += 2;
-	}
-	else if (ft_isalpha(input[*i + 1]))
-	{
-		var = ft_strdup(&input[++(*i)]);
-		print_echo(input, i, var, mini);
-	}
-}
-
-char	*print_echo(char *input, int *i, char *var, t_mini *mini)
-{
-	char	*s;
-	int		j;
-
-	j = 0;
-	while (ft_isalnum(var[j]) || var[j] == '_')
-		j++;
-	var[j] = '\0';
-	s = expand_var(var, mini->export);
-	free(var);
-	if (s)
-	{
-		printf("%s", s);
-		free(s);
-	}
-	while (ft_isalnum(input[*i]) || input[*i] == '_')
-		(*i)++;
-	return (s);
 }

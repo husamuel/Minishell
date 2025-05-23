@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_processor2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:25:21 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/04/27 15:27:06 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/23 10:18:29 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	setup_heredoc_in_token(t_token *current, t_mini *ms)
 	current->type = CMD_HEREDOC;
 	++ms->redirect;
 }
-
 
 void	process_exit_status(t_token *current, t_mini *ms)
 {
@@ -73,19 +72,4 @@ int	is_math_operator(t_token *current)
 		return (1);
 	}
 	return (0);
-}
-
-void	handle_exit_status_argument(t_token *current, t_token *last_cmd,
-	t_mini *ms)
-{
-	char	*exit_status_str;
-
-	exit_status_str = ft_itoa(ms->exit_status);
-	if (exit_status_str)
-	{
-		add_to_args_file(last_cmd, exit_status_str);
-		add_to_args(last_cmd, exit_status_str);
-		current->type = CMD_ARG;
-		free(exit_status_str);
-	}
 }

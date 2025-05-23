@@ -1,40 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/23 10:21:32 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 10:22:20 by husamuel         ###   ########.fr       */
+/*   Created: 2025/05/23 18:02:31 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/23 18:06:33 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../minishell.h"
 
-void	exec(t_mini *ms)
+char	*get_env_value(t_env *env, char *key)
 {
-	t_token		*current;
+	t_env	*current;
 
-	if (!ms || !ms->token)
+	if (!key || !env)
+		return (NULL);
+	current = env;
+	while (current)
 	{
-		ms->exit_status = 0;
-		return ;
+		if (strcmp(current->var, key) == 0)
+			return (ft_strdup(current->content));
+		current = current->next;
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	if (ms->pipe > 0)
-		ms->exit_status = execute_pipeline(ms);
-	else
-	{
-		current = ms->token;
-		while (current)
-		{
-			if (is_valid_command(current))
-				ms->exit_status = execute_token(current, ms);
-			current = current->next;
-		}
-	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	return (NULL);
 }

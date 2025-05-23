@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:27:55 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 18:52:32 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/23 10:20:56 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,4 @@ int	is_redirect_out(char *cmd)
 int	is_heredoc(char *cmd)
 {
 	return (cmd && ft_strlen(cmd) >= 2 && cmd[0] == '<' && cmd[1] == '<');
-}
-
-int	is_redirect_in(char *cmd)
-{
-	return (cmd[0] == '<');
-}
-
-void	setup_redirect_out_token(t_token *current, t_mini *ms)
-{
-	current->type = CMD_REDIRECT_OUT;
-	++ms->redirect;
-}
-
-void	setup_append_token(t_token *current, t_mini *ms)
-{
-	current->type = CMD_APPEND;
-	++ms->redirect;
 }

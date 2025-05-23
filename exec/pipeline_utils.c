@@ -1,20 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                            :::      ::::::::   */
-/*   pipeline_utils.c                                     :+:      :+:    :+:   */
+/*                                                        :::      ::::::::   */
+/*   pipeline_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/22 18:00:00 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/22 18:05:00 by husamuel         ###   ########.fr       */
+/*   Created: 2025/05/23 17:50:37 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/23 18:03:55 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../minishell.h"
 
-/**
- * Conta os comandos presentes em pipes_cmd[]
- */
 int	count_commands(t_token *tokens)
 {
 	char	**pipes_cmd;
@@ -29,17 +26,26 @@ int	count_commands(t_token *tokens)
 	return (count);
 }
 
-/**
- * Cria os pipes necessários entre os comandos.
- * Para N comandos, precisamos de N-1 pipes.
- */
-int	**create_pipes(int cmd_count)
+static void	cleanup_pipes(int **pipes, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		free(pipes[i]);
+		i++;
+	}
+	free(pipes);
+}
+
+static int	**allocate_and_create_pipes(int cmd_count)
 {
 	int	**pipes;
 	int	i;
 
-	if (cmd_count <= 1)
-		return (NULL);
 	pipes = malloc(sizeof(int *) * (cmd_count - 1));
 	if (!pipes)
 		return (NULL);
@@ -49,13 +55,7 @@ int	**create_pipes(int cmd_count)
 		pipes[i] = malloc(sizeof(int) * 2);
 		if (!pipes[i] || pipe(pipes[i]) == -1)
 		{
-			while (--i >= 0)
-			{
-				close(pipes[i][0]);
-				close(pipes[i][1]);
-				free(pipes[i]);
-			}
-			free(pipes);
+			cleanup_pipes(pipes, i);
 			return (NULL);
 		}
 		i++;
@@ -63,13 +63,19 @@ int	**create_pipes(int cmd_count)
 	return (pipes);
 }
 
+int	**create_pipes(int cmd_count)
+{
+	if (cmd_count <= 1)
+		return (NULL);
+	return (allocate_and_create_pipes(cmd_count));
+}
+
 void	close_all_pipes(t_pipe_ctx *ctx)
 {
 	int	i;
 
 	if (!ctx || !ctx->pipe_fds)
-		return;
-
+		return ;
 	i = 0;
 	while (i < ctx->count - 1)
 	{

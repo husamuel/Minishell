@@ -32,8 +32,6 @@
 # define GREEN "\001\033[32m\002"
 # define RESET "\001\033[0m\002"
 
-extern volatile sig_atomic_t	g_signal_received;
-
 typedef struct s_token
 {
 	char			*cmd;
@@ -136,7 +134,7 @@ typedef enum e_cmd_type
 }	t_cmd_type;
 
 //Core initialization
-int ft_strcmp(char *s1, char *s2);
+int		ft_strcmp(char *s1, char *s2);
 t_mini	init(char **envp);
 t_env	*ft_last(t_env *head);
 char	*get_input(t_mini *ms, char *prompt);
@@ -180,8 +178,8 @@ void	add_to_args(t_token *token, char *arg);
 //Token Type Handling
 void	handle_command_token(t_parser *state, t_mini *ms);
 void	handle_arg_token(t_parser *state, t_mini *ms);
-void	handle_exit_status_argument(t_token *current, t_token *last_cmd,
-			t_mini *ms);
+void	handle_exit_status_argument(t_token *current,
+			t_token *last_cmd, t_mini *ms);
 //Setup Instructions
 void	setup_expr_command(t_token *current,
 			int *command_seen, t_token **last_cmd);
@@ -190,7 +188,6 @@ void	ft_handle_zero(t_mini *ms);
 
 //Execution
 void	exec(t_mini *ms);
-void	execute_child_process(t_token *current, t_mini *ms);
 int		is_builtin(const char *cmd);
 
 //Builtins
@@ -220,11 +217,6 @@ void	update_var(char *oldpwd, char *pwd, t_mini *mini);
 int		check_fullpath(t_token *next, t_mini *mini);
 
 //Redirection & Pipes
-int		**init_pipes(int pipe_count);
-void	handle_child_process(t_token *current, t_mini *ms, t_pipe_ctx *ctx);
-void	close_and_free_pipes(t_pipe_ctx *ctx);
-int		exec_redirect(t_token *token, t_mini *ms);
-int		exec_heredoc(t_token *token, t_mini *ms);
 void	setup_pipe_token(t_token *current, t_mini *ms);
 void	setup_redirect_out_token(t_token *current, t_mini *ms);
 void	setup_redirect_in_token(t_token *current, t_mini *ms);
@@ -265,91 +257,54 @@ int		is_in_expr_context(t_token *prev);
 void	ft_handle_flag(t_token **next, int *nl_flag);
 int		ft_is_valid_n_flag(char *s, int *len);
 int		ft_skip_n_flags(char *input, int *nl_flag);
-void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count);
-int		exec_pipe_with_redirects(t_mini *ms);
-t_token	*ft_unlink_tokens(t_token *token, t_token *next);
-int		ft_open_redirect_file(t_token *token, t_token *next);
-int		ft_redir_exec_setup(int fd, int is_input);
 char	**env_to_array(t_env *env);
 void	free_env_array(char **env_array);
 void	free_args_array(char **args);
-int		exec_heredoc_with_pipes(t_mini *ms);
-int		exec_heredoc_with_pipes(t_mini *ms);
-int		process_special_token2(t_token *token, t_mini *ms,
-			int *has_output_redirect);
-void	setup_child_pipes(int **pipe_fds, int cmd_index,
-			int pipe_count, int has_output_redirect);
-t_token	*find_command(t_token *current);
-void	execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
-t_token	*next_command(t_token *current);
-int		process_command(t_token **current, t_mini *ms, t_pipe_ctx *ctx);
-int		**init_pipes2(int pipe_count);
-void	close_pipes(t_pipe_ctx *ctx);
-void	setup_child_pipes(int **pipe_fds, int cmd_index,
-			int pipe_count, int has_output_redirect);
-void	execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
-int		process_command(t_token **current, t_mini *ms, t_pipe_ctx *ctx);
-void	close_all_pipe_fds(int **pipe_fds, int pipe_count);
-void	dup_pipe_ends(int **pipe_fds, int cmd_index,
-			int pipe_count, int has_output_redirect);
-void	execute_child(t_token *start_token, t_mini *ms, t_pipe_ctx *ctx);
-void	execute_child_part2(t_token *cmd_token, t_mini *ms,
-			t_pipe_ctx *ctx, int has_output_redirect);
-t_token	*find_command(t_token *current);
-int		process_special_token2(t_token *token, t_mini *ms,
-			int *has_output_redirect);
-int		ft_handle_heredoc_input(const t_token *next, int fd[2]);
-int		ft_execute_builtin(t_token *cmd_token, t_mini *ms, int fd);
-int		ft_execute_external(t_token *cmd_token, t_mini *ms, int fd);
-int		ft_heredoc_default(int fd);
-void	handle_execve_with_args(t_token *current, t_mini *ms, char **envp);
-int		ft_execute_special_in_child(t_token *current, t_mini *ms);
-void	set_child_pipes(int **pipe_fds, int cmd_index, int pipe_count);
-void	handle_execve_with_cmd(t_token *current, t_mini *ms, char **envp);
-void	handle_execve_error(char *path, char **envp);
-int		ft_redirect_execution(t_token *cmd, t_mini *ms,
-			int fd, int is_input);
-void	ft_relink_tokens(t_token *token, t_token *next, t_token *after);
-
-void	close_pipe_ends(t_pipe_ctx *ctx);
-void	close_all_pipes_in_child(t_pipe_ctx *ctx);
-void	prepare_child_io(t_pipe_ctx *ctx);
-int		setup_redirects(t_token *token, t_token **next_cmd);
-int		setup_redirect_single(t_token *token, t_token *next,
-			t_token **after);
-int		process_redirect_file(t_token *token, t_token *next);
-void	close_and_free_pipes1(t_pipe_ctx *ctx);
-int		**init_pipes1(int count);
-void	handle_child_process1(t_token *cmd, t_mini *ms, t_pipe_ctx *ctx);
 void	display_command_not_found(t_token *token, t_mini *ms);
 int		is_valid_for_processing(t_mini *ms);
 void	ft_decide_on_exit_status(t_parser *state, t_mini *ms);
 void	free_token_content(t_token *token);
 int		handle_input_line(char *line, t_mini *ms);
 void	restore_child_tty(void);
-char **get_env_array(t_env *env);
-int setup_heredoc(char *delimiter);
-void ft_free_split(char **split);
-char *ft_strjoin_free(char *s1, char *s2);
-char *get_env_value(t_env *env, char *key);
-int setup_redirections(t_token *token);
-int	is_valid_command(t_token *token);
-int execute_pipeline(t_mini *ms);
-int execute_token(t_token *token, t_mini *ms);
-char *find_command_path(char *cmd, t_env *env);
-int is_valid_command(t_token *token);
-int execute_simple_command(t_token *token, t_mini *ms);
-int execute_external_command(t_token *token, t_mini *ms);
-char *find_command_path(char *cmd, t_env *env);
-int execute_external_builtin(t_token *token, t_mini *ms);
+char	**get_env_array(t_env *env);
+int		setup_heredoc(char *delimiter);
+void	ft_free_split(char **split);
+char	*ft_strjoin_free(char *s1, char *s2);
+char	*get_env_value(t_env *env, char *key);
+int		setup_redirections(t_token *token);
+int		is_valid_command(t_token *token);
+int		execute_pipeline(t_mini *ms);
+int		execute_token(t_token *token, t_mini *ms);
+char	*find_command_path(char *cmd, t_env *env);
+int		is_valid_command(t_token *token);
+int		execute_simple_command(t_token *token, t_mini *ms);
+int		execute_external_command(t_token *token, t_mini *ms);
+char	*find_command_path(char *cmd, t_env *env);
+int		execute_external_builtin(t_token *token, t_mini *ms);
 void	close_all_pipes(t_pipe_ctx *ctx);
-int	**create_pipes(int cmd_count);
-int	count_commands(t_token *tokens);
+int		**create_pipes(int cmd_count);
+int		count_commands(t_token *tokens);
 void	fill_pipes_cmd(t_token *token);
-int	is_append(char *cmd);
+int		is_append(char *cmd);
 void	setup_append_token(t_token *current, t_mini *ms);
 int		is_redirect_in(char *cmd);
 void	setup_heredoc_in_token(t_token *current, t_mini *ms);
-int	is_heredoc(char *cmd);
+int		is_heredoc(char *cmd);
+int		exec_builtin_commands(t_token *token, t_mini *mini, char **paths);
+int		exec_system_builtins(t_token *token, t_mini *mini, char **paths);
+int		exec_basic_builtins(t_token *token, t_mini *mini);
+int		handle_fork_error2(char *cmd_path);
+void	print_command_not_found(char *cmd);
+int		process_redirection(t_token *current);
+int		validate_and_find_command(t_token *token, t_mini *ms, char **cmd_path);
+int		execute_fork_process(t_token *token, t_mini *ms, char *cmd_path);
+char	*print_echo(char *input, int *i, char *var, t_mini *mini);
+t_token	*get_next_command_token(t_token **token_ptr);
+int		init_pipeline_context(t_mini *ms, t_pipe_ctx *ctx, pid_t **pids);
+void	execute_pipeline_command(t_token *token_list,
+			t_pipe_ctx *ctx, t_mini *ms, int type);
+char	*join_command_segment(t_token **token);
+int		count_pipe_segments(t_token *token);
+int		*extract_command_types(t_token *token, int count);
 
 #endif

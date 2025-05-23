@@ -1,94 +1,82 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirections.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/23 17:47:56 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/23 17:48:59 by husamuel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
-int setup_redirections(t_token *token)
+static int	handle_output_redirect(t_token *current)
 {
-    t_token *current = token->next;
-    int fd;
+	int	fd;
 
-    while (current)
-    {
-        if (current->type == CMD_REDIRECT_OUT && current->next)
-        {
-            fd = open(current->next->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd < 0 || dup2(fd, STDOUT_FILENO) == -1)
-            {
-                perror(current->next->cmd);
-                return (-1);
-            }
-            close(fd);
-        }
-        else if (current->type == CMD_APPEND && current->next)
-        {
-            fd = open(current->next->cmd, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd < 0 || dup2(fd, STDOUT_FILENO) == -1)
-            {
-                perror(current->next->cmd);
-                return (-1);
-            }
-            close(fd);
-        }
-        else if (current->type == CMD_REDIRECT_IN && current->next)
-        {
-            fd = open(current->next->cmd, O_RDONLY);
-            if (fd < 0 || dup2(fd, STDIN_FILENO) == -1)
-            {
-                perror(current->next->cmd);
-                return (-1);
-            }
-            close(fd);
-        }
-        else if (current->type == CMD_HEREDOC && current->next)
-        {
-            fd = setup_heredoc(current->next->cmd);
-            if (fd < 0 || dup2(fd, STDIN_FILENO) == -1)
-            {
-                perror("heredoc");
-                return (-1);
-            }
-            close(fd);
-        }
-        current = current->next;
-    }
-
-    return (0);
+	fd = open(current->next->cmd, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0 || dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror(current->next->cmd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
 }
 
-
-int setup_heredoc(char *delimiter)
+static int	handle_append_redirect(t_token *current)
 {
-    int fd[2];
-    char *line;
-    char *prompt = "> ";
+	int	fd;
 
-    if (!delimiter)
-        return (-1);
+	fd = open(current->next->cmd, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd < 0 || dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror(current->next->cmd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
 
-    if (pipe(fd) == -1)
-    {
-        perror("pipe");
-        return (-1);
-    }
+static int	handle_input_redirect(t_token *current)
+{
+	int	fd;
 
-    while (1)
-    {
-        write(STDOUT_FILENO, prompt, strlen(prompt));
-        line = NULL;
-        size_t len = 0;
-        if (getline(&line, &len, stdin) == -1)
-        {
-            free(line);
-            close(fd[1]);
-            return (fd[0]);
-        }
+	fd = open(current->next->cmd, O_RDONLY);
+	if (fd < 0 || dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror(current->next->cmd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
 
-        if (strcmp(line, delimiter) == 0 || (strncmp(line, delimiter, strlen(delimiter)) == 0 && line[strlen(delimiter)] == '\n'))
-        {
-            free(line);
-            close(fd[1]);
-            return (fd[0]);
-        }
+static int	handle_heredoc_redirect(t_token *current)
+{
+	int	fd;
 
-        write(fd[1], line, strlen(line));
-        free(line);
-    }
+	fd = setup_heredoc(current->next->cmd);
+	if (fd < 0 || dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("heredoc");
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
+
+int	process_redirection(t_token *current)
+{
+	if (current->type == CMD_REDIRECT_OUT && current->next)
+		return (handle_output_redirect(current));
+	else if (current->type == CMD_APPEND && current->next)
+		return (handle_append_redirect(current));
+	else if (current->type == CMD_REDIRECT_IN && current->next)
+		return (handle_input_redirect(current));
+	else if (current->type == CMD_HEREDOC && current->next)
+		return (handle_heredoc_redirect(current));
+	return (0);
 }

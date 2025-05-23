@@ -1,74 +1,94 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/23 17:33:40 by husamuel          #+#    #+#             */
+/*   Updated: 2025/05/23 17:35:43 by husamuel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "./../minishell.h"
 
-int execute_external_builtin(t_token *token, t_mini *ms)
+int	execute_external_builtin(t_token *token, t_mini *ms)
 {
-    pid_t pid;
-    int status;
+	pid_t	pid;
+	int		status;
 
-    pid = fork();
-    if (pid == 0)
-    {
-        if (setup_redirections(token) == -1)
-            exit(1);
-        exec_builtin(token, ms);
-        exit(0);
-    }
-    else if (pid > 0)
-    {
-        waitpid(pid, &status, 0);
-        return (WEXITSTATUS(status));
-    }
-    else
-    {
-        perror("fork");
-        return (1);
-    }
+	pid = fork();
+	if (pid == 0)
+	{
+		if (setup_redirections(token) == -1)
+			exit(1);
+		exec_builtin(token, ms);
+		exit(0);
+	}
+	else if (pid > 0)
+	{
+		waitpid(pid, &status, 0);
+		return (WEXITSTATUS(status));
+	}
+	else
+	{
+		perror("fork");
+		return (1);
+	}
 }
 
-int is_builtin(const char *cmd)
+static int	compare_builtin(const char *cmd, const char *builtin)
 {
-    int i;
-    static const char *builtins[] = {
-        "cd", "echo", "pwd", "export", "unset", "env", "exit",
-        "/bin/pwd", "/bin/env", "/bin/echo", NULL
-    };
-
-    if (!cmd)
-        return (0);
-    i = 0;
-    while (builtins[i])
-    {
-        if (strcmp(cmd, builtins[i]) == 0)
-            return (1);
-        i++;
-    }
-    return (0);
+	return (strcmp(cmd, builtin) == 0);
 }
 
-int exec_builtin(t_token *token, t_mini *mini)
+int	is_builtin(const char *cmd)
 {
-    int status;
-    char *s[3];
+	static const char	*builtins[] = {
+		"cd", "echo", "pwd", "export", "unset", "env", "exit",
+		"/bin/pwd", "/bin/env", "/bin/echo", NULL
+	};
+	int					i;
 
-    status = 127;
-    s[0] = "/bin/echo";
-    s[1] = "/bin/pwd";
-    s[2] = "/bin/env";
-    if (!is_builtin(token->cmd))
-        return (status);
-    if (strcmp(token->cmd, "cd") == 0)
-        exec_cd(token, mini);
-    else if ((strcmp(token->cmd, "echo") == 0) || !strcmp(token->cmd, s[0]))
-        exec_echo(token, mini);
-    else if ((strcmp(token->cmd, "pwd") == 0) || !strcmp(token->cmd, s[1]))
-        exec_pwd(token);
-    else if (strcmp(token->cmd, "export") == 0)
-        exec_export(token, mini);
-    else if (strcmp(token->cmd, "unset") == 0)
-        exec_unset(token, mini);
-    else if ((strcmp(token->cmd, "env") == 0) || !strcmp(token->cmd, s[2]))
-        exec_env(token, mini);
-    else if (strcmp(token->cmd, "exit") == 0)
-        exec_exit(token, mini);
-    return (status);
+	if (!cmd)
+		return (0);
+	i = 0;
+	while (builtins[i])
+	{
+		if (compare_builtin(cmd, builtins[i]))
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+int	exec_basic_builtins(t_token *token, t_mini *mini)
+{
+	if (compare_builtin(token->cmd, "cd"))
+		exec_cd(token, mini);
+	else if (compare_builtin(token->cmd, "export"))
+		exec_export(token, mini);
+	else if (compare_builtin(token->cmd, "unset"))
+		exec_unset(token, mini);
+	else if (compare_builtin(token->cmd, "exit"))
+		exec_exit(token, mini);
+	else
+		return (127);
+	return (0);
+}
+
+int	exec_system_builtins(t_token *token, t_mini *mini, char **paths)
+{
+	if (compare_builtin(token->cmd, "echo")
+		|| compare_builtin(token->cmd, paths[0]))
+		exec_echo(token, mini);
+	else if (compare_builtin(token->cmd, "pwd")
+		|| compare_builtin(token->cmd, paths[1]))
+		exec_pwd(token);
+	else if (compare_builtin(token->cmd, "env")
+		|| compare_builtin(token->cmd, paths[2]))
+		exec_env(token, mini);
+	else
+		return (127);
+	return (0);
 }
