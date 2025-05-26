@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:33:40 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 17:35:43 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:28:50 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,17 @@ int	execute_external_builtin(t_token *token, t_mini *ms)
 	else if (pid > 0)
 	{
 		waitpid(pid, &status, 0);
-		return (WEXITSTATUS(status));
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			return (is_core_dumped(status));
 	}
 	else
 	{
 		perror("fork");
 		return (1);
 	}
+	return (0);
 }
 
 static int	compare_builtin(const char *cmd, const char *builtin)

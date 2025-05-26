@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 09:30:23 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:28:57 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,11 @@ int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 	{
 		waitpid(pid, &status, 0);
 		free(cmd_path);
-		return (WEXITSTATUS(status));
+		if (WIFEXITED(status))
+			return (WEXITSTATUS(status));
+		else if (WIFSIGNALED(status))
+			return (is_core_dumped(status));
+		return (1);
 	}
 	else
 		return (handle_fork_error2(cmd_path));

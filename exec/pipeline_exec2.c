@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:07:21 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:08:59 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:28:42 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,12 @@ static int	wait_for_children(pid_t *pids, int count)
 	{
 		waitpid(pids[i], &status, 0);
 		if (i == count - 1)
-			last_status = WEXITSTATUS(status);
+		{
+			if (WIFEXITED(status))
+				last_status = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				return (is_core_dumped(status));
+		}
 	}
 	return (last_status);
 }
