@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 10:21:32 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 14:22:10 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:33:24 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,5 +42,4 @@ void	exec(t_mini *ms)
 		ms->exit_status = execute_pipeline(ms);
 	else
 		exec_end(ms);
-	reset_signals();
 }

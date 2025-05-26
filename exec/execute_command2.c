@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command2.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:41:56 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 17:51:35 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:32:51 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,14 @@ int	execute_external_command(t_token *token, t_mini *ms)
 {
 	char	*cmd_path;
 	int		validation_result;
+	int		i;
 
 	validation_result = validate_and_find_command(token, ms, &cmd_path);
 	if (validation_result != 0)
 		return (validation_result);
-	return (execute_fork_process(token, ms, cmd_path));
+	i = execute_fork_process(token, ms, cmd_path);
+	setup_signals();
+	disable_ctrl_backslash();
+
+	return (i);
 }

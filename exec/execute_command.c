@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 14:28:57 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/26 16:30:59 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 	{
 		waitpid(pid, &status, 0);
 		free(cmd_path);
+		setup_signals();
+		disable_ctrl_backslash();
 		if (WIFEXITED(status))
 			return (WEXITSTATUS(status));
 		else if (WIFSIGNALED(status))
@@ -86,5 +88,8 @@ int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 	}
 	else
 		return (handle_fork_error2(cmd_path));
+
+	// ✅ Garantia de retorno
 	return (0);
 }
+

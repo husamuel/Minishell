@@ -30,7 +30,6 @@ void	restore_child_tty(void)
 
 	if (tcgetattr(STDIN_FILENO, &term) == -1)
 		return ;
-	term.c_cc[VQUIT] = _POSIX_VDISABLE;
 	term.c_lflag |= ECHOCTL;
 	term.c_cc[VQUIT] = 28;
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
