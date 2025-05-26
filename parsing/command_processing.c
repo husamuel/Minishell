@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:31:33 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 19:16:34 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 09:44:33 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,10 @@ static int	setup_cmd_args_file(t_parser *state)
 	return (1);
 }
 
-void	setup_command_after_exit_status(t_parser *state)
+void	setup_command_after_exit_status(t_parser *state, t_mini *ms)
 {
+	if (!state->curr || !state->curr->cmd)
+		return ;
 	state->cmd_seen = 1;
 	state->last_cmd = state->curr;
 	if (!state->curr->args)
@@ -55,6 +57,8 @@ void	setup_command_after_exit_status(t_parser *state)
 	}
 	if (!state->curr->args_file)
 	{
+		ms->exit_status = 127;
+		printf("%d: command not found\n", ms->exit_status);
 		if (!setup_cmd_args_file(state))
 			return ;
 	}
@@ -66,7 +70,7 @@ void	ft_decide_on_exit_status(t_parser *state, t_mini *ms)
 	{
 		process_exit_status(state->curr, ms);
 		if (!state->cmd_seen)
-			setup_command_after_exit_status(state);
+			setup_command_after_exit_status(state, ms);
 		else if (state->last_cmd)
 			handle_arg_token(state, ms);
 	}

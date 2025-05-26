@@ -183,9 +183,8 @@ void	handle_exit_status_argument(t_token *current,
 //Setup Instructions
 void	setup_expr_command(t_token *current,
 			int *command_seen, t_token **last_cmd);
-void	setup_command_after_exit_status(t_parser *state);
 void	ft_handle_zero(t_mini *ms);
-
+void	setup_command_after_exit_status(t_parser *state, t_mini *ms);
 //Execution
 void	exec(t_mini *ms);
 int		is_builtin(const char *cmd);

@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 17:52:40 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 09:30:23 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ int	execute_simple_command(t_token *token, t_mini *ms)
 
 static void	setup_child_process(t_token *token, char *cmd_path, t_mini *ms)
 {
+	restore_child_tty();
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (setup_redirections(token) == -1)

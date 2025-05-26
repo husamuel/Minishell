@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 10:21:32 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 10:22:20 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/25 11:20:37 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ void	exec(t_mini *ms)
 		ms->exit_status = 0;
 		return ;
 	}
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	setup_exec_signals();
 	if (ms->pipe > 0)
 		ms->exit_status = execute_pipeline(ms);
 	else
@@ -31,10 +30,14 @@ void	exec(t_mini *ms)
 		while (current)
 		{
 			if (is_valid_command(current))
+			{
+				restore_child_tty();
 				ms->exit_status = execute_token(current, ms);
+			}
+			else
+				ms->exit_status = 127;
 			current = current->next;
 		}
 	}
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
+	reset_signals();
 }
