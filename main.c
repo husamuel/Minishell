@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/26 14:14:39 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/26 15:54:37 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ static void	main_loop(t_mini *ms, t_parser *state)
 			if (ms->token)
 			{
 				ft_free_pipes_data(ms->token);
-				if (!ms->redirect)
-					free_tokens(ms->token);
+				free_tokens(ms->token);
 			}
 			ms->token = NULL;
 		}
