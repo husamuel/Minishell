@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/21 09:29:08 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:14:39 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,12 @@ static void	main_loop(t_mini *ms, t_parser *state)
 			if (result == 0)
 				ft_handle_zero(ms);
 			exec(ms);
-			if (!ms->redirect)
-				free_tokens(ms->token);
+			if (ms->token)
+			{
+				ft_free_pipes_data(ms->token);
+				if (!ms->redirect)
+					free_tokens(ms->token);
+			}
 			ms->token = NULL;
 		}
 		ft_update_ms(ms);

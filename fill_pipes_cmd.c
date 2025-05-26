@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 10:23:26 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:13:49 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:12:13 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ char	*join_command_segment(t_token **token)
 			segment = ft_strdup((*token)->cmd);
 		else
 			segment = ft_strjoin_space(segment, (*token)->cmd);
+		if (!segment)
+		{
+			free(tmp);
+			return (NULL);
+		}
 		free(tmp);
 		*token = (*token)->next;
 	}

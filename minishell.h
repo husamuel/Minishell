@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/21 17:24:38 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:29:55 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -234,6 +234,7 @@ void	sigquit_handler(int sig);
 void	setup_signals(void);
 void	setup_exec_signals(void);
 void	reset_signals(void);
+int		is_core_dumped(int status);
 
 //Errors Handling
 int		handle_fork_error(int stdout_backup);
@@ -245,6 +246,8 @@ void	free_2strings(char *var, char *arg);
 char	**free_mat(char **mat);
 void	free_pwd(char *oldpwd, char *pwd);
 void	free_env_list(t_env *head);
+void	ft_free_pipes_data(t_token *head);
+void	ft_free_cmds(char **arr);
 
 //Utils
 int		ft_strcmp(char *s1, char *s2);

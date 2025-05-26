@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:11:56 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:12:12 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:24:37 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	fill_pipes_cmd(t_token *token)
 	pipes_type = extract_command_types(token, count);
 	if (!pipes_type)
 	{
-		free(pipes_cmd);
+		ft_free_cmds(pipes_cmd);
 		return ;
 	}
 	assign_to_all_tokens(head, pipes_cmd, pipes_type);

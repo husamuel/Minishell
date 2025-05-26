@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:26:24 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/20 19:31:38 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/26 13:36:00 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,36 @@ void	free_env_array(char **env_array)
 	while (env_array && env_array[i])
 		free(env_array[i++]);
 	free(env_array);
+}
+
+void	ft_free_pipes_data(t_token *head)
+{
+	t_token	*current;
+
+	if (!head || !head->pipes_cmd || !head->pipes_type)
+		return ;
+	ft_free_cmds(head->pipes_cmd);
+	free(head->pipes_type);
+	current = head;
+	while (current)
+	{
+		current->pipes_cmd = NULL;
+		current->pipes_type = NULL;
+		current = current->next;
+	}
+}
+
+void	ft_free_cmds(char **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }

@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:39:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/21 17:24:51 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/05/26 14:29:04 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,23 @@ void	restore_child_tty(void)
 	tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
-
 void	reset_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+int	is_core_dumped(int status)
+{
+	int	sig;
+
+	sig = WTERMSIG(status);
+	if (sig == SIGQUIT)
+	{
+		write(STDOUT_FILENO, "Quit (core dumped)\n", 18);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		write(STDOUT_FILENO, "\n", 1);
+	}
+	return (128 + sig);
 }
