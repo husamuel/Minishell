@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:41:56 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 16:32:51 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:27:03 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,5 @@ int	execute_external_command(t_token *token, t_mini *ms)
 	i = execute_fork_process(token, ms, cmd_path);
 	setup_signals();
 	disable_ctrl_backslash();
-
 	return (i);
 }

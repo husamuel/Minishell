@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 16:30:59 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/27 16:27:37 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,5 @@ int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 	}
 	else
 		return (handle_fork_error2(cmd_path));
-
-	// ✅ Garantia de retorno
 	return (0);
 }
-
