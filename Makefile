@@ -1,4 +1,4 @@
-CC = gcc
+CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES = -I./42-libft
 LIBS = -lreadline -L./42-libft -lft
