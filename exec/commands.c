@@ -3,53 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:25:23 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 16:26:11 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:11:52 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../minishell.h"
-
-static char	*build_full_path(char *path, char *cmd)
-{
-	char	*temp;
-	char	*full_path;
-
-	temp = ft_strjoin(path, "/");
-	if (!temp)
-		return (NULL);
-	full_path = ft_strjoin_free(temp, cmd);
-	return (full_path);
-}
-
-static char	*search_in_paths(char **paths, char *cmd, char *path_env)
-{
-	char	*full_path;
-	int		i;
-
-	i = 0;
-	while (paths[i])
-	{
-		full_path = build_full_path(paths[i], cmd);
-		if (!full_path)
-		{
-			ft_free_split(paths);
-			free(path_env);
-			return (NULL);
-		}
-		if (access(full_path, X_OK) == 0)
-		{
-			ft_free_split(paths);
-			free(path_env);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	return (NULL);
-}
 
 char	*find_command_path(char *cmd, t_env *env)
 {
@@ -92,22 +53,46 @@ int	token_has_redirection(t_token *token)
 	return (0);
 }
 
+static int	handle_heredoc_alone(t_token *token)
+{
+	int	fd;
+
+	if (token->type == CMD_HEREDOC && token->next && !token->prev)
+	{
+		fd = setup_heredoc(token->next->cmd);
+		if (fd >= 0)
+		{
+			close(fd);
+			return (0);
+		}
+		return (1);
+	}
+	return (-1);
+}
+
+static int	handle_builtin_or_expr(t_token *token, t_mini *ms)
+{
+	if (token_has_redirection(token))
+		return (execute_external_builtin(token, ms));
+	return (execute_simple_command(token, ms));
+}
+
 int	execute_token(t_token *token, t_mini *ms)
 {
+	int	result;
+
 	if (!token || token->type == CMD_NONE)
 		return (0);
+	result = handle_heredoc_alone(token);
+	if (result != -1)
+		return (result);
 	if (!is_valid_command(token))
 	{
 		ft_putstr_fd("minishell: command not found\n", 2);
 		return (127);
 	}
 	if (token->type == CMD_BUILDIN || token->type == CMD_EXPR)
-	{
-		if (token_has_redirection(token))
-			return (execute_external_builtin(token, ms));
-		else
-			return (execute_simple_command(token, ms));
-	}
+		return (handle_builtin_or_expr(token, ms));
 	else if (token->type == CMD_EXEC)
 		return (execute_external_command(token, ms));
 	return (0);

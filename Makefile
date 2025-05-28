@@ -31,6 +31,7 @@ SRCS = \
 	./term_evaluation.c \
 	./init2.c \
 	./exec/commands.c \
+	./exec/commands2.c \
 	./exec/utils.c \
 	./exec/redirections2.c \
 	./exec/execute_command2.c \

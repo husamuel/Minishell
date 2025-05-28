@@ -6,13 +6,13 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 18:58:13 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/22 14:10:46 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:07:38 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../minishell.h"
 
-static	int	allocate_cmd_args(t_parser *state)
+int	allocate_cmd_args(t_parser *state)
 {
 	state->curr->args_file = malloc(sizeof(char *) * 2);
 	if (!state->curr->args_file)
@@ -56,15 +56,18 @@ static	int	set_cmd_args(t_parser *state)
 	return (1);
 }
 
-static int	check_special_token(t_parser *state)
+static int	handle_redirect_argument(t_parser *state)
 {
-	return (state->curr->type == CMD_PIPE
-		|| state->curr->type == CMD_APPEND
-		|| state->curr->type == CMD_REDIRECT_IN
-		|| state->curr->type == CMD_REDIRECT_OUT
-		|| state->curr->type == CMD_ARG_FILE
-		|| state->curr->type == CMD_ARG
-		|| state->curr->type == CMD_HEREDOC);
+	if (state->prev && state->curr->type == CMD_NONE
+		&& (state->prev->type == CMD_HEREDOC
+			|| state->prev->type == CMD_REDIRECT_OUT
+			|| state->prev->type == CMD_REDIRECT_IN
+			|| state->prev->type == CMD_APPEND))
+	{
+		state->curr->type = CMD_ARG_FILE;
+		return (1);
+	}
+	return (0);
 }
 
 void	handle_command_token(t_parser *state, t_mini *ms)
@@ -80,8 +83,12 @@ void	handle_command_token(t_parser *state, t_mini *ms)
 		state->cmd_seen = 1;
 		state->last_cmd = state->curr;
 	}
-	else if (check_special_token(state) && state->prev != NULL)
+	else if (handle_redirect_argument(state))
+		return ;
+	else if (check_special_token(state))
 	{
+		if (!set_cmd_args(state))
+			return ;
 	}
 	else
 	{

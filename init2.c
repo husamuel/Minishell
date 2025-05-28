@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:43:09 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/20 19:43:12 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:08:09 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,15 @@ void	create_node(t_env **head, char *s)
 	if (!node)
 		return ;
 	append_env_node(head, node);
+}
+
+int	check_special_token(t_parser *state)
+{
+	return (state->curr->type == CMD_PIPE
+		|| state->curr->type == CMD_APPEND
+		|| state->curr->type == CMD_REDIRECT_IN
+		|| state->curr->type == CMD_REDIRECT_OUT
+		|| state->curr->type == CMD_ARG_FILE
+		|| state->curr->type == CMD_ARG
+		|| state->curr->type == CMD_HEREDOC);
 }

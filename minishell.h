@@ -308,5 +308,8 @@ void	execute_pipeline_command(t_token *token_list,
 char	*join_command_segment(t_token **token);
 int		count_pipe_segments(t_token *token);
 int		*extract_command_types(t_token *token, int count);
+int		check_special_token(t_parser *state);
+char	*build_full_path(char *path, char *cmd);
+char	*search_in_paths(char **paths, char *cmd, char *path_env);
 
 #endif
