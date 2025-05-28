@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:30 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/28 17:41:05 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,16 +41,24 @@ char	*append_info_to_var(char *var, char *input, int *i, t_mini *mini)
 	t_env	*exp;
 	char	*join;
 	char	*arg;
+	int		start;
+
+	(*i) += 2;
+	start = *i;
+	while (input[*i] && input[*i] != ' ')
+	{
+		if (input[*i] == '\'' || input[*i] == '\"')
+			count_till_char(input, i, input[*i]);
+		(*i)++;
+	}
+	arg = ft_substr(input, start, *i - start);
 
 	exp = find_node(var, mini->export);
-	arg = get_end_arg(input, i);
 	if (exp && exp->content)
-	{
-		join = ft_strjoin(exp->content, arg + ft_strlen(var) + 2);
-		free(arg);
-		return (join);
-	}
-	join = ft_strjoin(var, arg + ft_strlen(var) + 1);
+		join = ft_strjoin(exp->content, arg);
+	else
+		join = ft_strdup(arg);
+
 	free(arg);
 	return (join);
 }
