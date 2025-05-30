@@ -311,5 +311,6 @@ int		*extract_command_types(t_token *token, int count);
 int		check_special_token(t_parser *state);
 char	*build_full_path(char *path, char *cmd);
 char	*search_in_paths(char **paths, char *cmd, char *path_env);
+int		ft_isspace(int c);
 
 #endif

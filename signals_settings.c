@@ -14,22 +14,22 @@
 
 void	sigint_handler(int sig)
 {
-	(void)sig;
-	write(1, "\n", 1);
+	(void)sig; // g_exit = sig + 128
 	rl_on_new_line();
 	rl_replace_line("", 0);
+	write(1, "\n", 1);
 	rl_redisplay();
 }
 
 void	sigint_cmd_handler(int sig)
 {
-	(void)sig;
+	(void)sig; // g_exit = sig + 128
 	write(1, "\n", 1);
 }
 
 void	sigquit_handler(int sig)
 {
-	(void)sig;
+	(void)sig; // g_exit = sig + 128
 }
 
 void	setup_signals(void)

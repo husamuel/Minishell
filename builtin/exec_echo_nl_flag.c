@@ -50,7 +50,7 @@ int	ft_is_valid_n_flag(char *s, int *len)
 		return (0);
 	while (s[i] == 'n')
 		i++;
-	if (s[i] == '\0' || s[i] == ' ' || s[i] == '\t')
+	if (s[i] == '\0' || ft_isspace(s[i]) != 0)
 	{
 		if (len)
 			*len = i;
@@ -69,7 +69,7 @@ int	ft_skip_n_flags(char *input, int *nl_flag)
 	*nl_flag = 0;
 	while (input[i])
 	{
-		while (input[i] == ' ' || input[i] == '\t')
+		while (ft_isspace(input[i]) != 0)
 			i++;
 		if (ft_is_valid_n_flag(&input[i], &len))
 		{
@@ -79,7 +79,7 @@ int	ft_skip_n_flags(char *input, int *nl_flag)
 		else
 			break ;
 	}
-	while (input[i] == ' ' || input[i] == '\t')
+	while (ft_isspace(input[i]) != 0)
 		i++;
 	return (i);
 }

@@ -17,7 +17,7 @@ static int	handle_spaces(t_lexer *state)
 	int	i;
 
 	i = state->pos[1];
-	if (!(state->in_quotes) && state->input[i] == ' ')
+	if (!(state->in_quotes) && ft_isspace(state->input[i]) != 0)
 	{
 		if (i > state->pos[0])
 		{

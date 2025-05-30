@@ -48,7 +48,7 @@ void	exec_export(t_token *token, t_mini *mini)
 	}
 	while (*input)
 	{
-		while (*input == ' ')
+		while (ft_isspace(*input) != 0)
 			input++;
 		i = parsing_export(input, mini);
 		if (i > (int)ft_strlen(input))

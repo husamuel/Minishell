@@ -12,6 +12,11 @@
 
 #include "minishell.h"
 
+int	ft_isspace(int c)
+{
+	return (c == 32 || (c >= 9 && c <= 13));
+}
+
 void	ft_handle_zero(t_mini *ms)
 {
 	free(ms->input);
