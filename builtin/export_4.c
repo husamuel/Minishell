@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/28 17:41:05 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/05/30 09:39:26 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,11 @@ char	*append_info_to_var(char *var, char *input, int *i, t_mini *mini)
 		(*i)++;
 	}
 	arg = ft_substr(input, start, *i - start);
-
 	exp = find_node(var, mini->export);
 	if (exp && exp->content)
 		join = ft_strjoin(exp->content, arg);
 	else
 		join = ft_strdup(arg);
-
 	free(arg);
 	return (join);
 }
