@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/26 16:33:19 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:29:26 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+g_exit_status = 0;
 
 static void	ft_init_parser(t_parser *state)
 {

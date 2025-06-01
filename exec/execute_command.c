@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_command.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/27 16:27:37 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:14:03 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,19 @@ int	is_valid_command(t_token *token)
 int	execute_simple_command(t_token *token, t_mini *ms)
 {
 	if (!is_valid_command(token))
+	{
+		g_exit_status = 1;
 		return (1);
+	}
 	if (token->type == CMD_BUILDIN)
-		return (exec_builtin(token, ms));
+	{
+		g_exit_status = exec_builtin(token, ms);
+		return (g_exit_status);
+	}
 	else if (token->type == CMD_EXPR)
 	{
 		process_expr_command(token, ms);
+		g_exit_status = 0;
 		return (0);
 	}
 	return (0);

@@ -5,7 +5,6 @@ LIBS = -lreadline -L./42-libft -lft
 NAME = minishell
 
 SRCS = \
-	./exit_status.c \
 	./fill_pipes_cmd2.c \
 	./fill_pipes_cmd.c \
 	./builtin/exec_echo.c \

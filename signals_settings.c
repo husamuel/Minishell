@@ -14,7 +14,7 @@
 
 void	sigint_handler(int sig)
 {
-	(void)sig; // g_exit = sig + 128
+	g_exit_status = sig + 128;
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	write(1, "\n", 1);
@@ -23,13 +23,13 @@ void	sigint_handler(int sig)
 
 void	sigint_cmd_handler(int sig)
 {
-	(void)sig; // g_exit = sig + 128
+	g_exit_status = sig + 128;
 	write(1, "\n", 1);
 }
 
 void	sigquit_handler(int sig)
 {
-	(void)sig; // g_exit = sig + 128
+	g_exit_status = sig + 128;
 }
 
 void	setup_signals(void)

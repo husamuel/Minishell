@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:07:21 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 14:28:42 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:13:40 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ int	execute_pipeline(t_mini *ms)
 	int			last_status;
 
 	if (init_pipeline_context(ms, &ctx, &pids) != 0)
+	{
+		g_exit_status = 1;
 		return (1);
+	}
 	if (execute_pipeline_loop(&ctx, ms, pids) != 0)
 		last_status = 1;
 	else
@@ -89,5 +92,6 @@ int	execute_pipeline(t_mini *ms)
 	if (last_status == 0)
 		last_status = wait_for_children(pids, ctx.count);
 	free(pids);
+	g_exit_status = last_status;
 	return (last_status);
 }

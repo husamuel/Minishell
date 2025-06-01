@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 16:02:04 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:27:26 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:22:29 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ void	mark_tokens_as_processed(t_token *start)
 
 void	process_expr_command(t_token *current, t_mini *ms)
 {
-	int		result;
-	int		is_math_expr;
+	int	result;
+	int	is_math_expr;
 
 	ms->expr_seen = 1;
 	if (ft_check_args_validity(current, ms))
@@ -79,7 +79,6 @@ void	process_expr_command(t_token *current, t_mini *ms)
 	result = process_expression(current->next, ms);
 	ft_putnbr_fd(result, 1);
 	ft_putstr_fd("\n", 2);
-	ms->exit_status = result;
+	g_exit_status = result;
 	mark_tokens_as_processed(current->next);
-	return ;
 }

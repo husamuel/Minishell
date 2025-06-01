@@ -32,6 +32,8 @@
 # define GREEN "\001\033[32m\002"
 # define RESET "\001\033[0m\002"
 
+extern int	g_exit_status;
+
 typedef struct s_token
 {
 	char			*cmd;
@@ -99,7 +101,6 @@ typedef struct s_mini
 	t_parser	*state;
 	t_env		*export;
 	t_token		*token;
-	int			exit_status;
 	int			exit_status_count;
 	int			count;
 	int			in_quotes;
@@ -163,7 +164,7 @@ int		ft_check_args_validity(t_token *current, t_mini *ms);
 int		ft_determine_expression_type(t_token *current, t_mini *ms);
 int		ft_just_one_arg(t_token *current, t_mini *ms);
 int		ft_is_valid_operator_token(t_token *token);
-void	process_exit_status(t_token *current, t_mini *ms);
+void	process_exit_status(t_token *current);
 int		evaluate_term(const char *term, t_mini *ms);
 int		ft_handle_exit_status(t_mini *ms);
 int		ft_is_valid_operator(char *symbol);
@@ -178,13 +179,12 @@ void	add_to_args(t_token *token, char *arg);
 //Token Type Handling
 void	handle_command_token(t_parser *state, t_mini *ms);
 void	handle_arg_token(t_parser *state, t_mini *ms);
-void	handle_exit_status_argument(t_token *current,
-			t_token *last_cmd, t_mini *ms);
+void	handle_exit_status_argument(t_token *current, t_token *last_cmd);
 //Setup Instructions
 void	setup_expr_command(t_token *current,
 			int *command_seen, t_token **last_cmd);
 void	ft_handle_zero(t_mini *ms);
-void	setup_command_after_exit_status(t_parser *state, t_mini *ms);
+void	setup_command_after_exit_status(t_parser *state);
 //Execution
 void	exec(t_mini *ms);
 int		is_builtin(const char *cmd);
@@ -194,7 +194,7 @@ int		exec_builtin(t_token *token, t_mini *ms);
 void	exec_pwd(t_token *token);
 void	exec_unset(t_token *token, t_mini *mini);
 void	exec_env(t_token *token, t_mini *mini);
-void	exec_exit(t_token *token, t_mini *ms);
+void	exec_exit(t_token *token);
 void	exec_cd(t_token *token, t_mini *mini);
 //Echo
 void	exec_echo(t_token *token, t_mini *mini);
@@ -266,7 +266,7 @@ void	display_command_not_found(t_token *token, t_mini *ms);
 int		is_valid_for_processing(t_mini *ms);
 void	ft_decide_on_exit_status(t_parser *state, t_mini *ms);
 void	free_token_content(t_token *token);
-int		handle_input_line(char *line, t_mini *ms);
+int		handle_input_line(char *line);
 void	restore_child_tty(void);
 char	**get_env_array(t_env *env);
 int		setup_heredoc(char *delimiter);

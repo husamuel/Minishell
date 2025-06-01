@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:33:40 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 14:28:50 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:01:52 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	exec_basic_builtins(t_token *token, t_mini *mini)
 	else if (compare_builtin(token->cmd, "unset"))
 		exec_unset(token, mini);
 	else if (compare_builtin(token->cmd, "exit"))
-		exec_exit(token, mini);
+		exec_exit(token);
 	else
 		return (127);
 	return (0);

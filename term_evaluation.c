@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 16:01:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/21 13:27:38 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:25:21 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	ft_validate_numeric_term(const char *term)
 			{
 				ft_putstr_fd("expr: invalid value: '", 2);
 				ft_putstr_fd((char *)term, 2);
-				ft_putstr_fd("\n", 2);
+				ft_putstr_fd("'\n", 2);
 				return (0);
 			}
 		}
@@ -36,15 +36,10 @@ int	ft_validate_numeric_term(const char *term)
 
 int	evaluate_term(const char *term, t_mini *ms)
 {
+	(void)(ms);
 	if (ft_strcmp((char *)term, "$?") == 0)
-		return (ft_handle_exit_status(ms));
+		return (g_exit_status);
 	if (!ft_validate_numeric_term(term))
 		return (0);
 	return (ft_atoi(term));
 }
-/*
-void	expr_verify(t_token *token)
-{
-	if (!token || !token->cmd)
-		ft_putstr_fd("expr: invalid expression\n", 2);
-}*/

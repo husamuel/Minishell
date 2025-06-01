@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:09:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/21 08:18:50 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:10:15 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	display_command_not_found(t_token *token, t_mini *ms)
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(token->cmd, 2);
 	ft_putstr_fd(": command not found\n", 2);
-	ms->exit_status = 127;
+	g_exit_status = 127;
 	ms->expr = 1;
 }
 

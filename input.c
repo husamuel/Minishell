@@ -23,7 +23,7 @@ char	*get_input(t_mini *ms, char *prompt)
 		write(STDOUT_FILENO, "exit\n", 5);
 		exit(0);
 	}
-	if (!handle_input_line(input, ms))
+	if (!handle_input_line(input))
 	{
 		ms->echo = 1;
 	}

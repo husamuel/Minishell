@@ -6,16 +6,11 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:05:22 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 15:45:23 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:18:52 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	ft_isspace(int c)
-{
-	return (c == 32 || (c >= 9 && c <= 13));
-}
 
 void	ft_handle_zero(t_mini *ms)
 {

@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/23 18:01:07 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:21:19 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int		check_nl_echo(char *s);
 
 int	has_unclosed_quotes(const char *input)
 {
-	int		i;
 	char	quote;
+	int		i;
 
 	i = 0;
 	quote = '\0';
@@ -45,7 +45,7 @@ static void	handle_dollar_variable(t_token *token, t_mini *mini, int i)
 
 	arg = token->args[i];
 	if (arg[1] == '?')
-		printf("%d", mini->exit_status);
+		printf("%d", g_exit_status);
 	else
 	{
 		value = get_env_value(mini->export, arg + 1);
@@ -90,13 +90,14 @@ void	exec_echo(t_token *token, t_mini *mini)
 
 	if (has_unclosed_quotes(mini->input))
 	{
-		mini->exit_status = 2;
+		g_exit_status = 2;
 		return ;
 	}
 	if (ft_strchr(mini->input, '\'') || ft_strchr(mini->input, '\"')
 		|| ft_strchr(mini->input, '$'))
 	{
 		echo_others(token->next, 0, mini, mini->input + 5);
+		g_exit_status = 0;
 		return ;
 	}
 	start_index = 1;
@@ -106,4 +107,5 @@ void	exec_echo(t_token *token, t_mini *mini)
 	print_args(token, mini, start_index);
 	if (newline)
 		printf("\n");
+	g_exit_status = 0;
 }

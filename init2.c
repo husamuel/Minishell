@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:43:09 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/28 17:08:09 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:18:56 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,9 @@ int	check_special_token(t_parser *state)
 		|| state->curr->type == CMD_ARG_FILE
 		|| state->curr->type == CMD_ARG
 		|| state->curr->type == CMD_HEREDOC);
+}
+
+int	ft_isspace(int c)
+{
+	return (c == 32 || (c >= 9 && c <= 13));
 }

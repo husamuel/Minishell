@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:25:21 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/23 10:18:29 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:12:25 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ void	setup_heredoc_in_token(t_token *current, t_mini *ms)
 	++ms->redirect;
 }
 
-void	process_exit_status(t_token *current, t_mini *ms)
+void	process_exit_status(t_token *current)
 {
 	char	*exit_status_str;
 
 	current->type = CMD_EXIT_STATUS;
 	free(current->cmd);
-	exit_status_str = ft_itoa(ms->exit_status);
+	exit_status_str = ft_itoa(g_exit_status);
 	current->cmd = exit_status_str;
 	if (current->args)
 	{

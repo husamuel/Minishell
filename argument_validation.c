@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:50:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/19 22:09:19 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:27:54 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,16 @@ int	ft_has_no_arguments(t_token *current)
 
 int	ft_check_args_validity(t_token *current, t_mini *ms)
 {
+	(void)(ms);
 	if (ft_has_no_arguments(current))
 	{
-		ms->exit_status = 1;
+		g_exit_status = 1;
 		return (1);
 	}
 	if (!current->next)
 	{
 		ft_putstr_fd("expr: missing arguments\n", 2);
-		ms->exit_status = 1;
+		g_exit_status = 1;
 		return (1);
 	}
 	return (0);
@@ -40,7 +41,7 @@ int	ft_check_args_validity(t_token *current, t_mini *ms)
 
 int	ft_validate_single_arg(t_token *arg_token)
 {
-	int	i;
+	int		i;
 
 	i = 0;
 	while (arg_token->cmd[i])
@@ -73,7 +74,7 @@ int	ft_just_one_arg(t_token *current, t_mini *ms)
 			ft_putstr_fd(arg_token->cmd, 1);
 			ft_putstr_fd("\n", 1);
 		}
-		ms->exit_status = 0;
+		g_exit_status = 0;
 		mark_tokens_as_processed(current->next);
 		return (-1);
 	}
@@ -100,7 +101,7 @@ int	ft_determine_expression_type(t_token *current, t_mini *ms)
 			ft_putstr_fd("expr: syntax error: unexpected argument \"", 2);
 			ft_putstr_fd(second_arg->cmd, 2);
 			ft_putstr_fd("\"\n", 2);
-			ms->exit_status = 1;
+			g_exit_status = 1;
 			mark_tokens_as_processed(current->next);
 			return (-1);
 		}

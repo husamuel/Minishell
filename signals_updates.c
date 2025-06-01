@@ -53,5 +53,6 @@ int	is_core_dumped(int status)
 		rl_replace_line("", 0);
 		write(STDOUT_FILENO, "\n", 1);
 	}
-	return (128 + sig);
+	g_exit_status = 128 + sig;
+	return (g_exit_status);
 }

@@ -24,7 +24,6 @@ t_mini	init(char **envp)
 	ms.token = NULL;
 	ms.state = NULL;
 	ms.prompt = GREEN "minishell" RESET "$ ";
-	ms.exit_status = 0;
 	ms.exit_status_count = 0;
 	ms.count = 0;
 	ms.in_quotes = 0;
