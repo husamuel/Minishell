@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/30 09:39:26 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 11:06:28 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*get_end_arg(char *input, int *i)
 		return (NULL);
 	(*i)++;
 	start = *i;
-	while (input[*i] && input[*i] != ' ')
+	while (input[*i] && !ft_isspace(input[*i]))
 	{
 		if (input[*i] == '\'' || input[*i] == '\"')
 			count_till_char(input, i, input[*i]);
@@ -45,7 +45,7 @@ char	*append_info_to_var(char *var, char *input, int *i, t_mini *mini)
 
 	(*i) += 2;
 	start = *i;
-	while (input[*i] && input[*i] != ' ')
+	while (input[*i] && !ft_isspace(input[*i]))
 	{
 		if (input[*i] == '\'' || input[*i] == '\"')
 			count_till_char(input, i, input[*i]);
