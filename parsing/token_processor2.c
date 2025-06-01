@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 15:25:21 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 10:12:25 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:12:23 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	setup_redirect_in_token(t_token *current, t_mini *ms)
 {
-	current->type = CMD_HEREDOC;
+	current->type = CMD_REDIRECT_IN;
 	++ms->redirect;
 }
 

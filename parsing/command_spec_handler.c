@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 13:35:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/20 19:19:24 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 15:15:04 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	ft_handle_spec(t_parser *state, t_mini *ms)
 		setup_append_token(state->curr, ms);
 	else if (is_redirect_out(state->curr->cmd))
 		setup_redirect_out_token(state->curr, ms);
-	else if (is_redirect_in(state->curr->cmd))
-		setup_redirect_in_token(state->curr, ms);
 	else if (is_heredoc(state->curr->cmd))
 		setup_heredoc_in_token(state->curr, ms);
+	else if (is_redirect_in(state->curr->cmd))
+		setup_redirect_in_token(state->curr, ms);
 	else if (state->curr->cmd[0] == '\\' || state->curr->cmd[0] == ';')
 		state->curr->type = CMD_NONE;
 }
