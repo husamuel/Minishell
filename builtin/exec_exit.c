@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:56 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 10:16:09 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 11:46:42 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,13 @@ static void	ft_spec_exit(t_token *token)
 {
 	if (!ft_strncmp(token->args[1], "-9223372036854775808", 21))
 	{
-		g_exit_status = 0;
+		if (token->args[2])
+		{
+			printf("minishell: exit: too many arguments\n");
+			g_exit_status = 1;
+		}
+		else
+			g_exit_status = 0;
 	}
 	else
 	{
@@ -58,14 +64,24 @@ void	exec_exit(t_token *token)
 	{
 		if (!ft_strncmp("-9223372036854775808", token->args[1], 21))
 			ft_spec_exit(token);
+		if (token->args[1][20] && token->args[1][20] != '\0')
+			ft_spec_exit(token);
 		num = ft_atoll(token->args[1] + i);
 		while (token->args[1][i])
 		{
+			if (token->args[1][i] == '+' || token->args[1][i] == '-')
+				i++;
 			if (!ft_isdigit(token->args[1][i]) || num > 9223372036854775807)
 				ft_spec_exit(token);
 			i++;
 		}
-		g_exit_status = ft_atoi(token->args[1]);
+		if (token->args[2])
+		{
+			printf("minishell: exit: too many arguments\n");
+			g_exit_status = 1;
+		}
+		else
+			g_exit_status = ft_atoi(token->args[1]);
 		exit(g_exit_status);
 	}
 	else
