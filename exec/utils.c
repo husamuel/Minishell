@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:57:34 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:04:43 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:48:46 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ char	*ft_strjoin_free(char *s1, char *s2)
 			free(s1);
 		return (NULL);
 	}
-	len1 = strlen(s1);
-	len2 = strlen(s2);
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
 	result = malloc(len1 + len2 + 1);
 	if (!result)
 	{
