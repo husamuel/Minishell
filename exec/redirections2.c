@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:48:22 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:05:56 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 10:42:24 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	check_delimiter_match(char *line, char *delimiter)
 
 	if (strcmp(line, delimiter) == 0)
 		return (1);
-	delim_len = strlen(delimiter);
+	delim_len = ft_strlen(delimiter);
 	if (strncmp(line, delimiter, delim_len) == 0
 		&& line[delim_len] == '\n')
 		return (1);
@@ -42,24 +42,19 @@ static int	check_delimiter_match(char *line, char *delimiter)
 static int	read_heredoc_line(int write_fd, char *delimiter)
 {
 	char	*line;
-	size_t	len;
 	char	*prompt;
 
 	prompt = "> ";
-	line = NULL;
-	len = 0;
-	write(STDOUT_FILENO, prompt, strlen(prompt));
-	if (getline(&line, &len, stdin) == -1)
-	{
-		free(line);
+	line = readline(prompt);
+	if (!line)
 		return (-1);
-	}
 	if (check_delimiter_match(line, delimiter))
 	{
 		free(line);
 		return (-1);
 	}
-	write(write_fd, line, strlen(line));
+	write(write_fd, line, ft_strlen(line));
+	write(write_fd, "\n", 1);
 	free(line);
 	return (0);
 }
