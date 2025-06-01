@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:56 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 14:00:26 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 14:36:42 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,22 @@ static unsigned long	ft_atoll(const char *str)
 	return (n);
 }
 
+static int	get_shell_level() // TODO - update SHLVL
+{
+	char	*shlvl;
+	int	level;
+
+	level = 0;
+	shlvl = getenv("SHLVL");
+	if (shlvl)
+		level = ft_atoi(shlvl);
+	else
+		level = 1;
+	printf("%d\n", level);
+	return (level);
+
+}
+
 static void	ft_spec_exit(t_token *token)
 {
 	if (!ft_strncmp(token->args[1], "-9223372036854775808", 21))
@@ -50,6 +66,9 @@ static void	ft_spec_exit(t_token *token)
 			token->args[1]);
 		g_exit_status = 2;
 	}
+	// we need to check the shell level and for each of them setup_signals();
+	if (get_shell_level() == 1)
+		setup_signals();
 	exit(g_exit_status);
 }
 
@@ -82,12 +101,17 @@ void	exec_exit(t_token *token)
 		}
 		else
 			g_exit_status = ft_atoi(token->args[1]);
+	// we need to check the shell level and for each of them setup_signals();
+		if (get_shell_level() == 1)
+			setup_signals();
 		exit(g_exit_status);
 	}
 	else
 	{
 		g_exit_status = 0;
+	// we need to check the shell level and for each of them setup_signals();
+		if (get_shell_level() == 1)
+			setup_signals();
 		exit(g_exit_status);
 	}
-	setup_signals();
 }
