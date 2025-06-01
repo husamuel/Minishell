@@ -39,7 +39,10 @@ void	set_command_type(t_token *current)
 	if (is_builtin_command(current->cmd))
 		current->type = CMD_BUILDIN;
 	else if (ft_strcmp(current->cmd, "./minishell") == 0)
+	{
+		//TODO -> update shlvl like in export
 		current->type = CMD_EXEC;
+	}
 	else if (is_exec_command(current->cmd))
 		current->type = CMD_EXEC;
 }
