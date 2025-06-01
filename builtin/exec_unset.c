@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:10:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:26 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:54:45 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,16 @@ void	exec_unset(t_token *token, t_mini *mini)
 
 	next = token->next;
 	if (!next)
+	{
+		setup_signals();
 		return ;
+	}
 	while (next)
 	{
 		unset_env(next, &mini->export);
 		next = next->next;
 	}
+	setup_signals();
 }
 
 static	void	unset_all(t_token *next, t_env *ev)

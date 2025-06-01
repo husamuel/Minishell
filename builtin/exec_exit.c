@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:56 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 11:46:42 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/01 14:00:26 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,4 +89,5 @@ void	exec_exit(t_token *token)
 		g_exit_status = 0;
 		exit(g_exit_status);
 	}
+	setup_signals();
 }

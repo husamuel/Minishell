@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:37 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:17 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:50:17 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,5 @@ void	exec_env(t_token *token, t_mini *mini)
 			printf("%s=%s\n", ev->var, ev->content);
 		ev = ev->next;
 	}
+	setup_signals();
 }

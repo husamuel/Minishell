@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:36 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:05 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:49:27 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	exec_cd(t_token *token, t_mini *mini)
 		cd_dollar(next, mini);
 	else
 		exec_cd_3(token, mini);
+	setup_signals();
 }
 
 void	exec_cd_4(t_token *token, t_mini *mini)

@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:22 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:51:40 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	exec_export(t_token *token, t_mini *mini)
 			i = ft_strlen(input);
 		input += i;
 	}
+	setup_signals();
 }
 
 static char	*ft_extract_var_name(char *input, int *i)

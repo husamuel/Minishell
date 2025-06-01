@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:09:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:24 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:52:21 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,4 +25,5 @@ void	exec_pwd(t_token *token)
 		return ;
 	}
 	printf("%s\n", current_path);
+	setup_signals();
 }
