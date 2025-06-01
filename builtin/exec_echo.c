@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 10:21:19 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/01 13:41:29 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,5 @@ void	exec_echo(t_token *token, t_mini *mini)
 	if (newline)
 		printf("\n");
 	g_exit_status = 0;
+	setup_signals();
 }
