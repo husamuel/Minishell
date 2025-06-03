@@ -55,7 +55,7 @@ static void	handle_exec_command(t_token *token_list, t_mini *ms)
 void	execute_pipeline_command(t_token *token_list, t_pipe_ctx *ctx,
 		t_mini *ms, int type)
 {
-	if (!token_list || !is_valid_command(token_list))
+	if (!token_list || !is_valid_command(token_list, ms))
 		exit(1);
 	handle_pipe_redirection(ctx);
 	close_all_pipes(ctx);

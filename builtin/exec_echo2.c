@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:00:57 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/23 18:02:04 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:35:26 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@ void	echo_dollar(int *i, char *input, t_mini *mini)
 		handle_digit(i, input);
 	else if (ft_isalpha(input[*i + 1]))
 		handle_alpha(i, input, mini);
+	else if (input[*i] == '$' && mini->redirect > 0)
+		mini->token->args_file[1] = ft_strdup("$");
+	else
+	{
+		printf("%c", input[*i]);
+		(*i)++;
+	}
 }
 
 char	*print_echo(char *input, int *i, char *var, t_mini *mini)

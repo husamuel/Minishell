@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 16:25:23 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/28 17:11:52 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:12:41 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	execute_token(t_token *token, t_mini *ms)
 	result = handle_heredoc_alone(token);
 	if (result != -1)
 		return (result);
-	if (!is_valid_command(token))
+	if (!is_valid_command(token, ms))
 	{
 		ft_putstr_fd("minishell: command not found\n", 2);
 		return (127);

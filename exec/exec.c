@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 10:21:32 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/01 10:13:05 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 15:08:21 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	exec_end(t_mini *ms)
 	current = ms->token;
 	while (current)
 	{
-		if (is_valid_command(current))
+		if (is_valid_command(current, ms))
 		{
 			restore_child_tty();
 			g_exit_status = execute_token(current, ms);
