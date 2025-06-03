@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 14:30:14 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:01:31 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ void	exec_echo(t_token *token, t_mini *mini);
 int		has_redirection(t_token *token);
 char	*ft_get_redirect_pos(char *input_start);
 void	ft_handle_redirect_case(char *input_start, char *redirect_pos);
+int		has_unclosed_quotes(const char *input);
 char	*ft_custom_strstr(const char *haystack, const char *needle);
 char	*ft_custom_substr(char const *s, unsigned int start, size_t len);
 //Export

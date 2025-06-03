@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/27 18:09:09 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 10:10:15 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 11:36:21 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	set_command_type(t_token *current)
 		current->type = CMD_BUILDIN;
 	else if (ft_strcmp(current->cmd, "./minishell") == 0)
 	{
-		//TODO -> update shlvl like in export
 		current->type = CMD_EXEC;
 	}
 	else if (is_exec_command(current->cmd))
 		current->type = CMD_EXEC;
 }
+/*	-> update shlvl like in export */

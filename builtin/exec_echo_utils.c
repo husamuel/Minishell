@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 18:44:41 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:11 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:00:30 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,25 @@ char	*ft_custom_substr(char const *s, unsigned int start, size_t len)
 	}
 	result[i] = '\0';
 	return (result);
+}
+
+int	has_unclosed_quotes(const char *input)
+{
+	char	quote;
+	int		i;
+
+	i = 0;
+	quote = '\0';
+	while (input[i])
+	{
+		if ((input[i] == '\'' || input[i] == '\"'))
+		{
+			if (!quote)
+				quote = input[i];
+			else if (quote == input[i])
+				quote = '\0';
+		}
+		i++;
+	}
+	return (quote != '\0');
 }

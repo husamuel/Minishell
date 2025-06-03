@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 18:54:49 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 13:41:29 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 12:00:39 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,6 @@ char	*print_echo(char *input, int *i, char *var, t_mini *mini);
 void	echo_others(t_token *next, int i, t_mini *mini, char *input);
 void	echo_dollar(int *i, char *input, t_mini *mini);
 int		check_nl_echo(char *s);
-
-int	has_unclosed_quotes(const char *input)
-{
-	char	quote;
-	int		i;
-
-	i = 0;
-	quote = '\0';
-	while (input[i])
-	{
-		if ((input[i] == '\'' || input[i] == '\"'))
-		{
-			if (!quote)
-				quote = input[i];
-			else if (quote == input[i])
-				quote = '\0';
-		}
-		i++;
-	}
-	return (quote != '\0');
-}
 
 static void	handle_dollar_variable(t_token *token, t_mini *mini, int i)
 {
@@ -57,6 +36,17 @@ static void	handle_dollar_variable(t_token *token, t_mini *mini, int i)
 	}
 }
 
+static void	ft_handle_home(void)
+{
+	char	*home;
+
+	home = getenv("HOME");
+	if (home)
+		printf("%s", home);
+	else
+		printf("~");
+}
+
 static void	print_args(t_token *token, t_mini *mini, int start_index)
 {
 	int		i;
@@ -68,6 +58,8 @@ static void	print_args(t_token *token, t_mini *mini, int start_index)
 		arg = token->args[i];
 		if (arg[0] == '$')
 			handle_dollar_variable(token, mini, i);
+		else if (!ft_strcmp(arg, "~"))
+			ft_handle_home();
 		else
 			printf("%s", arg);
 		if (token->args[i + 1])
@@ -76,11 +68,31 @@ static void	print_args(t_token *token, t_mini *mini, int start_index)
 	}
 }
 
-static int	check_newline_flag(t_token *token)
+static int	count_newline_flags(t_token *token, int *newline)
 {
-	if (token->args[1] && ft_strncmp(token->args[1], "-n", 3) == 0)
-		return (0);
-	return (1);
+	int	count;
+	int	i;
+
+	count = 0;
+	*newline = 1;
+	while (token)
+	{
+		if (token->cmd[0] == '-')
+		{
+			i = 1;
+			while (token->cmd[i] == 'n')
+				i++;
+			if (token->cmd[i] == '\0')
+			{
+				count++;
+				*newline = 0;
+				token = token->next;
+				continue ;
+			}
+		}
+		break ;
+	}
+	return (count);
 }
 
 void	exec_echo(t_token *token, t_mini *mini)
@@ -93,17 +105,14 @@ void	exec_echo(t_token *token, t_mini *mini)
 		g_exit_status = 2;
 		return ;
 	}
+	start_index = 1 + count_newline_flags(token->next, &newline);
 	if (ft_strchr(mini->input, '\'') || ft_strchr(mini->input, '\"')
 		|| ft_strchr(mini->input, '$'))
 	{
-		echo_others(token->next, 0, mini, mini->input + 5);
+		echo_others(token->next, newline, mini, mini->input + 5);
 		g_exit_status = 0;
 		return ;
 	}
-	start_index = 1;
-	newline = check_newline_flag(token);
-	if (!newline)
-		start_index++;
 	print_args(token, mini, start_index);
 	if (newline)
 		printf("\n");
