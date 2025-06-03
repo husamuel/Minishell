@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:24:30 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/26 14:14:17 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 14:18:58 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ void	ft_update_ms(t_mini *ms)
 	ms->exit_status_count = 0;
 	ms->count++;
 	ms->none = 0;
+	setup_signals();
 }
