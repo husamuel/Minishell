@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 13:51:40 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:52:37 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ void	exec_export(t_token *token, t_mini *mini)
 {
 	char	*input;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 	order_var(mini);
 	if (!token->next)
 		print_export(mini->export);
@@ -46,14 +48,25 @@ void	exec_export(t_token *token, t_mini *mini)
 		printf("Not closed quotes\n");
 		return ;
 	}
-	while (*input)
+	if (input[++i] && !ft_isalpha(input[i++]))
 	{
-		while (ft_isspace(*input) != 0)
-			input++;
-		i = parsing_export(input, mini);
-		if (i > (int)ft_strlen(input))
-			i = ft_strlen(input);
-		input += i;
+		printf("minishell: export: `%s': not a valid identifier\n", input);
+		return ;
+	}
+	while (input[j])
+	{
+		while (ft_isspace(input[j]) != 0)
+			j++;
+		if (input[i] && !ft_isalnum(input[i]))
+		{
+			printf("minishell: export: `%s': not a valid identifier\n", input);
+			return ;
+		}
+		i = parsing_export(input + j, mini);
+		if (i > (int)ft_strlen(input + j))
+			i = ft_strlen(input + j);
+		j += i;
+		j++;
 	}
 	setup_signals();
 }

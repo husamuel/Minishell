@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:33 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:38:41 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	print_export(t_env	*head)
 	while (head)
 	{
 		i = ft_strlen(head->var) + 1;
-		if (!head->content)
+		if (!ft_strcmp(&head->var[0], "_"))
+		{
+		}
+		else if (!head->content)
 			printf("declare -x %s\n", head->var);
 		else
 			printf("declare -x %s=\"%s\"\n", head->var, head->content + i);

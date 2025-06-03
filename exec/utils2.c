@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:02:31 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 18:21:08 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:25:40 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,8 @@ int	is_valid_command(t_token *token, t_mini *ms)
 	while (curr)
 	{
 		if (curr->type == CMD_REDIRECT_OUT || curr->type == CMD_REDIRECT_IN
-			|| curr->type == CMD_APPEND || curr->type == CMD_HEREDOC)
+			|| curr->type == CMD_APPEND || curr->type == CMD_HEREDOC
+			|| curr->type == CMD_PIPE)
 		{
 			if (!ft_validate_redirect(curr))
 				return (0);
