@@ -6,22 +6,11 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 16:46:16 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:17:49 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./../minishell.h"
-
-int	is_valid_command(t_token *token, t_mini *ms)
-{
-	if (!token || !token->cmd || token->type == CMD_NONE)
-		return (0);
-	if (token->is_invalid || !token->args || !token->args[0])
-		return (0);
-	if (ms->redirect > 0 && (!token->args_file[1]))
-		return (0);
-	return (1);
-}
 
 int	execute_simple_command(t_token *token, t_mini *ms)
 {
