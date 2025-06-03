@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:27:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/05/22 12:43:21 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:34:38 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ char	*export_expand(char *input, t_mini *mini)
 {
 	char	*temp;
 
+	if (!ft_strchr(input, '$'))
+		return (ft_strdup(input));
 	while (input)
 	{
 		temp = ft_strchr(input, '$');
@@ -80,7 +82,6 @@ char	*get_next_arg(char *input, t_mini *mini)
 	return (final);
 }
 
-// return var content with malloc
 char	*get_var_name(char *input, int *a, t_mini *mini)
 {
 	char	*var;

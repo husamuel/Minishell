@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:09:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 13:52:21 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:37:23 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,26 @@ void	exec_pwd(t_token *token)
 	}
 	printf("%s\n", current_path);
 	setup_signals();
+}
+
+void	create_export(char *var, char *content, t_mini *mini)
+{
+	t_env	*export;
+	char	*value;
+
+	export = find_node(var, mini->export);
+	if (export)
+	{
+		if (content)
+		{
+			free(export->content);
+			export->content = ft_strdup(content);
+		}
+		return ;
+	}
+	if (content)
+		value = ft_strdup(content);
+	else
+		value = ft_strdup("");
+	append_node(ft_strdup(var), value, mini->export);
 }

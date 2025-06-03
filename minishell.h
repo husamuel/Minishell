@@ -313,5 +313,7 @@ int		check_special_token(t_parser *state);
 char	*build_full_path(char *path, char *cmd);
 char	*search_in_paths(char **paths, char *cmd, char *path_env);
 int		ft_isspace(int c);
+char	*ft_strchrnul(const char *s, int c);
+void	create_export(char *var, char *content, t_mini *mini);
 
 #endif

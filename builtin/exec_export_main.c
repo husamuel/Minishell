@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 18:52:37 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:32:06 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,43 +31,71 @@ char	*get_next_arg(char *input, t_mini *mini);
 char	*export_expand(char *input, t_mini *mini);
 char	*get_var_name(char *input, int *a, t_mini *mini);
 
-void	exec_export(t_token *token, t_mini *mini)
+static int	is_valid_identifier(char *input, int *j)
 {
-	char	*input;
-	int		i;
-	int		j;
+	int	start;
+
+	start = *j;
+	if (!ft_isalpha(input[*j]) && input[*j] != '_')
+	{
+		printf("minishell: export: `%.*s': not a valid identifier\n",
+			(int)(ft_strchrnul(input + start, ' ') - (input + start)),
+			input + start);
+		return (0);
+	}
+	while (input[*j] && input[*j] != '='
+		&& !(input[*j] == '+' && input[*j + 1] == '=')
+		&& !ft_isspace(input[*j]))
+	{
+		if (!ft_isalnum(input[*j]) && input[*j] != '_')
+		{
+			printf("minishell: export: `%.*s': not a valid identifier\n",
+				(int)(ft_strchrnul(input + start, ' ') - (input + start)),
+				input + start);
+			return (0);
+		}
+		(*j)++;
+	}
+	return (1);
+}
+
+static int	process_export_args(char *input, t_mini *mini)
+{
+	int	i;
+	int	j;
+	int	start;
 
 	i = 0;
 	j = 0;
-	order_var(mini);
-	if (!token->next)
-		print_export(mini->export);
-	input = mini->input + 6;
-	if (!check_quotes(input))
-	{
-		printf("Not closed quotes\n");
-		return ;
-	}
-	if (input[++i] && !ft_isalpha(input[i++]))
-	{
-		printf("minishell: export: `%s': not a valid identifier\n", input);
-		return ;
-	}
 	while (input[j])
 	{
-		while (ft_isspace(input[j]) != 0)
+		while (ft_isspace(input[j]))
 			j++;
-		if (input[i] && !ft_isalnum(input[i]))
-		{
-			printf("minishell: export: `%s': not a valid identifier\n", input);
-			return ;
-		}
-		i = parsing_export(input + j, mini);
-		if (i > (int)ft_strlen(input + j))
-			i = ft_strlen(input + j);
-		j += i;
-		j++;
+		start = j;
+		if (!is_valid_identifier(input, &j))
+			return (0);
+		i = parsing_export(input + start, mini);
+		if (i > (int)ft_strlen(input + start))
+			i = ft_strlen(input + start);
+		j = start + i;
+		while (ft_isspace(input[j]))
+			j++;
 	}
+	return (1);
+}
+
+void	exec_export(t_token *token, t_mini *mini)
+{
+	char	*input;
+
+	order_var(mini);
+	if (!token->next)
+		return (print_export(mini->export));
+	input = mini->input + 6;
+	if (!check_quotes(input))
+		return ((void)printf("Not closed quotes\n"));
+	if (!process_export_args(input, mini))
+		return ;
 	setup_signals();
 }
 
@@ -107,21 +135,4 @@ int	parsing_export(char *input, t_mini *mini)
 	free(var);
 	free(arg);
 	return (i + 1);
-}
-
-void	create_export(char *var, char *content, t_mini *mini)
-{
-	t_env	*export;
-
-	export = find_node(var, mini->export);
-	if (export)
-	{
-		if (content)
-		{
-			free(export->content);
-			export->content = ft_strdup(content);
-		}
-		return ;
-	}
-	append_node(ft_strdup(var), ft_strdup(content), mini->export);
 }

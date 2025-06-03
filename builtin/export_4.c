@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:07 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 11:06:28 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:38:12 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,11 @@ void	count_till_char(char *input, int *i, char c)
 		(*i)++;
 	while (input[*i] && input[*i] != c)
 		(*i)++;
+}
+
+char	*ft_strchrnul(const char *s, int c)
+{
+	while (*s && *s != (char)c)
+		s++;
+	return ((char *)s);
 }
