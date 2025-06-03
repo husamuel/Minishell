@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 15:42:42 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:46:16 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_valid_command(t_token *token, t_mini *ms)
 	if (token->is_invalid || !token->args || !token->args[0])
 		return (0);
 	if (ms->redirect > 0 && (!token->args_file[1]))
-		return (0);	
+		return (0);
 	return (1);
 }
 
@@ -37,8 +37,7 @@ int	execute_simple_command(t_token *token, t_mini *ms)
 	}
 	else if (token->type == CMD_EXPR)
 	{
-		process_expr_command(token, ms);
-		g_exit_status = 0;
+		g_exit_status = process_expr_command(token, ms);
 		return (0);
 	}
 	return (0);

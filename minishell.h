@@ -6,7 +6,7 @@
 /*   By: gtretiak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:01:48 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 12:01:31 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:52:56 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,9 +159,10 @@ void	set_command_type(t_token *current);
 void	free_token_list(t_token *head);
 
 //Token Processing
-void	process_expr_command(t_token *current, t_mini *ms);
+int		process_expr_command(t_token *current, t_mini *ms);
 int		ft_check_args_validity(t_token *current, t_mini *ms);
 int		ft_determine_expression_type(t_token *current, t_mini *ms);
+int		handle_standalone(t_token *current);
 int		ft_just_one_arg(t_token *current, t_mini *ms);
 int		ft_is_valid_operator_token(t_token *token);
 void	process_exit_status(t_token *current);

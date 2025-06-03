@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 13:50:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/01 10:27:54 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:54:48 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,17 @@ int	ft_check_args_validity(t_token *current, t_mini *ms)
 	if (ft_has_no_arguments(current))
 	{
 		g_exit_status = 1;
-		return (1);
+		return (-1);
 	}
 	if (!current->next)
 	{
 		ft_putstr_fd("expr: missing arguments\n", 2);
 		g_exit_status = 1;
-		return (1);
+		return (-1);
 	}
-	return (0);
+	if (!ft_strcmp(current->next->cmd, "$"))
+		return (handle_standalone(current));
+	return (1);
 }
 
 int	ft_validate_single_arg(t_token *arg_token)

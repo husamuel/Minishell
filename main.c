@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 12:17:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 15:43:55 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 16:46:53 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ static void	main_loop(t_mini *ms, t_parser *state)
 			result = parser(state, ms);
 			if (result == 0)
 				ft_handle_zero(ms);
-			
 			exec(ms);
 			if (ms->token)
 			{
