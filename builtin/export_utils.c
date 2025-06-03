@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 18:38:41 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:50:04 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	print_export(t_env	*head)
 		else if (!head->content)
 			printf("declare -x %s\n", head->var);
 		else
-			printf("declare -x %s=\"%s\"\n", head->var, head->content + i);
+			printf("declare -x %s=\"%s\"\n", head->var, head->content);
 		head = head->next;
 	}
 }

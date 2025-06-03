@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_export_main.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 19:32:06 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:56:25 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	is_valid_identifier(char *input, int *j)
 		&& !(input[*j] == '+' && input[*j + 1] == '=')
 		&& !ft_isspace(input[*j]))
 	{
-		if (!ft_isalnum(input[*j]) && input[*j] != '_')
+		if (!ft_isalnum(input[*j]))
 		{
 			printf("minishell: export: `%.*s': not a valid identifier\n",
 				(int)(ft_strchrnul(input + start, ' ') - (input + start)),

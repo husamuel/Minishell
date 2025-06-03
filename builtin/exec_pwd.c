@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_pwd.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:09:06 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 19:37:23 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:47:01 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,15 @@ void	create_export(char *var, char *content, t_mini *mini)
 	char	*value;
 
 	export = find_node(var, mini->export);
-	if (export)
-	{
-		if (content)
-		{
-			free(export->content);
-			export->content = ft_strdup(content);
-		}
-		return ;
-	}
 	if (content)
 		value = ft_strdup(content);
 	else
-		value = ft_strdup("");
+		value = NULL;
+	if (export)
+	{
+		free(export->content);
+		export->content = value;
+		return ;
+	}
 	append_node(ft_strdup(var), value, mini->export);
 }
