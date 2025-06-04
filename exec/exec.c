@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 10:21:32 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 15:08:21 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:36:16 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,9 @@
 static void	exec_end(t_mini *ms)
 {
 	t_token	*current;
+	int		marker;
 
+	marker = 0;
 	current = ms->token;
 	while (current)
 	{
@@ -23,11 +25,12 @@ static void	exec_end(t_mini *ms)
 		{
 			restore_child_tty();
 			g_exit_status = execute_token(current, ms);
+			marker = 1;
 		}
-		else
-			g_exit_status = 127;
 		current = current->next;
 	}
+	if (!marker)
+		g_exit_status = 127;
 }
 
 void	exec(t_mini *ms)
