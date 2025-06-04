@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:08:56 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 11:56:19 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/04 12:10:09 by gtretiak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	handle_exit_arguments(t_token *token)
 	i = 0;
 	if (!ft_strncmp("-9223372036854775808", token->args[1], 21))
 		ft_spec_exit(token);
-	if (token->args[1][20] && token->args[1][20] != '\0')
+	if (ft_strlen(token->args[1]) > 20)
 		ft_spec_exit(token);
 	num = ft_atoll(token->args[1] + i);
 	while (token->args[1][i])
