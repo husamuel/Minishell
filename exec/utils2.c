@@ -30,16 +30,6 @@ char	*get_env_value(t_env *env, char *key)
 
 int	ft_validate_redirect(t_token *curr)
 {
-	if (!curr->prev || (curr->prev->type != CMD_EXEC
-			&& curr->prev->type != CMD_BUILDIN
-			&& curr->prev->type != CMD_ARG))
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
-		ft_putstr_fd(curr->cmd, 2);
-		ft_putstr_fd("'\n", 2);
-		g_exit_status = 2;
-		return (0);
-	}
 	if (!curr->next || curr->next->type != CMD_ARG_FILE)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected"
