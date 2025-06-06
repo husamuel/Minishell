@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:02:31 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 18:25:40 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/06 16:26:01 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,24 +42,10 @@ int	ft_validate_redirect(t_token *curr)
 
 int	is_valid_command(t_token *token, t_mini *ms)
 {
-	t_token	*curr;
-
 	(void)ms;
 	if (!token || !token->cmd || token->type == CMD_NONE)
 		return (0);
 	if (token->is_invalid || !token->args || !token->args[0])
 		return (0);
-	curr = token;
-	while (curr)
-	{
-		if (curr->type == CMD_REDIRECT_OUT || curr->type == CMD_REDIRECT_IN
-			|| curr->type == CMD_APPEND || curr->type == CMD_HEREDOC
-			|| curr->type == CMD_PIPE)
-		{
-			if (!ft_validate_redirect(curr))
-				return (0);
-		}
-		curr = curr->next;
-	}
 	return (1);
 }
