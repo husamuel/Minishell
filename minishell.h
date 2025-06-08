@@ -262,7 +262,7 @@ void	ft_handle_flag(t_token **next, int *nl_flag);
 int		ft_is_valid_n_flag(char *s, int *len);
 int		ft_skip_n_flags(char *input, int *nl_flag);
 char	**env_to_array(t_env *env);
-void	free_env_array(char **env_array);
+char	*expand_and_free(char *str, t_mini *mini);
 void	free_args_array(char **args);
 void	display_command_not_found(t_token *token, t_mini *ms);
 int		is_valid_for_processing(t_mini *ms);
@@ -315,5 +315,6 @@ char	*search_in_paths(char **paths, char *cmd, char *path_env);
 int		ft_isspace(int c);
 char	*ft_strchrnul(const char *s, int c);
 void	create_export(char *var, char *content, t_mini *mini);
+char	*export_expand(char *input, t_mini *mini);
 
 #endif

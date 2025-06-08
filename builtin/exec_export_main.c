@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_export_main.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/26 17:25:38 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 19:56:25 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/08 12:24:03 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,16 +120,16 @@ int	parsing_export(char *input, t_mini *mini)
 	char	*var;
 	char	*arg;
 
-	arg = NULL;
 	i = 0;
+	arg = NULL;
 	var = ft_extract_var_name(input, &i);
 	if (ft_strncmp(input + i, "+=", 2) == 0)
 		arg = append_info_to_var(var, input, &i, mini);
 	else if (input[i] == '=')
 		arg = get_end_arg(input, &i);
 	if (arg)
-		arg = export_expand(arg, mini);
-	var = export_expand(var, mini);
+		arg = expand_and_free(arg, mini);
+	var = expand_and_free(var, mini);
 	if (syntax_export(var, arg))
 		create_export(var, arg, mini);
 	free(var);

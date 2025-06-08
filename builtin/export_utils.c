@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 19:11:15 by gtretiak          #+#    #+#             */
-/*   Updated: 2025/06/03 19:50:04 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/08 11:53:56 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,8 @@ void	swap_var(t_env *current, t_env *next, t_env **head);
 
 void	print_export(t_env	*head)
 {
-	int	i;
-
-	i = 0;
 	while (head)
 	{
-		i = ft_strlen(head->var) + 1;
 		if (!ft_strcmp(&head->var[0], "_"))
 		{
 		}

@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 19:26:24 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/26 13:36:00 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/08 12:26:02 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,13 @@ void	free_tokens(t_token *token)
 	}
 }
 
-void	free_env_array(char **env_array)
+char	*expand_and_free(char *str, t_mini *mini)
 {
-	int	i;
+	char	*tmp;
 
-	i = 0;
-	while (env_array && env_array[i])
-		free(env_array[i++]);
-	free(env_array);
+	tmp = export_expand(str, mini);
+	free(str);
+	return (tmp);
 }
 
 void	ft_free_pipes_data(t_token *head)
