@@ -316,5 +316,6 @@ int		ft_isspace(int c);
 char	*ft_strchrnul(const char *s, int c);
 void	create_export(char *var, char *content, t_mini *mini);
 char	*export_expand(char *input, t_mini *mini);
+int		is_directory(const char *path);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: husamuel <husamuel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 18:02:31 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/06 16:26:01 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:38:49 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,6 @@ char	*get_env_value(t_env *env, char *key)
 		current = current->next;
 	}
 	return (NULL);
-}
-
-int	ft_validate_redirect(t_token *curr)
-{
-	if (!curr->next || curr->next->type != CMD_ARG_FILE)
-	{
-		ft_putstr_fd("minishell: syntax error near unexpected"
-			" token `newline'\n", 2);
-		g_exit_status = 2;
-		return (0);
-	}
-	return (1);
 }
 
 int	is_valid_command(t_token *token, t_mini *ms)

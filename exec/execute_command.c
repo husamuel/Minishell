@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/03 18:17:49 by gtretiak         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:54:31 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,15 @@ int	validate_and_find_command(t_token *token, t_mini *ms, char **cmd_path)
 		print_command_not_found(token->cmd);
 		return (127);
 	}
+	if (is_directory(*cmd_path))
+	{
+		ft_putstr_fd("minishell: is a directory\n", 2);
+		free(*cmd_path);
+		return (126);
+	}
 	return (0);
 }
+
 
 int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 {

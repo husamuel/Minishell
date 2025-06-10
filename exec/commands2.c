@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/28 17:09:41 by husamuel          #+#    #+#             */
-/*   Updated: 2025/05/28 17:10:46 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:57:47 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,13 @@ char	*search_in_paths(char **paths, char *cmd, char *path_env)
 		i++;
 	}
 	return (NULL);
+}
+
+int	is_directory(const char *path)
+{
+	struct stat	statbuf;
+
+	if (stat(path, &statbuf) != 0)
+		return (0);
+	return (S_ISDIR(statbuf.st_mode));
 }
