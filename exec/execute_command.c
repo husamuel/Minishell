@@ -6,7 +6,7 @@
 /*   By: husamuel <husamuel@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/23 17:51:12 by husamuel          #+#    #+#             */
-/*   Updated: 2025/06/10 17:54:31 by husamuel         ###   ########.fr       */
+/*   Updated: 2025/06/10 22:26:48 by husamuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int	validate_and_find_command(t_token *token, t_mini *ms, char **cmd_path)
 	}
 	return (0);
 }
-
 
 int	execute_fork_process(t_token *token, t_mini *ms, char *cmd_path)
 {
