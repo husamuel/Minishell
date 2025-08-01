@@ -1,10 +1,17 @@
 # Minishell
 
+<img width="512" height="279" alt="image" src="https://github.com/user-attachments/assets/22924ebf-ae21-4c52-b385-142062963eec" />
+
+
 Welcome to **Minishell**, a simple yet powerful shell implementation created as part of the 42 curriculum. This project aims to replicate a miniature version of Bash, offering hands-on experience with processes, file descriptors, and user input handling. Developed collaboratively, it’s both a technical and teamwork challenge that delivers immense learning and satisfaction.
 
 ## About the Project
 
 Minishell is a compact shell that mimics Bash functionality on a smaller scale. It’s designed to deepen your understanding of how shells process user input, execute commands, and manage system resources. By building this project, you’ll uncover the inner workings of Bash, mastering concepts like process management, file descriptors, and environment variables. Despite its challenges, Minishell is a rewarding and fun project that fosters both technical skills and effective communication with your coding partner.
+
+## Mind Map
+
+<img width="1183" height="945" alt="image" src="https://github.com/user-attachments/assets/42f31c7b-58a2-45e6-a3c4-6672e3a2a4f4" />
 
 ## Code Breakdown
 
@@ -58,6 +65,6 @@ Clone the repository, install the `readline` library, and run `make` to build th
 
 ## Acknowledgments
 
-This project was crafted by Rafaela Bustamante and Raphael dos Santos Esteves, cadets at 42 São Paulo. It’s a testament to collaboration, perseverance, and the joy of learning.
+This project was crafted by Hugo Leonor and  [Georgii Tretiakov](https://github.com/gtretiak), cadets at 42 Porto It’s a testament to collaboration, perseverance, and the joy of learning.
 
 Enjoy your shell adventure with Minishell! 🐚
