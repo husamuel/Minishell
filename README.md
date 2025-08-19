@@ -1,6 +1,6 @@
 # Minishell
 
-<img width="512" height="279" alt="image" src="https://github.com/user-attachments/assets/22924ebf-ae21-4c52-b385-142062963eec" />
+![143232233-4e385114-441f-4e3e-b3ba-477bc75454e1](https://github.com/user-attachments/assets/fdd77391-a9d4-4c0d-8aa3-d37dd4debca4)
 
 
 Welcome to **Minishell**, a simple yet powerful shell implementation created as part of the 42 curriculum. This project aims to replicate a miniature version of Bash, offering hands-on experience with processes, file descriptors, and user input handling. Developed collaboratively, it’s both a technical and teamwork challenge that delivers immense learning and satisfaction.
